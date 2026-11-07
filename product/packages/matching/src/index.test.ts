@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Court, Profile } from "@rally/types";
 import { roster, tonight, profilesById, scene4Ids } from "../../../fixtures";
-import { assign, fairness, randomAssign, ratingOnlyAssign } from "./index";
+import { assign, fairness, primaryStyle, randomAssign, ratingOnlyAssign } from "./index";
 
 const players = roster.filter(p => tonight.signups.includes(p.playerId));
 const average = (courts: Court[]) => courts.reduce((n, c) => n + c.fairness, 0) / courts.length;
@@ -71,4 +71,28 @@ describe("matching", () => {
     expect(() => assign(players.slice(0, 6), 2)).toThrow("full groups of four");
     expect(() => assign(players, 3)).toThrow("enough courts");
   });
+  it("MATCH-4 mirrors every visible icon when compatible style pairs exist", () => {
+    const kinds = ["power", "kitchen", "mobility", "readiness"] as const;
+    const paired = players.map((p, i): Profile => ({
+      ...p, tempo: "any",
+      style: { power: 0.1, kitchen: 0.1, mobility: 0.1, readiness: 0.1, [kinds[Math.floor(i / 4)]]: 0.9 },
+    }));
+    const before = structuredClone(paired);
+    const map = profilesById(paired);
+    for (const c of assign(paired, 4).courts) {
+      expect(primaryStyle(map.get(c.teams[0][0])!)).toBe(primaryStyle(map.get(c.teams[1][0])!));
+      expect(primaryStyle(map.get(c.teams[0][1])!)).toBe(primaryStyle(map.get(c.teams[1][1])!));
+    }
+    expect(paired).toEqual(before);
+  });
+  it("MATCH-4 minimizes unavoidable icon mismatches without changing player styles", () => {
+    const map = profilesById(players);
+    let unmatched = 0;
+    for (const c of assign(players, 4).courts) for (const row of [0, 1]) {
+      unmatched += Number(primaryStyle(map.get(c.teams[0][row])!) !== primaryStyle(map.get(c.teams[1][row])!));
+    }
+    // Four odd-sized style buckets require at least two unmatched opponent pairs.
+    expect(unmatched).toBe(2);
+  });
+
 });

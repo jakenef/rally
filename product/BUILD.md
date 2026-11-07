@@ -105,3 +105,13 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 requested player cards: replaced ball accessories and separate rating badges with camera-facing 3D cards containing 2D playstyle icons, name, skill/stars, tempo and all four attributes. Cards remain hidden in the facility overview.
 
 - 2026-11-06 1.4 player card layout: fit 3D cards to screen-safe bounds, separate court cards into two rows per side, and constrain spotlight card size/position below navigation and above player controls.
+
+- 2026-11-06 1.4 requested card clearance: reserved side columns, court camera fit, and foreground 3D panels prevent card/court intersections. Five viewport geometry tests, TypeScript, and production build pass. Browser visual verification pending: browser access host unavailable.
+
+- 2026-11-06 1.4 card follow-up: ball-adjacent placement, animated card entry and persistent selected-card zoom, fixed ball clearance, and court-anchored contact shadows. Inspected court and spotlight through native Chrome controls; production build, TypeScript, and five viewport checks pass.
+
+- 2026-11-06 1.4 facility playstyle markers: reuse card icons beside every overview ball, following players through Rally reassignment. Inspected pre/post-Rally screenshots in Chrome; TypeScript and production build pass.
+
+- 2026-11-06 1.4 requested icon/skill matching: star tiers beneath overview icons, shared card/marker stars, and exhaustive icon-aware court assignments that retain tempo constraints and optimize skill fairness. 58 tests, TypeScript, production build, and pre/post-Rally Chrome screenshots pass. Exact pairs for the odd-count demo roster await profile-adjustment choice.
+
+- 2026-11-06 1.4 requested mixed-to-tiered demo: session lineup starts with mixed skills, then the real matcher produces full 5-, 3-, 2-, and 1-star courts with exact mirrored icons and compatible tempo. Cards and stars use the same demo profiles. 61 tests, TypeScript, production build pass; pre/post-Rally screenshots inspected in Chrome on localhost:3000.

@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import type { Court, Profile } from "@rally/types";
+import { primaryStyle } from "@rally/matching";
+import { courtCameraOffset } from "./court-layout";
 export type FacilityController = {
   setCourts(courts: Court[], animate?: boolean): Promise<void>;
   dispose(): void;
@@ -174,6 +176,7 @@ export function mountFacility(
     group: THREE.Group;
     ring: THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
     glow: THREE.Sprite;
+    shadow: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
     material: THREE.MeshStandardMaterial;
     c: number;
     pIndex: number;
@@ -206,9 +209,7 @@ export function mountFacility(
       ["mobility", "High mobility"],
       ["readiness", "High readiness"],
     ] as const;
-    return styles.reduce((best, candidate) =>
-      p.style[candidate[0]] > p.style[best[0]] ? candidate : best,
-    );
+    return styles.find(([kind]) => kind === primaryStyle(p))!;
   }
   const origins = [
     [-12.2, -7],
@@ -380,33 +381,13 @@ export function mountFacility(
       }
     }
   });
-  function addPlayerCard(group: THREE.Group, p: Profile) {
-    const [kind, label] = playstyle(p);
-    const canvas = document.createElement("canvas");
-    canvas.width = 640;
-    canvas.height = 800;
-    const ctx = canvas.getContext("2d")!;
-    const paper = token("--paper"),
-      muted = token("--ink-muted"),
-      accent = token("--crimson");
-    const font = token("--font-sans");
-    ctx.fillStyle = token("--surface-raised");
-    ctx.fillRect(0, 0, 640, 800);
-    ctx.strokeStyle = token("--line-strong");
-    ctx.lineWidth = 3;
-    ctx.strokeRect(2, 2, 636, 796);
-    ctx.fillStyle = accent;
-    ctx.fillRect(0, 0, 640, 9);
-    ctx.fillStyle = paper;
-    ctx.font = `600 38px ${font}`;
-    let nameSize = 38;
-    while (ctx.measureText(p.name).width > 552 && nameSize > 22)
-      ctx.font = `600 ${--nameSize}px ${font}`;
-    ctx.fillText(p.name, 44, 72);
-
-    // Flat line icons are printed onto the face of the physical 3D card.
+  function drawPlaystyleIcon(
+    ctx: CanvasRenderingContext2D, kind: ReturnType<typeof playstyle>[0],
+    x: number, y: number, paper: string, scale = 1,
+  ) {
     ctx.save();
-    ctx.translate(92, 161);
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
     ctx.strokeStyle = paper;
     ctx.fillStyle = paper;
     ctx.lineWidth = 6;
@@ -474,6 +455,75 @@ export function mountFacility(
       ctx.stroke();
     }
     ctx.restore();
+  }
+  function drawRatingStars(
+    ctx: CanvasRenderingContext2D, rating: number,
+    x: number, y: number, radius: number, gap: number,
+  ) {
+    const stars = Math.max(1, Math.min(5, Math.round(rating - 1)));
+    for (let i = 0; i < 5; i++) {
+      ctx.fillStyle = token(i < stars ? "--paper" : "--line");
+      ctx.beginPath();
+      for (let j = 0; j < 10; j++) {
+        const angle = -Math.PI / 2 + (j * Math.PI) / 5;
+        const r = j % 2 ? radius * 0.47 : radius;
+        const px = x + i * gap + Math.cos(angle) * r;
+        const py = y + Math.sin(angle) * r;
+        if (j === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+  function addStyleMarker(group: THREE.Group, p: Profile) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 192;
+    canvas.height = 232;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = token("--surface");
+    ctx.beginPath();
+    ctx.roundRect(4, 4, 184, 224, 22);
+    ctx.fill();
+    ctx.strokeStyle = token("--line-strong");
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    drawPlaystyleIcon(ctx, playstyle(p)[0], 96, 85, token("--paper"), 1.15);
+    drawRatingStars(ctx, p.skill.mu, 24, 190, 15, 36);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const marker = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: texture, transparent: true, depthTest: false, depthWrite: false,
+      toneMapped: false,
+    }));
+    marker.name = "playstyle-marker";
+    marker.renderOrder = 20;
+    group.add(marker);
+  }
+  function addPlayerCard(group: THREE.Group, p: Profile) {
+    const [kind, label] = playstyle(p);
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 800;
+    const ctx = canvas.getContext("2d")!;
+    const paper = token("--paper"),
+      muted = token("--ink-muted"),
+      accent = token("--crimson");
+    const font = token("--font-sans");
+    ctx.fillStyle = token("--surface-raised");
+    ctx.fillRect(0, 0, 640, 800);
+    ctx.strokeStyle = token("--line-strong");
+    ctx.lineWidth = 3;
+    ctx.strokeRect(2, 2, 636, 796);
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, 0, 640, 9);
+    ctx.fillStyle = paper;
+    ctx.font = `600 38px ${font}`;
+    let nameSize = 38;
+    while (ctx.measureText(p.name).width > 552 && nameSize > 22)
+      ctx.font = `600 ${--nameSize}px ${font}`;
+    ctx.fillText(p.name, 44, 72);
+
+    drawPlaystyleIcon(ctx, kind, 92, 161, paper);
     ctx.fillStyle = muted;
     ctx.font = `500 22px ${font}`;
     ctx.fillText("PLAYSTYLE", 166, 146);
@@ -488,21 +538,7 @@ export function mountFacility(
     ctx.fillStyle = muted;
     ctx.font = `500 19px ${font}`;
     ctx.fillText("SKILL", 177, 279);
-    const stars = Math.max(1, Math.min(5, Math.round(p.skill.mu - 1)));
-    for (let i = 0; i < 5; i++) {
-      ctx.fillStyle = i < stars ? paper : token("--line");
-      ctx.beginPath();
-      for (let j = 0; j < 10; j++) {
-        const angle = -Math.PI / 2 + (j * Math.PI) / 5;
-        const radius = j % 2 ? 8 : 17;
-        const x = 193 + i * 43 + Math.cos(angle) * radius,
-          y = 311 + Math.sin(angle) * radius;
-        if (j === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.closePath();
-      ctx.fill();
-    }
+    drawRatingStars(ctx, p.skill.mu, 193, 311, 17, 43);
     const stats: [string, number][] = [
       ["Power", p.style.power],
       ["Kitchen", p.style.kitchen],
@@ -584,6 +620,10 @@ export function mountFacility(
           }
         }
       });
+      f.shadow.removeFromParent();
+      f.shadow.geometry.dispose();
+      f.shadow.material.map?.dispose();
+      f.shadow.material.dispose();
       f.ring.geometry.dispose();
       f.ring.material.dispose();
     });
@@ -612,7 +652,7 @@ export function mountFacility(
           isA = pIndex < 2,
           [x, z] = playerPositions[pIndex];
         const group = new THREE.Group();
-        group.position.set(x, 1.35, z);
+        group.position.set(x, 1.1, z);
         group.rotation.set(0.3, pIndex * 0.6, 0.2);
         groups[c].root.add(group);
         const geometry = buildPickleGeometry();
@@ -628,8 +668,9 @@ export function mountFacility(
           emissiveIntensity: 0,
         });
         addPlayerCard(group, p);
+        addStyleMarker(group, p);
         const shell = new THREE.Mesh(geometry.outer, m);
-        shell.castShadow = false;
+        shell.castShadow = true;
         shell.receiveShadow = true;
         group.add(shell);
         group.add(
@@ -710,13 +751,14 @@ export function mountFacility(
           }),
         );
         contactShadow.rotation.x = -Math.PI / 2;
-        contactShadow.position.set(0, -1.28, 0);
-        group.add(contactShadow);
+        contactShadow.position.set(x, 0.055, z);
+        groups[c].root.add(contactShadow);
         figures.push({
           id,
           group,
           ring,
           glow,
+          shadow: contactShadow,
           material: m,
           c,
           pIndex,
@@ -1185,8 +1227,11 @@ export function mountFacility(
           desiredCamera.set(0, 35.5 * fit, 33.65 * fit);
           desiredLook.set(0, 0, 0);
         } else if (level === "court") {
-          desiredCamera.set(ox, 15, oz + 19);
           desiredLook.set(ox, 0, oz);
+          // Fit the whole court into the space between the card columns.
+          desiredCamera.copy(desiredLook).add(courtCameraOffset(
+            stage.clientWidth, stage.clientHeight, camera.fov,
+          ));
         } else {
           const [x, z] = playerPositions[playerIndex];
           desiredCamera.set(ox + x + (x < 0 ? -3.6 : 3.6), 4.2, oz + z + 7.2);
@@ -1206,6 +1251,8 @@ export function mountFacility(
           look.lerp(desiredLook, speed);
         }
         camera.lookAt(look);
+        // Projection/unprojection below must use this frame's camera transform.
+        camera.updateMatrixWorld();
         groups.forEach((g, i) => {
           const hover = level === "facility" && hoverCourt === i;
           g.lift +=
@@ -1223,18 +1270,28 @@ export function mountFacility(
         };
         figures.forEach((f, index) => {
           const card = f.group.getObjectByName("player-card");
-          if (card)
-            card.visible =
-              level !== "facility" &&
-              f.c === courtIndex &&
-              !cameraMove &&
-              !shuffle &&
-              (level === "court" || f.pIndex === playerIndex);
+          if (card) {
+            const active = level !== "facility" && f.c === courtIndex && !shuffle
+              && (level === "court" || f.pIndex === playerIndex);
+            const opacity = THREE.MathUtils.lerp(
+              Number(card.userData.opacity ?? 0), Number(active),
+              reduce.matches ? 1 : 1 - Math.exp(-dt * 6),
+            );
+            card.userData.opacity = opacity;
+            card.visible = opacity > 0.005;
+            card.traverse((node) => {
+              if (node instanceof THREE.Mesh) {
+                node.material.transparent = true;
+                node.material.opacity = opacity;
+              }
+            });
+          }
+          f.shadow.visible = !shuffle;
           if (shuffle) {
             const start = shuffle.starts.get(f.id)!;
             const [cx, cz] = origins[f.c];
             const [px, pz] = playerPositions[f.pIndex];
-            const destination = new THREE.Vector3(cx + px, 1.35, cz + pz);
+            const destination = new THREE.Vector3(cx + px, 1.1, cz + pz);
             const angle =
               (index / figures.length) * Math.PI * 2 +
               ease(progress / 0.6) * Math.PI * 1.5;
@@ -1261,11 +1318,11 @@ export function mountFacility(
             (Number(hovered) * 0.4 - f.lift) *
             (reduce.matches ? 1 : 1 - Math.exp(-dt * 7));
           f.group.position.y =
-            1.35 +
+            1.1 +
             f.lift +
             (reduce.matches
               ? 0
-              : Math.sin(time * 0.00085 + f.pIndex * 0.8) * 0.13);
+              : (1 + Math.sin(time * 0.00085 + f.pIndex * 0.8)) * 0.06);
           if (card?.visible) {
             const width = stage.clientWidth,
               height = stage.clientHeight;
@@ -1282,64 +1339,65 @@ export function mountFacility(
               : Math.min(
                   250,
                   (availableHeight - gap) / 2,
-                  (availableWidth - gap) / 2 / 0.8,
+                  (width * 0.22) / 0.8,
                 );
             const cardWidth = cardHeight * 0.8;
-            const center = f.group.getWorldPosition(new THREE.Vector3());
-            const projected = center.clone().project(camera);
-            const anchorX = ((projected.x + 1) * width) / 2;
-            const anchorY = ((1 - projected.y) * height) / 2;
-            const depth = -center
-              .clone()
-              .applyMatrix4(camera.matrixWorldInverse).z;
+            const panelDepth = new THREE.Vector3(0, 0, -2)
+              .applyMatrix4(camera.matrixWorld).project(camera).z;
+            // Keep panels on a camera-facing plane in front of the scene,
+            // instead of embedding them at the balls' depth in the court.
+            const depth = 2;
             const worldHeight =
               2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * depth;
-            const radiusPixels = (0.85 / worldHeight) * height;
-            const side = inSpotlight || f.pIndex < 2 ? -1 : 1;
-            const preferredX =
-              anchorX + side * (radiusPixels + cardWidth / 2 + 16);
             let x: number, y: number;
+            const center = f.group.getWorldPosition(new THREE.Vector3());
+            const anchor = project(center);
+            const ballDepth = -center.clone().applyMatrix4(camera.matrixWorldInverse).z;
+            const ballRadius = 0.85 * height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * ballDepth);
             if (inSpotlight) {
-              x = THREE.MathUtils.clamp(
-                preferredX,
-                margin + cardWidth / 2,
-                width - margin - cardWidth / 2,
-              );
-              y = THREE.MathUtils.clamp(
-                anchorY,
-                top + cardHeight / 2,
-                bottom - cardHeight / 2,
-              );
+              x = THREE.MathUtils.clamp(anchor.x - ballRadius - 16 - cardWidth / 2,
+                margin + cardWidth / 2, width - margin - cardWidth / 2);
+              y = THREE.MathUtils.clamp(anchor.y, top + cardHeight / 2, bottom - cardHeight / 2);
             } else {
-              // Two non-overlapping rows on each side of the court.
+              const side = f.pIndex < 2 ? -1 : 1;
+              // Clear both teammates, including the nearer/larger front ball.
+              const neighbors = figures.filter(other => other.c === f.c && (other.pIndex < 2) === (f.pIndex < 2));
+              const edges = neighbors.map(other => {
+                const world = other.group.getWorldPosition(new THREE.Vector3());
+                const projected = project(world);
+                const distance = -world.clone().applyMatrix4(camera.matrixWorldInverse).z;
+                const radius = 0.85 * height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * distance);
+                return projected.x + side * (radius + 16 + cardWidth / 2);
+              });
+              const preferred = side < 0 ? Math.min(...edges) : Math.max(...edges);
+              x = THREE.MathUtils.clamp(preferred,
+                side < 0 ? margin + cardWidth / 2 : width / 2 + gap / 2 + cardWidth / 2,
+                side < 0 ? width / 2 - gap / 2 - cardWidth / 2 : width - margin - cardWidth / 2);
               const middle = top + availableHeight / 2;
               const backRow = f.pIndex % 2 === 0;
-              const minY = backRow
-                ? top + cardHeight / 2
-                : middle + gap / 2 + cardHeight / 2;
-              const maxY = backRow
-                ? middle - gap / 2 - cardHeight / 2
-                : bottom - cardHeight / 2;
-              y = THREE.MathUtils.clamp(anchorY - cardHeight * 0.2, minY, maxY);
-              const minX =
-                side < 0
-                  ? margin + cardWidth / 2
-                  : width / 2 + gap / 2 + cardWidth / 2;
-              const maxX =
-                side < 0
-                  ? width / 2 - gap / 2 - cardWidth / 2
-                  : width - margin - cardWidth / 2;
-              x = THREE.MathUtils.clamp(preferredX, minX, maxX);
+              y = THREE.MathUtils.clamp(anchor.y,
+                backRow ? top + cardHeight / 2 : middle + gap / 2 + cardHeight / 2,
+                backRow ? middle - gap / 2 - cardHeight / 2 : bottom - cardHeight / 2);
             }
-            // Reconstruct at the player's depth: real 3D panels, sized to fit
-            // safe screen bounds without losing the player/card association.
+            // Keep the same panel alive through camera and player transitions.
+            const previous = card.userData.layout ?? { x, y: y + 20, height: cardHeight * 0.92 };
+            // Retiring cards fade in place while the selected card follows the camera.
+            const retiring = level === "facility" || (level === "player" && f.pIndex !== playerIndex);
+            const blend = reduce.matches ? 1 : 1 - Math.exp(-dt * 7);
+            const layout = {
+              x: THREE.MathUtils.lerp(previous.x, retiring ? previous.x : x, blend),
+              y: THREE.MathUtils.lerp(previous.y, retiring ? previous.y : y, blend),
+              height: THREE.MathUtils.lerp(previous.height, retiring ? previous.height : cardHeight, blend),
+            };
+            card.userData.layout = layout;
+            // Reconstruct the reserved screen position on the panel plane.
             const position = new THREE.Vector3(
-              (x / width) * 2 - 1,
-              1 - (y / height) * 2,
-              projected.z,
+              (layout.x / width) * 2 - 1,
+              1 - (layout.y / height) * 2,
+              panelDepth,
             ).unproject(camera);
             card.position.copy(f.group.worldToLocal(position));
-            card.scale.setScalar(((cardHeight / height) * worldHeight) / 4.4);
+            card.scale.setScalar(((layout.height / height) * worldHeight) / 4.4);
             const parentRotation = f.group.getWorldQuaternion(
               new THREE.Quaternion(),
             );
@@ -1370,7 +1428,7 @@ export function mountFacility(
             figures.forEach((f) => {
               groups[f.c].root.attach(f.group);
               const [x, z] = playerPositions[f.pIndex];
-              f.group.position.set(x, 1.35, z);
+              f.group.position.set(x, 1.1, z);
               f.group.rotation.set(0.3, f.pIndex * 0.6, 0.2);
             });
             const complete = shuffle.complete;
@@ -1379,6 +1437,29 @@ export function mountFacility(
             complete();
           }
         }
+        // Keep each overview icon beside its own ball, including during Rally it.
+        figures.forEach(f => {
+          const marker = f.group.getObjectByName("playstyle-marker") as THREE.Sprite;
+          marker.visible = level === "facility";
+          if (!marker.visible) return;
+          const world = f.group.getWorldPosition(new THREE.Vector3());
+          const anchor = project(world);
+          const depth = -world.clone().applyMatrix4(camera.matrixWorldInverse).z;
+          const tangent = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+          const radius = 0.85 * stage.clientHeight / (2 * tangent * depth);
+          const size = THREE.MathUtils.clamp(stage.clientWidth / 32, 28, 44);
+          const x = anchor.x + radius + size / 2 + 6;
+          const panelDepth = new THREE.Vector3(0, 0, -2)
+            .applyMatrix4(camera.matrixWorld).project(camera).z;
+          const position = new THREE.Vector3(
+            (x / stage.clientWidth) * 2 - 1,
+            1 - (anchor.y / stage.clientHeight) * 2,
+            panelDepth,
+          ).unproject(camera);
+          marker.position.copy(f.group.worldToLocal(position));
+          const worldSize = size / stage.clientHeight * 4 * tangent;
+          marker.scale.set(worldSize, worldSize * 232 / 192, 1);
+        });
         renderer!.render(scene, camera);
         updateLabels();
         animation = requestAnimationFrame(frame);

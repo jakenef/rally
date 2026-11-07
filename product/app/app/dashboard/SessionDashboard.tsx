@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { roster, tonight } from "@rally/fixtures";
+import { tonight } from "@rally/fixtures";
 import { assign, randomAssign } from "@rally/matching";
 import { Button, Headline } from "@rally/ui";
 import type { Court } from "@rally/types";
 import type { FacilityController } from "./facility-scene";
 import "./dashboard.css";
-
-const players = roster.filter((player) =>
-  tonight.signups.includes(player.playerId),
-);
+import { sessionDemoPlayers as players } from "./demo-lineup";
 
 export default function SessionDashboard() {
   const startingCourts = useMemo(
