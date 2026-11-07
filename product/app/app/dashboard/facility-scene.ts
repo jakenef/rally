@@ -689,7 +689,7 @@ export function mountFacility(
           );
           lightStrip(sign * (29 + row * 1.35), -0.1 + row * 0.65, 0, 21, true);
         }
-      function planter(x: number, z: number, seed: number) {
+      function planter(x: number, z: number) {
         const g = new THREE.Group();
         g.position.set(x, -0.5, z);
         architecture.add(g);
@@ -706,26 +706,11 @@ export function mountFacility(
           );
           rock.scale.set(1.3, 0.8 + k * 0.28, 1.1);
         }
-        const foliage = mat("--crimson-deep", { roughness: 0.9 });
-        for (let k = 0; k < 28; k++) {
-          const angle = k * 2.399 + seed;
-          const height = 1.5 + ((k * 7) % 11) * 0.13;
-          const blade = prop(
-            new THREE.ConeGeometry(0.075, height, 3),
-            foliage,
-            1.4 + Math.cos(angle) * 0.35,
-            1.3 + height / 2,
-            Math.sin(angle) * 0.35,
-            g,
-          );
-          blade.rotation.z = Math.sin(angle) * 0.55;
-          blade.rotation.x = Math.cos(angle) * 0.55;
-        }
       }
-      planter(-26, -18, 1);
-      planter(26, -18, 2);
-      planter(-26, 18, 3);
-      planter(26, 18, 4);
+      planter(-26, -18);
+      planter(26, -18);
+      planter(-26, 18);
+      planter(26, 18);
       // Slatted shelter and picnic table at the head of the plaza.
       for (const x of [-7.5, 7.5])
         for (const z of [-20, -16])
