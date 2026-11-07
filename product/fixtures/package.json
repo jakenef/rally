@@ -1,0 +1,8 @@
+{
+  "name": "@rally/fixtures",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "dependencies": { "@rally/types": "*" }
+}

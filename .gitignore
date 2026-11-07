@@ -28,3 +28,7 @@ __pycache__/
 demo/clips/*
 !demo/clips/.gitkeep
 product/vision/output/
+
+# Build leftovers
+*.tsbuildinfo
+*.egg-info/

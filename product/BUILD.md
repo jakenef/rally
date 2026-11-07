@@ -15,8 +15,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 ## Steps
 
 ### Step 0: Skeleton (both, together)
-- [ ] **0.1 Workspace.** npm workspace with the layout in `product/README.md`, strict TypeScript, vitest, `packages/types` (every type from the specs), `packages/fakes`, `packages/ui` (crimsonhacks tokens and components). Next.js app with the home page and one placeholder route per lane: `/dashboard` and `/phone` (Facility), `/player` (AI). `vision/` with a Python package stub and pytest.
-- [ ] **0.2 Demo roster.** `fixtures/roster.json`: 16 to 18 players with names, skill and style chosen so random assignment looks bad and balanced assignment looks good.
+- [x] **0.1 Workspace.** npm workspace with the layout in `product/README.md`, strict TypeScript, vitest, `packages/types` (every type from the specs), `packages/fakes`, `packages/ui` (crimsonhacks tokens and components). Next.js app with the home page and one placeholder route per lane: `/dashboard` and `/phone` (Facility), `/player` (AI). `vision/` with a Python package stub and pytest.
+- [x] **0.2 Demo roster.** `fixtures/roster.json`: 16 to 18 players with names, skill and style chosen so random assignment looks bad and balanced assignment looks good.
 
 ### Step 1: The engine (demo) — Facility lane, Danny
 - [ ] **1.1 Matching** (`030`, MATCH-1 to MATCH-6).
@@ -53,4 +53,5 @@ Work through this list one step at a time, top to bottom (or take the step you w
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
+- 2026-11-07 0.1, 0.2: npm workspace (app, packages, fixtures), shared types, Claude and Gemini fakes, crimsonhacks port in packages/ui, lane stubs, Next.js app with /, /dashboard, /phone, /player, Python vision stub, 18-player demo roster with the scene 4 group, sample clip stats.
 - 2026-11-06 docs: no real messaging (fake phone only), YouTube clips instead of filming, mirror rule and tempo preference in matching (030, 020), second-brain edits go straight to main.

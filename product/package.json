@@ -1,0 +1,17 @@
+{
+  "name": "rally",
+  "private": true,
+  "workspaces": ["app", "packages/*", "fixtures"],
+  "scripts": {
+    "dev": "npm run dev -w @rally/app",
+    "build": "npm run build -w @rally/app",
+    "test": "vitest run",
+    "typecheck": "tsc -p . --noEmit && tsc -p app --noEmit",
+    "tokens": "node scripts/build-tokens.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.0"
+  }
+}

@@ -8,7 +8,7 @@ Each path belongs to a lane (`specs/README.md`, Lanes).
 
 | Path | What |
 | --- | --- |
-| `app/` | Next.js app: player onboarding, facility dashboard, on-screen fake phone |
+| `app/` | Next.js app. `app/app/player/` is the AI lane's screen; `app/app/dashboard/` and `app/app/phone/` are the Facility lane's |
 | `packages/matching/` | 030, TypeScript |
 | `packages/sessions/` | 040, TypeScript |
 | `packages/backfill/` | 050, TypeScript |
@@ -18,14 +18,23 @@ Each path belongs to a lane (`specs/README.md`, Lanes).
 | `packages/fakes/` | In-memory fakes for Claude and Gemini, used by tests |
 | `packages/ui/` | The crimsonhacks design system: tokens as CSS variables and React components |
 | `vision/` | 010, Python, our fork of Pickleball-Vision |
-| `fixtures/` | The demo roster, cached clip stats |
+| `fixtures/` | `roster.json` (shared), `sample-stats.json`, and `clips/` for cached clip results (AI lane) |
 
-Step 0.1 in `BUILD.md` creates this layout. Until then this file is the plan.
+## Running it
 
-## Running checks
+From `product/`:
 
-- TypeScript: `npm test` and `npx tsc --noEmit` from `product/`.
-- Python: `pytest` from `product/vision/`.
+```sh
+npm install
+npm run dev          # the app at http://localhost:3000
+npm test             # vitest: packages and fixtures
+npm run typecheck    # packages and the app
+npm run tokens       # regenerate packages/ui/styles/tokens.css after re-copying the design system
+```
+
+Python (AI lane), from `product/vision/`: see `vision/README.md`.
+
+Workspace packages are TypeScript source with no build step; the app compiles them (`transpilePackages` in `app/next.config.ts`). Each lane's package exports its spec's functions as stubs that throw until its BUILD step is done, so the other lane can import them now.
 
 ## Secrets
 

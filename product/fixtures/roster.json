@@ -1,0 +1,384 @@
+{
+  "_about": "Demo roster (BUILD 0.2). Shared file: tell the other lane before changing it. p01-p16 are signed up for tonight's session (4 courts); p17-p18 are the waitlist. p05-p08 are the scene 4 group: equal skill, two hard hitters (p05, p06) and two soft players (p07, p08).",
+  "session": {
+    "id": "tue-7pm",
+    "facilityId": "provo-courts",
+    "startsAt": "2026-11-10T19:00:00-07:00",
+    "courts": 4,
+    "priceCents": 1200,
+    "signups": [
+      "p01",
+      "p02",
+      "p03",
+      "p04",
+      "p05",
+      "p06",
+      "p07",
+      "p08",
+      "p09",
+      "p10",
+      "p11",
+      "p12",
+      "p13",
+      "p14",
+      "p15",
+      "p16"
+    ],
+    "waitlist": [
+      "p17",
+      "p18"
+    ],
+    "paid": [
+      "p01",
+      "p02",
+      "p03",
+      "p04",
+      "p05",
+      "p06",
+      "p07",
+      "p08",
+      "p09",
+      "p10",
+      "p11",
+      "p12",
+      "p13",
+      "p14",
+      "p15",
+      "p16"
+    ]
+  },
+  "scene4": [
+    "p05",
+    "p06",
+    "p07",
+    "p08"
+  ],
+  "players": [
+    {
+      "playerId": "p01",
+      "name": "Maya R.",
+      "style": {
+        "kitchen": 0.85,
+        "power": 0.55,
+        "mobility": 0.8,
+        "readiness": 0.85
+      },
+      "skill": {
+        "mu": 4.6,
+        "sigma": 0.25
+      },
+      "skillSource": "dupr",
+      "tempo": "fast",
+      "athleticism": 84
+    },
+    {
+      "playerId": "p02",
+      "name": "Tanner B.",
+      "style": {
+        "kitchen": 0.6,
+        "power": 0.8,
+        "mobility": 0.85,
+        "readiness": 0.75
+      },
+      "skill": {
+        "mu": 4.4,
+        "sigma": 0.25
+      },
+      "skillSource": "dupr",
+      "tempo": "fast",
+      "athleticism": 88
+    },
+    {
+      "playerId": "p03",
+      "name": "Kenji W.",
+      "style": {
+        "kitchen": 0.9,
+        "power": 0.35,
+        "mobility": 0.7,
+        "readiness": 0.85
+      },
+      "skill": {
+        "mu": 4.2,
+        "sigma": 0.25
+      },
+      "skillSource": "dupr",
+      "tempo": "any",
+      "athleticism": 74
+    },
+    {
+      "playerId": "p04",
+      "name": "Ava L.",
+      "style": {
+        "kitchen": 0.7,
+        "power": 0.65,
+        "mobility": 0.75,
+        "readiness": 0.7
+      },
+      "skill": {
+        "mu": 4.0,
+        "sigma": 0.5
+      },
+      "skillSource": "video",
+      "tempo": "any",
+      "athleticism": 77,
+      "estimatedDupr": {
+        "low": 3.75,
+        "high": 4.25,
+        "confidence": "medium"
+      }
+    },
+    {
+      "playerId": "p05",
+      "name": "Brooke H.",
+      "style": {
+        "kitchen": 0.45,
+        "power": 0.85,
+        "mobility": 0.8,
+        "readiness": 0.6
+      },
+      "skill": {
+        "mu": 3.8,
+        "sigma": 0.25
+      },
+      "skillSource": "dupr",
+      "tempo": "any",
+      "athleticism": 81
+    },
+    {
+      "playerId": "p06",
+      "name": "Jordan P.",
+      "style": {
+        "kitchen": 0.5,
+        "power": 0.8,
+        "mobility": 0.75,
+        "readiness": 0.65
+      },
+      "skill": {
+        "mu": 3.8,
+        "sigma": 0.5
+      },
+      "skillSource": "video",
+      "tempo": "any",
+      "athleticism": 79,
+      "estimatedDupr": {
+        "low": 3.55,
+        "high": 4.05,
+        "confidence": "medium"
+      }
+    },
+    {
+      "playerId": "p07",
+      "name": "Sam T.",
+      "style": {
+        "kitchen": 0.85,
+        "power": 0.2,
+        "mobility": 0.6,
+        "readiness": 0.8
+      },
+      "skill": {
+        "mu": 3.8,
+        "sigma": 0.25
+      },
+      "skillSource": "dupr",
+      "tempo": "any",
+      "athleticism": 66
+    },
+    {
+      "playerId": "p08",
+      "name": "Lena K.",
+      "style": {
+        "kitchen": 0.8,
+        "power": 0.25,
+        "mobility": 0.55,
+        "readiness": 0.8
+      },
+      "skill": {
+        "mu": 3.7,
+        "sigma": 0.5
+      },
+      "skillSource": "video",
+      "tempo": "any",
+      "athleticism": 63,
+      "estimatedDupr": {
+        "low": 3.45,
+        "high": 3.95,
+        "confidence": "medium"
+      }
+    },
+    {
+      "playerId": "p09",
+      "name": "Carlos M.",
+      "style": {
+        "kitchen": 0.55,
+        "power": 0.6,
+        "mobility": 0.65,
+        "readiness": 0.6
+      },
+      "skill": {
+        "mu": 3.5,
+        "sigma": 0.8
+      },
+      "skillSource": "self",
+      "tempo": "any",
+      "athleticism": 70
+    },
+    {
+      "playerId": "p10",
+      "name": "Priya S.",
+      "style": {
+        "kitchen": 0.75,
+        "power": 0.3,
+        "mobility": 0.55,
+        "readiness": 0.7
+      },
+      "skill": {
+        "mu": 3.4,
+        "sigma": 0.25
+      },
+      "skillSource": "dupr",
+      "tempo": "soft",
+      "athleticism": 58
+    },
+    {
+      "playerId": "p11",
+      "name": "Ethan G.",
+      "style": {
+        "kitchen": 0.4,
+        "power": 0.7,
+        "mobility": 0.7,
+        "readiness": 0.5
+      },
+      "skill": {
+        "mu": 3.2,
+        "sigma": 0.8
+      },
+      "skillSource": "self",
+      "tempo": "fast",
+      "athleticism": 72
+    },
+    {
+      "playerId": "p12",
+      "name": "Hannah J.",
+      "style": {
+        "kitchen": 0.65,
+        "power": 0.25,
+        "mobility": 0.5,
+        "readiness": 0.65
+      },
+      "skill": {
+        "mu": 3.1,
+        "sigma": 0.5
+      },
+      "skillSource": "video",
+      "tempo": "soft",
+      "athleticism": 55,
+      "estimatedDupr": {
+        "low": 2.85,
+        "high": 3.35,
+        "confidence": "medium"
+      }
+    },
+    {
+      "playerId": "p13",
+      "name": "Marcus D.",
+      "style": {
+        "kitchen": 0.35,
+        "power": 0.75,
+        "mobility": 0.6,
+        "readiness": 0.45
+      },
+      "skill": {
+        "mu": 2.9,
+        "sigma": 0.8
+      },
+      "skillSource": "self",
+      "tempo": "any",
+      "athleticism": 64
+    },
+    {
+      "playerId": "p14",
+      "name": "Olivia C.",
+      "style": {
+        "kitchen": 0.55,
+        "power": 0.3,
+        "mobility": 0.45,
+        "readiness": 0.55
+      },
+      "skill": {
+        "mu": 2.8,
+        "sigma": 0.8
+      },
+      "skillSource": "self",
+      "tempo": "soft",
+      "athleticism": 50
+    },
+    {
+      "playerId": "p15",
+      "name": "Noah F.",
+      "style": {
+        "kitchen": 0.3,
+        "power": 0.65,
+        "mobility": 0.55,
+        "readiness": 0.4
+      },
+      "skill": {
+        "mu": 2.6,
+        "sigma": 0.8
+      },
+      "skillSource": "self",
+      "tempo": "any",
+      "athleticism": 60
+    },
+    {
+      "playerId": "p16",
+      "name": "Grace Y.",
+      "style": {
+        "kitchen": 0.45,
+        "power": 0.2,
+        "mobility": 0.4,
+        "readiness": 0.5
+      },
+      "skill": {
+        "mu": 2.5,
+        "sigma": 0.8
+      },
+      "skillSource": "self",
+      "tempo": "soft",
+      "athleticism": 45
+    },
+    {
+      "playerId": "p17",
+      "name": "Diego V.",
+      "style": {
+        "kitchen": 0.8,
+        "power": 0.3,
+        "mobility": 0.6,
+        "readiness": 0.75
+      },
+      "skill": {
+        "mu": 3.7,
+        "sigma": 0.25
+      },
+      "skillSource": "dupr",
+      "tempo": "any",
+      "athleticism": 65
+    },
+    {
+      "playerId": "p18",
+      "name": "Rachel N.",
+      "style": {
+        "kitchen": 0.5,
+        "power": 0.55,
+        "mobility": 0.55,
+        "readiness": 0.55
+      },
+      "skill": {
+        "mu": 3.0,
+        "sigma": 0.8
+      },
+      "skillSource": "self",
+      "tempo": "any",
+      "athleticism": 58
+    }
+  ]
+}

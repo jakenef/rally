@@ -1,0 +1,12 @@
+[project]
+name = "rally-vision"
+version = "0.0.1"
+description = "Rally's vision pipeline (spec 010, AI lane): clip in, ClipStats JSON out."
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
