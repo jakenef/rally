@@ -52,6 +52,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
+- 2026-11-06 design study (requested): three responsive black/red frontend previews at /player/themes with session and player views, isolated theme tokens, self-hosted type, and local demo interactions; no build-step acceptance criteria changed.
+
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
 - 2026-11-07 2.2 (partial): profiles (PRO-1 to PRO-5, PRO-7, PRO-8; PRO-6 todo until the answer-key clips): style, athleticism, estimated DUPR with calibration fit, Claude card with template fallback; /player (scene 2) with Join calling sessions.signUp, /player/compare (scene 4).
 - 2026-11-07 2.1 (partial): Gemini assessment with rubric, schema check and one retry (VIS-4), cache (VIS-6), measured stats from tracks (VIS-2, VIS-3, VIS-5), combine to ClipStats (VIS-1), detection adapter on Ultralytics (untested). Waiting on clips and the Gemini key.
