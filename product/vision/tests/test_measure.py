@@ -102,3 +102,19 @@ def test_following_by_look_keeps_the_right_player_when_two_cross():
     frames[3][1] = [[2, *box(xs_red[3])], [1, *box(xs_blue[3])]]
     looks = [{1: red, 2: blue}, {1: red, 2: blue}, {1: red, 2: blue}, {2: red, 1: blue}]
     assert follow_by_look(frames, looks, anchor_id=1, at_sec=0.0) == [1, 1, 1, 2]
+
+
+def test_find_video_matches_the_clip_id_anywhere_in_the_name(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    from rally_vision import overlay
+
+    clips = tmp_path / "demo" / "clips"
+    clips.mkdir(parents=True)
+    (clips / "clip-06-wise-pickleball-4.5-RijUJWIBe_o.mp4").write_bytes(b"")
+    (clips / "old_style_abc123_0000-0060.mp4").write_bytes(b"")
+    fake_module = tmp_path / "product" / "vision" / "rally_vision" / "overlay.py"
+    monkeypatch.setattr(overlay, "__file__", str(fake_module))
+    assert overlay.find_video("RijUJWIBe_o") == Path(clips / "clip-06-wise-pickleball-4.5-RijUJWIBe_o.mp4")
+    assert overlay.find_video("abc123") is not None
+    assert overlay.find_video("missing") is None

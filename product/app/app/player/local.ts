@@ -13,13 +13,13 @@ function productDir(): string | null {
   return null;
 }
 
-/** demo/clips/<clipId>_*.mp4, if this laptop has it. */
+/** The local copy in demo/clips/: any .mp4 whose name contains the clip ID (e.g. clip-06-wise-pickleball-4.5-RijUJWIBe_o.mp4). */
 export function localVideoPath(clipId: string): string | null {
   const product = productDir();
   if (!product || !SAFE_ID.test(clipId)) return null;
   const dir = path.join(product, "..", "demo", "clips");
   if (!existsSync(dir)) return null;
-  const file = readdirSync(dir).find((f) => f.endsWith(".mp4") && (f === `${clipId}.mp4` || f.startsWith(`${clipId}_`)));
+  const file = readdirSync(dir).find((f) => f.endsWith(".mp4") && f.includes(clipId));
   return file ? path.join(dir, file) : null;
 }
 

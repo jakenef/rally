@@ -20,7 +20,7 @@ SELECTION_FILE = Path(__file__).resolve().parents[2] / "fixtures" / "clips" / "s
 
 def find_video(clip_id: str) -> Path | None:
     clips = Path(__file__).resolve().parents[3] / "demo" / "clips"
-    matches = sorted(clips.glob(f"{clip_id}_*.mp4")) + sorted(clips.glob(f"{clip_id}.mp4"))
+    matches = sorted(p for p in clips.glob("*.mp4") if clip_id in p.name)  # e.g. clip-06-wise-pickleball-4.5-<id>.mp4
     return matches[0] if matches else None
 
 

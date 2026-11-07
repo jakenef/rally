@@ -9,6 +9,8 @@ What makes a good clip:
 
 Rules: link only. Any local copy stays in `demo/clips/` (gitignored) on one laptop. Credit the channel on screen.
 
+Local copies are named `clip-NN-channel-level-<clipId>.mp4`, numbered as in the demo controls (press D on `/player`). The app and the pipeline find a clip by its ID anywhere in the file name.
+
 | Clip | Channel | Labeled level | Players we use | Start time | Used in |
 | --- | --- | --- | --- | --- | --- |
 | [f5WajWaVLfM](https://www.youtube.com/watch?v=f5WajWaVLfM) | RallyPoint by Suffolk Pickleball Co. | 3.0+ | near side, right: woman in white tank top and black leggings, ponytail | 0:00 | answer key |
