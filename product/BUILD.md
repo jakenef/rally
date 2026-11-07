@@ -20,8 +20,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 ### Step 1: The engine (demo)
 - [ ] **1.1 Matching** (`030`, MATCH-1 to MATCH-6).
-- [ ] **1.2 Sessions** (`040`, SESS-1 to SESS-4), payment simulated.
-- [ ] **1.3 Backfill** (`050`, FILL-1 to FILL-4), offers on the on-screen fake phone.
+- [ ] **1.2 Sessions** (`040`, SESS-1 to SESS-3), payment simulated.
+- [ ] **1.3 Backfill** (`050`, FILL-1, FILL-2, FILL-4), offers on the on-screen fake phone.
 - [ ] **1.4 Dashboard** (scenes 1 and 3): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
 
 ### Step 2: The player (demo)

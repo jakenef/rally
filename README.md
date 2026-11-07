@@ -4,7 +4,7 @@ Balanced pickleball sessions for facilities.
 
 > DUPR tells you what you are. Rally decides who you should play tonight, and fills the court when someone bails.
 
-Built for the Utah hackathon (Best Commerce Project track), November 2026. This repo is the whole team's second brain: the idea, the research, our meeting notes, the specs and the code all live here, so any teammate or coding agent can pick up where someone left off.
+A hackathon proof of concept, built for the Utah hackathon (Best Commerce Project track), November 2026. Not a business yet: anything the demo doesn't need is faked. This repo is the whole team's second brain: the idea, the research, our meeting notes, the specs and the code all live here, so any teammate or coding agent can pick up where someone left off.
 
 ## Folders
 

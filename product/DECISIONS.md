@@ -4,6 +4,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 
 ## Product
 
+- Rally is a hackathon proof of concept: anything the demo doesn't show is faked or left out (see `AGENTS.md`). Dropped SESS-4 (unpaid sign-up timeout) and FILL-3 (offer expiry) for that reason.
+
 - Rally's product is matchmaking, sessions and backfill; the video rating is an input, because DUPR and PB Vision already rate players from video (see `idea/positioning.md`).
 - No ball tracking at the hackathon, because it's the riskiest vision piece; stats come from player position and pose (see `research/risks.md`).
 - DUPR lookup is mocked, because we found no public API.
