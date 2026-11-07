@@ -1,7 +1,7 @@
 /* Layout only. Overtime colors, type, and components come from @rally/ui. */
 * { box-sizing: border-box; }
 .rl-nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: var(--space-mini);
-  min-height: 80px; padding: 18px var(--space-container); background: var(--surface); border-bottom: 1px solid var(--line); }
+  min-height: 88px; padding: 8px var(--space-container); background: var(--surface); border-bottom: 1px solid var(--line); }
 .rl-nav-links { display: flex; gap: 28px; align-items: center; }
 .rl-nav-links a { color: var(--ink-muted); font-size: 14px; text-decoration: none; transition: color .2s; }
 .rl-nav-links a:hover { color: var(--crimson-text); }
@@ -26,7 +26,7 @@
   background: var(--surface-raised); display: flex; flex-direction: column; gap: 12px; }
 .rl-phone-screen { flex: 1; background: var(--surface); border-radius: 22px; padding: var(--space-mini); display: grid; align-content: start; gap: 8px; }
 @media (max-width: 640px) {
-  .rl-nav { min-height: 68px; padding: 16px; }.rl-nav .ch-wordmark { font-size: 36px; }.rl-nav-links { gap: 16px; }.rl-nav-links a { font-size: 12px; }
+  .rl-nav { min-height: 72px; padding: 8px 16px; }.rl-nav .ch-logo { --ch-logo-width: 104px; }.rl-nav-links { gap: 16px; }.rl-nav-links a { font-size: 12px; }
   .rl-page { padding: 36px 16px; gap: 28px; }.rl-hero { min-height: 530px; padding: 48px 20px 56px; }.rl-hero-content { gap: 27px; }.rl-hero .ch-hl-impact { font-size: clamp(48px, 11.8vw, 75px); line-height: 1.02; }
   .rl-hero .rl-body-lg { font-size: 17px; }.rl-hero .rl-row { gap: 12px; }.rl-hero .ch-btn { padding-inline: 14px; font-size: 13px; }
   .rl-slogans { padding: 28px 0 34px; }.rl-grid { grid-template-columns: minmax(0, 1fr); }

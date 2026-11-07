@@ -10,6 +10,7 @@ The name belongs in the design docs, not in the app's navigation or marketing co
 - `product/packages/ui/src/index.tsx`: shared components for both lanes.
 - `product/packages/ui/styles/components.css`: shared typography and components.
 - `product/packages/ui/styles/fonts/`: self-hosted Anton and Mona Sans with OFL licenses.
+- `product/app/public/brand/rally-logo.png`: canonical user-supplied logo artwork, preserved unchanged.
 
 Update source tokens and run `npm run tokens` from `product/`. Colors and fonts
 come from `@rally/ui`; screens only add layout. The old `ch-*` class prefix is
@@ -27,7 +28,7 @@ contrast. Text on red uses `on-crimson`. `ch-night` remains black, not burgundy.
 
 ## Type
 
-- **Anton, 400:** wordmark, headings, prominent numbers. Uppercase with tight
+- **Anton, 400:** headings and prominent numbers. Uppercase with tight
   tracking (-0.035 to -0.04em) and close leading. Do not synthesize bold.
 - **Mona Sans, 400–800:** body, navigation, controls, metadata. Use 400 for body,
   500 for labels, 600 for controls. Keep body readable and calmer than headings.
@@ -59,7 +60,17 @@ the product UI. Buttons start with a verb and say what they do.
 
 ## Components and texture
 
-Use `Button`, `Headline`, `Wordmark`, `Icon`, `Perforation`, and `Marquee` from
+### Logo
+
+Use `Logo` from `@rally/ui` everywhere a brand mark is needed. It renders the
+supplied white block RALLY / red brush-script artwork from
+`/brand/rally-logo.png`. Browser and Apple touch icons use the same canonical
+asset. The source PNG is preserved byte-for-byte; shared CSS crops empty margins
+and blends its dark background into the site without stretching or redrawing it.
+Do not recreate the mark with a font or recolor the supplied brushwork.
+`Wordmark` remains a compatibility alias to `Logo`.
+
+Use `Button`, `Headline`, `Logo`, `Icon`, `Perforation`, and `Marquee` from
 `@rally/ui`. Buttons have 48px targets and minimal rounding. Cards are square or
 nearly square. Use the existing line icon set and one primary action per view.
 
