@@ -34,3 +34,6 @@ product/vision/output/
 *.egg-info/
 # Next.js rewrites this on every dev or build run
 product/app/next-env.d.ts
+
+# Uploaded clips for the get-your-rating flow (local only)
+product/.uploads/

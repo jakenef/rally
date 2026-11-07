@@ -4,29 +4,205 @@
   "player": "near side, left: white t-shirt, white cap, khaki shorts",
   "used_model": "gemini-3.8-flash",
   "used_processing": true,
-  "windowSec": 180,
+  "windowSec": 180.0,
   "assessment": {
     "shots": {
-      "dink": 20,
-      "drive": 2,
-      "drop": 7,
+      "dink": 22,
+      "drive": 1,
+      "drop": 1,
       "lob": 0,
       "volley": 1,
-      "serve": 1,
-      "return": 5
+      "serve": 3,
+      "return": 8
     },
     "thirdShotDropShare": 1.0,
-    "unforcedErrors": 3,
+    "unforcedErrors": 2,
     "resetsUnderPressure": 0,
     "levelEstimate": {
       "low": 4.0,
       "high": 4.5
     },
     "reasons": [
-      "Consistently executes third-shot drops with great touch, landing all attempted drops into the kitchen and advancing cleanly to the NVZ line.",
-      "Shows patience and solid balance in sustained crosscourt and middle dink exchanges.",
-      "Displays quick hands at the kitchen line, executing a sharp counter-volley winner off an incoming speed-up.",
-      "Commits only a couple of unforced errors when rushing drives from the transition zone."
+      "Sustains extended dink rallies with patience and balanced footwork at the non-volley zone.",
+      "Executes deep, high-percentage returns and immediately transitions to establish position at the kitchen line.",
+      "Shows sound partner chemistry and court awareness, maintaining few unforced errors throughout multiple exchanges."
+    ],
+    "events": [
+      {
+        "t": 121.0,
+        "shot": "serve",
+        "label": "Deep serve"
+      },
+      {
+        "t": 135.6,
+        "shot": "serve",
+        "label": "Slice serve"
+      },
+      {
+        "t": 138.6,
+        "shot": "drop",
+        "label": "Third-shot drop"
+      },
+      {
+        "t": 140.4,
+        "shot": "dink",
+        "label": "Crosscourt dink"
+      },
+      {
+        "t": 142.2,
+        "shot": "dink",
+        "label": "Middle dink"
+      },
+      {
+        "t": 145.0,
+        "shot": "dink",
+        "label": "Backhand push"
+      },
+      {
+        "t": 154.8,
+        "shot": "serve",
+        "label": "Accurate serve"
+      },
+      {
+        "t": 160.6,
+        "shot": "dink",
+        "label": "Crosscourt dink"
+      },
+      {
+        "t": 164.0,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 167.0,
+        "shot": "dink",
+        "label": "Backhand dink"
+      },
+      {
+        "t": 170.8,
+        "shot": "return",
+        "label": "High return"
+      },
+      {
+        "t": 173.6,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 175.2,
+        "shot": "dink",
+        "label": "Soft touch"
+      },
+      {
+        "t": 184.2,
+        "shot": "return",
+        "label": "Controlled return"
+      },
+      {
+        "t": 190.4,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 201.2,
+        "shot": "error",
+        "label": "Dink in net"
+      },
+      {
+        "t": 206.2,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 212.6,
+        "shot": "dink",
+        "label": "Backhand dink"
+      },
+      {
+        "t": 214.6,
+        "shot": "dink",
+        "label": "Safe dink"
+      },
+      {
+        "t": 227.0,
+        "shot": "return",
+        "label": "High deep return"
+      },
+      {
+        "t": 229.2,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 231.0,
+        "shot": "putaway",
+        "label": "Overhead smash"
+      },
+      {
+        "t": 237.0,
+        "shot": "return",
+        "label": "Solid return"
+      },
+      {
+        "t": 243.0,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 246.2,
+        "shot": "dink",
+        "label": "Patient dink"
+      },
+      {
+        "t": 250.0,
+        "shot": "error",
+        "label": "Wide dink"
+      },
+      {
+        "t": 259.4,
+        "shot": "dink",
+        "label": "Backhand dink"
+      },
+      {
+        "t": 261.6,
+        "shot": "dink",
+        "label": "Middle dink"
+      },
+      {
+        "t": 271.0,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 273.8,
+        "shot": "dink",
+        "label": "Crosscourt dink"
+      },
+      {
+        "t": 276.0,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 277.8,
+        "shot": "dink",
+        "label": "Low dink"
+      },
+      {
+        "t": 279.0,
+        "shot": "dink",
+        "label": "Patient dink"
+      },
+      {
+        "t": 288.0,
+        "shot": "drive",
+        "label": "Baseline recovery"
+      },
+      {
+        "t": 291.8,
+        "shot": "dink",
+        "label": "Forehand dink"
+      }
     ]
   }
 }

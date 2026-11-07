@@ -4,28 +4,111 @@
   "player": "near side: black hoodie, gray sweatpants, beanie",
   "used_model": "gemini-3.8-flash",
   "used_processing": true,
-  "windowSec": 180,
+  "windowSec": 180.0,
   "assessment": {
     "shots": {
-      "dink": 5,
-      "drive": 2,
-      "drop": 3,
+      "dink": 4,
+      "drive": 0,
+      "drop": 1,
       "lob": 0,
-      "volley": 4,
-      "serve": 6,
-      "return": 0
+      "volley": 6,
+      "serve": 1,
+      "return": 4
     },
-    "thirdShotDropShare": 0.33,
-    "unforcedErrors": 4,
-    "resetsUnderPressure": 2,
+    "thirdShotDropShare": null,
+    "unforcedErrors": 2,
+    "resetsUnderPressure": 1,
     "levelEstimate": {
       "low": 3.5,
       "high": 4.0
     },
     "reasons": [
-      "Demonstrates soft hands by successfully absorbing pace and resetting hard-hit balls into the kitchen under pressure.",
-      "Shows competent kitchen play with controlled dinking and a well-executed third-shot drop.",
-      "Makes occasional unforced errors including a missed serve and mistimed speedups off low balls."
+      "Consistently follows deep service returns directly up to established non-volley zone positioning.",
+      "Demonstrates good hands and touch with a successful midcourt reset dropped softly into the kitchen under pressure.",
+      "Shows decisive punch volleys and putaway power when opponents pop the ball up at the net.",
+      "Committed two unforced errors by dumping routine backhand dinks into the net during short kitchen rallies."
+    ],
+    "events": [
+      {
+        "t": 83.0,
+        "shot": "serve",
+        "label": "Deep serve"
+      },
+      {
+        "t": 87.6,
+        "shot": "reset",
+        "label": "Soft reset"
+      },
+      {
+        "t": 89.4,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 91.8,
+        "shot": "error",
+        "label": "Into the net"
+      },
+      {
+        "t": 112.4,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 151.8,
+        "shot": "putaway",
+        "label": "Punch volley putaway"
+      },
+      {
+        "t": 169.8,
+        "shot": "return",
+        "label": "Forehand return"
+      },
+      {
+        "t": 172.6,
+        "shot": "volley",
+        "label": "Backhand volley"
+      },
+      {
+        "t": 191.8,
+        "shot": "volley",
+        "label": "Kitchen volley"
+      },
+      {
+        "t": 194.2,
+        "shot": "dink",
+        "label": "Crosscourt dink"
+      },
+      {
+        "t": 196.4,
+        "shot": "error",
+        "label": "Netted dink"
+      },
+      {
+        "t": 207.2,
+        "shot": "return",
+        "label": "High return"
+      },
+      {
+        "t": 209.4,
+        "shot": "volley",
+        "label": "Forehand punch"
+      },
+      {
+        "t": 211.8,
+        "shot": "putaway",
+        "label": "Volley winner"
+      },
+      {
+        "t": 232.4,
+        "shot": "volley",
+        "label": "Backhand volley drop"
+      },
+      {
+        "t": 245.0,
+        "shot": "return",
+        "label": "Forehand return"
+      }
     ]
   }
 }

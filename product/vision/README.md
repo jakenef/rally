@@ -30,6 +30,17 @@ Then build the clip files the app reads (works from Gemini alone when there's no
 .venv/bin/python -m rally_vision build-all
 ```
 
+## Uploads (the get-your-rating flow, spec 025)
+
+The app runs these itself; you don't need to.
+
+```sh
+.venv/bin/python -m rally_vision players path/to/clip.mp4 --t 12.5          # people on that frame, JSON
+.venv/bin/python -m rally_vision analyze product/.uploads/<job> --t 12.5 --box 0.4,0.2,0.5,0.9
+```
+
+`analyze` tracks the first minute and has Gemini watch the first three (with a crop of the picked player), side by side, writing progress to `<job>/status.json`.
+
 ## Tracking overlay (the boxes on the video, scene 2)
 
 Needs the local clips in `demo/clips/` and the `detect` extra (`pip install -e ".[gemini,detect,dev]"`).

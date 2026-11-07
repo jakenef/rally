@@ -15,7 +15,8 @@ function Bar({ label, value }: { label: string; value: number }) {
   );
 }
 
-export function PlayerCard({ profile, title }: { profile: Profile; title?: string }) {
+/** `you`: the card is the player's own (025): "Your estimated DUPR", "Your tip". */
+export function PlayerCard({ profile, title, you = false }: { profile: Profile; title?: string; you?: boolean }) {
   const e = profile.estimatedDupr;
   return (
     <article className="pl-card" aria-label={title ?? profile.name}>
@@ -24,7 +25,7 @@ export function PlayerCard({ profile, title }: { profile: Profile; title?: strin
         <div className="pl-dupr">
           {rangeLabel(e).replace(" to ", "–")}
           <br />
-          <span>estimated DUPR</span>
+          <span>{you ? "Your estimated DUPR" : "estimated DUPR"}</span>
         </div>
       ) : (
         <div className="pl-dupr">
@@ -38,6 +39,7 @@ export function PlayerCard({ profile, title }: { profile: Profile; title?: strin
         {profile.athleticism !== undefined ? <span>Athleticism {profile.athleticism}</span> : null}
         <span>Tempo {profile.tempo}</span>
       </div>
+      {you ? <span className="rl-label">Your play style</span> : null}
       <div className="pl-bars">
         <Bar label="Power" value={profile.style.power} />
         <Bar label="Kitchen" value={profile.style.kitchen} />
@@ -56,7 +58,10 @@ export function PlayerCard({ profile, title }: { profile: Profile; title?: strin
               ))}
             </ul>
           ) : null}
-          <p className="pl-tip">{profile.card.tip}</p>
+          <p className="pl-tip">
+            {you ? <b className="pl-tip-label">Your tip </b> : null}
+            {profile.card.tip}
+          </p>
         </>
       ) : null}
     </article>
