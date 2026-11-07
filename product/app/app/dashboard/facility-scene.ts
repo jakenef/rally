@@ -535,11 +535,11 @@ export function mountFacility(
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.15;
+      renderer.toneMappingExposure = 1.25;
       renderer.domElement.setAttribute("aria-hidden", "true");
       stage.prepend(renderer.domElement);
       scene.add(
-        new THREE.HemisphereLight(token("--paper"), token("--night"), 0.5),
+        new THREE.HemisphereLight(token("--paper"), token("--night"), 0.9),
       );
       const sun = new THREE.DirectionalLight(token("--paper"), 2.1);
       sun.position.set(-18, 35, -12);
@@ -570,11 +570,11 @@ export function mountFacility(
       const architecture = new THREE.Group();
       scene.add(architecture);
       const dark = mat("--surface-raised", {
-        color: new THREE.Color(token("--surface-raised")).multiplyScalar(0.4),
+        color: new THREE.Color(token("--surface-raised")).multiplyScalar(0.8),
         roughness: 0.95,
       });
       const trim = mat("--line", {
-        color: new THREE.Color(token("--line")).multiplyScalar(0.45),
+        color: new THREE.Color(token("--line")).multiplyScalar(0.8),
         roughness: 0.8,
         metalness: 0.15,
       });
@@ -785,7 +785,7 @@ export function mountFacility(
         add(
           new THREE.BoxGeometry(20, 0.07, 9.09),
           mat("--crimson-deep", {
-            color: new THREE.Color(token("--crimson-deep")).multiplyScalar(0.5),
+            color: new THREE.Color(token("--crimson-deep")).multiplyScalar(0.65),
             roughness: 1,
           }),
           0,
@@ -795,7 +795,7 @@ export function mountFacility(
         add(
           new THREE.BoxGeometry(6.36, 0.08, 9.09),
           mat("--crimson", {
-            color: new THREE.Color(token("--crimson")).multiplyScalar(0.65),
+            color: new THREE.Color(token("--crimson")).multiplyScalar(0.75),
             roughness: 1,
           }),
           0,
