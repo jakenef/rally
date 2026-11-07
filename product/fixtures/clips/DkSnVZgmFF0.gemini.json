@@ -1,0 +1,32 @@
+{
+  "clipId": "DkSnVZgmFF0",
+  "source": "https://www.youtube.com/watch?v=DkSnVZgmFF0",
+  "player": "camera side: brown t-shirt, black shorts, neon green shoes",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "windowSec": 180,
+  "assessment": {
+    "shots": {
+      "dink": 1,
+      "drive": 2,
+      "drop": 0,
+      "lob": 0,
+      "volley": 5,
+      "serve": 0,
+      "return": 6
+    },
+    "thirdShotDropShare": 0.0,
+    "unforcedErrors": 0,
+    "resetsUnderPressure": 1,
+    "levelEstimate": {
+      "low": 3.5,
+      "high": 4.0
+    },
+    "reasons": [
+      "Consistently hits deep returns and immediately advances to establish position at the kitchen line.",
+      "Displays quick hands and solid punch volleys at the kitchen line, including a clean soft volley reset under pressure.",
+      "Prefers hitting third-shot drives with pace over third-shot drops.",
+      "Plays very cleanly without committing any unforced errors across the rallies."
+    ]
+  }
+}

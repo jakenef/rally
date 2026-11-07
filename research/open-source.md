@@ -6,7 +6,7 @@ Researched 2026-11-06. Licenses and maintenance not verified unless noted: check
 
 | Repo | What it gives us | Notes |
 |---|---|---|
-| [ArvanJ/Pickleball-Vision](https://github.com/ArvanJ/Pickleball-Vision) | YOLO + ByteTrack player tracking, court homography, hits and bounces, shot types, rallies, faults, pose-based stroke form, heatmaps, dashboard | **Fork this.** Also has a [browser version](https://arvanj.github.io/Pickleball-Vision/) (YOLOv8n via onnxruntime-web, ~2 fps clip analysis, no pose). License: check. |
+| [ArvanJ/Pickleball-Vision](https://github.com/ArvanJ/Pickleball-Vision) | YOLO + ByteTrack player tracking, court homography, hits and bounces, shot types, rallies, faults, pose-based stroke form, heatmaps, dashboard | **Not forked: checked 2026-11-07, it has no licence file.** We use its building blocks (Ultralytics YOLO, AGPL-3.0, with ByteTrack) directly in `product/vision/detect.py`. Still a good reference for how it maps the court. |
 | [Ovar9000/pickleballOS](https://github.com/Ovar9000/pickleballOS) | One fixed camera, click-the-corners calibration, SQLite output, rankings | Thesis project; simpler fallback |
 | [ryjchen24/pickleball](https://github.com/ryjchen24/pickleball) | Fine-tuned YOLOv8 + ByteTrack, RTMPose, ST-GCN shot classifier | Parts to borrow |
 | [santhosharun99/picklytics](https://github.com/santhosharun99/picklytics) | YOLO11 + temporal heatmap ball tracking, 3D flight model | In development |

@@ -38,4 +38,4 @@ Workspace packages are TypeScript source with no build step; the app compiles th
 
 ## Secrets
 
-Copy `.env.example` to `.env.local` and fill it in. Never commit keys.
+Copy `.env.example` to `.env` (or `.env.local`) in `product/` and fill it in. Both are gitignored, and both the app and the vision pipeline read them. Never commit keys.

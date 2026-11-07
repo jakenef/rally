@@ -32,3 +32,5 @@ product/vision/output/
 # Build leftovers
 *.tsbuildinfo
 *.egg-info/
+# Next.js rewrites this on every dev or build run
+product/app/next-env.d.ts

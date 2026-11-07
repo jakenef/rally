@@ -1,0 +1,31 @@
+{
+  "clipId": "f5WajWaVLfM",
+  "source": "https://www.youtube.com/watch?v=f5WajWaVLfM",
+  "player": "near side, right: woman in white tank top and black leggings, ponytail",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "windowSec": 180,
+  "assessment": {
+    "shots": {
+      "dink": 1,
+      "drive": 0,
+      "drop": 0,
+      "lob": 0,
+      "volley": 2,
+      "serve": 2,
+      "return": 3
+    },
+    "thirdShotDropShare": null,
+    "unforcedErrors": 0,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.5,
+      "high": 4.0
+    },
+    "reasons": [
+      "Consistently hit deep returns and immediately transitioned all the way up to the non-volley zone line.",
+      "Demonstrated good composure and paddle-ready positioning at the kitchen line, executing a clean dink and controlling mid-rally volleys.",
+      "Maintained high shot consistency across all her touches without committing any unforced errors."
+    ]
+  }
+}

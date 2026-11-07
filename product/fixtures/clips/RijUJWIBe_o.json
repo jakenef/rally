@@ -1,0 +1,38 @@
+{
+  "clipId": "RijUJWIBe_o",
+  "source": "https://www.youtube.com/watch?v=RijUJWIBe_o",
+  "durationSec": 180.0,
+  "players": [
+    {
+      "trackId": 0,
+      "selected": true,
+      "measured": false,
+      "watched": {
+        "shots": {
+          "dink": 5,
+          "drive": 2,
+          "drop": 3,
+          "lob": 0,
+          "volley": 4,
+          "serve": 6,
+          "return": 0
+        },
+        "thirdShotDropShare": 0.33,
+        "unforcedErrors": 4,
+        "resetsUnderPressure": 2,
+        "levelEstimate": {
+          "low": 3.5,
+          "high": 4.0
+        },
+        "reasons": [
+          "Demonstrates soft hands by successfully absorbing pace and resetting hard-hit balls into the kitchen under pressure.",
+          "Shows competent kitchen play with controlled dinking and a well-executed third-shot drop.",
+          "Makes occasional unforced errors including a missed serve and mistimed speedups off low balls."
+        ]
+      }
+    }
+  ],
+  "channel": "Wise Pickleball",
+  "labeledLevel": 4.5,
+  "startSec": 75.0
+}

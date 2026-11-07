@@ -31,7 +31,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 ### Step 3: Polish (stretch)
 - [ ] **3.1 Ratings** (`060`, RATE-1 to RATE-3). Facility.
 - [ ] **3.2 Holy War Night** (bonus scene). Facility.
-- [ ] **3.3 Accuracy chart** (scene 5): chart labeled level against estimated range for the calibration clips from 2.2. AI.
+- [x] **3.3 Accuracy chart** (scene 5): chart labeled level against estimated range for the calibration clips from 2.2. AI.
 
 ## Checkpoints
 
@@ -53,6 +53,11 @@ Work through this list one step at a time, top to bottom (or take the step you w
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
+- 2026-11-07 2.1 overlay: YOLO + ByteTrack player boxes on the local clips, graded player followed by position and clothing; /player plays the local clip with the boxes (scene 2), YouTube embed otherwise.
+- 2026-11-07 2.2: shift calibration scored leave-one-out (PRO-6), Gemini-only clips, 3-minute windows, evidence rule; /player/accuracy (scene 5). Corrected error 0.62 vs 0.81 raw; see research/gemini-accuracy.md.
+- 2026-11-07 2.1: Gemini graded all 9 clips (about 25s each at 5 fps). Raw midpoint error 0.89, consistently low (mean -0.83); correlation with labels 0.44. assess-all command with progress; retries, timeouts and model fallback.
+- 2026-11-07 2.2 (partial): profiles (PRO-1 to PRO-5, PRO-7, PRO-8; PRO-6 todo until the answer-key clips): style, athleticism, estimated DUPR with calibration fit, Claude card with template fallback; /player (scene 2) with Join calling sessions.signUp, /player/compare (scene 4).
+- 2026-11-07 2.1 (partial): Gemini assessment with rubric, schema check and one retry (VIS-4), cache (VIS-6), measured stats from tracks (VIS-2, VIS-3, VIS-5), combine to ClipStats (VIS-1), detection adapter on Ultralytics (untested). Waiting on clips and the Gemini key.
 - 2026-11-07 0.1, 0.2: npm workspace (app, packages, fixtures), shared types, Claude and Gemini fakes, crimsonhacks port in packages/ui, lane stubs, Next.js app with /, /dashboard, /phone, /player, Python vision stub, 18-player demo roster with the scene 4 group, sample clip stats.
 - 2026-11-06 docs: no real messaging (fake phone only), YouTube clips instead of filming, mirror rule and tempo preference in matching (030, 020), second-brain edits go straight to main.
 
