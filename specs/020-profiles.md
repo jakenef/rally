@@ -28,11 +28,12 @@ type Profile = {
   style: Style;
   skill: { mu: number; sigma: number };  // 2.0..6.0 scale
   skillSource: "dupr" | "video" | "self" | "games";
+  tempo: "soft" | "fast" | "any";        // the game they want; player picks it, default "any"
   card?: { headline: string; tip: string };  // from Claude
 };
 function buildProfile(input: {
   playerId: string; name: string;
-  stats?: PlayerStats; dupr?: number; selfRating?: number;
+  stats?: PlayerStats; dupr?: number; selfRating?: number; tempo?: "soft" | "fast" | "any";
 }): Profile;
 ```
 
@@ -40,7 +41,8 @@ function buildProfile(input: {
 
 1. Style comes from stats: `kitchen = kitchenLineShare`, `power = drives / (drives + dinks)` (0.5 if no shot labels), `mobility` and `readiness` scaled to 0..1.
 2. Skill: DUPR if given (sigma 0.25); else a video estimate blended with self-rating (sigma 0.6); else self-rating alone (sigma 0.8).
-3. The card is written by Claude from the style and skill range. Without Claude, a template writes it.
+3. Tempo is the player's own choice at sign-up ("I want a soft game", "I like it fast", "Either"). It is never inferred from video, because style and preference aren't the same thing.
+4. The card is written by Claude from the style and skill range. Without Claude, a template writes it.
 
 ## Acceptance criteria
 
@@ -48,6 +50,7 @@ function buildProfile(input: {
 - **PRO-2** Given only stats, then sigma is at least 0.5 and the card shows a range, not a single number.
 - **PRO-3** Every style value is between 0 and 1.
 - **PRO-4** Without Claude credentials, a template card is produced.
+- **PRO-5** Tempo defaults to `any` and only changes when the player sets it.
 
 ## Open questions
 

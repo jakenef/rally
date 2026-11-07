@@ -38,6 +38,7 @@ We haven't found a public DUPR API. In the demo, the DUPR lookup is mocked; the 
 ## Judge questions
 
 - **"Isn't this just DUPR?"** DUPR is the rating. We're what happens at the facility at 7pm, and we use DUPR as an input.
-- **"Why not just sort by rating?"** Show two courts with the same average rating: one scores 52 for fairness, the other 91.
+- **"Why not just sort by rating?"** Show the same four players two ways: bangers vs. dinkers scores 52, mirrored teams score 91 (scene 4).
+- **"Is there research on play styles?"** Not good research; coaching advice disagrees on partners. That's why Rally applies only the rule players agree on (mirror the teams) and learns the rest from results. See `research/play-styles.md`.
 - **"Could DUPR build this?"** Their customer is the player, ours is the facility. Facilities already pay for booking software; we're the part they'd pay for on top.
 - **"How accurate is your video rating?"** It's a starting point with a confidence level. Real results take over after one session.

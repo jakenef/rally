@@ -3,6 +3,5 @@
 Each has a default we build until it's answered.
 
 - Which license does Pickleball-Vision use? **Default:** treat as all rights reserved until checked; keep our code in separate files.
-- Where do we film demo clips? **Default:** a local court tonight; public match footage as backup.
+- Which YouTube clips? **Default:** fixed-camera rec play filmed from behind the baseline, with the level in the title; listed in `demo/clips.md`.
 - Does DUPR have a partner API we could get? **Default:** mocked lookup.
-- Text or voice for backfill in the demo? **Default:** text (Twilio test or a fake phone screen); voice is a stretch.

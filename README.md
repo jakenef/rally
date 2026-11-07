@@ -15,7 +15,7 @@ Built for the Utah hackathon (Best Commerce Project track), November 2026. This 
 | `meeting-recordings/` | Recordings, transcripts and notes from our meetings and calls |
 | `specs/` | Module specs for the product. Spec first, then code. Start at `specs/README.md` |
 | `product/` | The code, the build plan (`BUILD.md`) and the judgment calls we made (`DECISIONS.md`) |
-| `demo/` | Demo flows, the stage script, and demo clips (videos stay out of git) |
+| `demo/` | Demo scenes and options, the stage script, and the list of YouTube clips (videos stay out of git) |
 | `brand-assets/` | Logo, colors, screenshots for the pitch |
 
 ## Start here
