@@ -95,14 +95,16 @@ class FakeGemini:
 
 
 def load_api_key() -> str | None:
-    """GEMINI_API_KEY from the environment, else from product/.env.local."""
+    """GEMINI_API_KEY from the environment, else from product/.env.local, else product/.env."""
     if os.environ.get("GEMINI_API_KEY"):
         return os.environ["GEMINI_API_KEY"]
-    env = Path(__file__).resolve().parents[2] / ".env.local"
-    if env.exists():
+    product = Path(__file__).resolve().parents[2]
+    for env in (product / ".env.local", product / ".env"):
+        if not env.exists():
+            continue
         for line in env.read_text().splitlines():
             k, _, v = line.partition("=")
-            if k.strip() == "GEMINI_API_KEY" and v.strip():
+            if k.strip().removeprefix("export ").strip() == "GEMINI_API_KEY" and v.strip():
                 return v.strip().strip('"').strip("'")
     return None
 

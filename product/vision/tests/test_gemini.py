@@ -83,3 +83,17 @@ def test_VIS_1_build_refuses_stats_without_a_selected_player(tmp_path):
 def test_the_sample_fixture_is_valid_clip_stats():
     sample = json.loads((clips.CLIPS_DIR.parent / "sample-stats.json").read_text())
     assert validate_clip_stats(sample) == []
+
+
+def test_api_key_is_read_from_env_local_or_env(tmp_path, monkeypatch):
+    from rally_vision import gemini
+
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    fake_module = tmp_path / "product" / "vision" / "rally_vision" / "gemini.py"
+    fake_module.parent.mkdir(parents=True)
+    monkeypatch.setattr(gemini, "__file__", str(fake_module))
+    assert gemini.load_api_key() is None
+    (tmp_path / "product" / ".env").write_text('GEMINI_API_KEY="from-env"\n')
+    assert gemini.load_api_key() == "from-env"
+    (tmp_path / "product" / ".env.local").write_text("GEMINI_API_KEY=from-local\n")
+    assert gemini.load_api_key() == "from-local"
