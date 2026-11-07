@@ -25,7 +25,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 - [ ] **1.4 Dashboard** (scenes 1 and 3): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
 
 ### Step 2: The player (demo)
-- [ ] **2.1 Vision** (`010`, VIS-1 to VIS-5). Fork Pickleball-Vision, run it on the YouTube clips in `demo/clips.md`, cache the JSON in `fixtures/`.
+- [ ] **2.1 Vision** (`010`, VIS-1 to VIS-5). Fork Pickleball-Vision, run it on the YouTube clips the team lists in `demo/clips.md`, cache the JSON in `fixtures/`.
 - [ ] **2.2 Profiles** (`020`, PRO-1 to PRO-5) and the player card screen (scene 2), plus the side-by-side style cards (scene 4).
 
 ### Step 3: Polish (stretch)

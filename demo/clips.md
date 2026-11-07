@@ -1,6 +1,6 @@
 # Demo clips
 
-Public YouTube rec-play videos we use in the demo. Add one row per clip.
+Public YouTube rec-play videos we use in the demo. **Jake and his teammate find the clips** and add one row per clip (link, level, which players to use). The coding agent takes it from there: it runs the vision pipeline on each clip and caches the stats in `product/fixtures/`.
 
 What makes a good clip:
 - Fixed camera, filmed from behind the baseline, whole court visible. No pro broadcasts (camera cuts and zooms break court mapping).
