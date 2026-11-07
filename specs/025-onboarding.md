@@ -47,7 +47,7 @@ type Result = {
   videoUrl: string;
   overlayUrl: string | null;
   offsetSec: number;          // subtract from shot times to get video time
-  shots: ShotEvent[];          // from 010
+  events: ShotEvent[];         // from 010
   profile: Profile;            // with card, written in the second person
   credit?: string;             // channel, for prepared clips
 };

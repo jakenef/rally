@@ -50,7 +50,7 @@ type GeminiAssessment = {
   resetsUnderPressure: number;        // soft blocks of hard balls
   levelEstimate: { low: number; high: number };  // 2.0..6.0, from the rubric
   reasons: string[];                  // what it saw, quoted on the player card
-  shots?: ShotEvent[];               // each shot the player hit, with its time (VIS-7)
+  events?: ShotEvent[];              // each shot the player hit, with its time (VIS-7)
 };
 type ShotEvent = {
   t: number;                          // seconds on the video's own timeline
