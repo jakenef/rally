@@ -75,3 +75,5 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 
 - 1.4 Dashboard: integrated Danny's approved facility → court → player preview into /dashboard using the active Overtime system. The real matching engine supplies assignments; demo reset restores the seed-42 fixture layout. Three.js and fonts are bundled locally. Power changes the ball stripe width; kitchen tendency changes printed pattern density; these are visual encodings, not new ratings. Danny explicitly requested the slow bobbing and hover glow/lift.
 - 1.4 Scope: this increment is the requested matching frontend only. Cancellations, backfill, and phone wiring remain pending; do not mark the whole Dashboard build step complete. Renderer cleanup releases GPU resources and animation on navigation.
+
+- 2026-11-06 Danny approved one strongest-style accessory per player (power paddle, kitchen chef hat, mobility sneakers, readiness headband) plus skill badge. Strongest-stat ties use that order; stars are illustrative tiers 1–5 derived from round(skill - 1), with numerical skill alongside. Rally animation follows real matching assignments; it does not alter matching logic.
