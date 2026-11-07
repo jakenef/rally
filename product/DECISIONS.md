@@ -22,6 +22,10 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 
 ## Build
 
+- 050 FILL-1: rank replacements in the exact vacated team/seat using matching.fairness; do not reshuffle the other three players or other courts. Pass the displayed courts as an optional fourth argument to rankWaitlist; its original three-argument interface derives matching's default pre-cancellation assignment. Exclude candidates outside session skill limits; tied scores keep waitlist order.
+- 050 FILL-2/FILL-4: backfill shares the Sessions store through cancelSignUp/promoteWaitlisted, supports one vacancy chain per session, and records replies so repeated clicks cannot advance twice or double-count revenue. Declines stay on the waitlist but are skipped for this vacancy. An exhausted/empty waitlist leaves the spot open. No expiry, messaging or payment flow. Recovered revenue is only the displayed-price demo metric.
+- 050 demo: /phone runs a resettable browser-local copy of the real demo roster and matching assignment, with cancellation, ranked offers, Accept/Decline, court updates and recovered revenue. Sharing this state with the full dashboard/player screen remains step 1.4. The stored departing ID is a seat marker while vacancy is open; the UI renders it as Open spot and hides that court's fairness until filled.
+
 - 010: we don't fork Pickleball-Vision, because it has no licence file; `detect.py` uses Ultralytics YOLO pose and ByteTrack directly (AGPL-3.0, fine for a public repo).
 - 010: Gemini model is `gemini-3.8-flash` (stable, video input; checked 2026-11-07), through the Interactions API with the YouTube link. Custom fps is documented only for uploaded files, so the adapter tries `fps: 5` and falls back to default sampling if refused.
 - 010: the pipeline caches three files per clip in `fixtures/clips/` (`.gemini.json`, `.measured.json`, final `.json`), so the measured half can be written by hand if detection fails, and Gemini is never called twice for a clip.

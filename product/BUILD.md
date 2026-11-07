@@ -21,7 +21,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 ### Step 1: The engine (demo) — Facility lane, Danny
 - [x] **1.1 Matching** (`030`, MATCH-1, MATCH-3 to MATCH-7). MATCH-2 benching deferred at Danny's request; full groups of four only.
 - [x] **1.2 Sessions** (`040`, SESS-1, SESS-2): sign-ups, skill limits and waitlist only. Payments and pricing rules cut from demo scope by Danny.
-- [ ] **1.3 Backfill** (`050`, FILL-1, FILL-2, FILL-4), offers on the on-screen fake phone.
+- [x] **1.3 Backfill** (`050`, FILL-1, FILL-2, FILL-4), offers on the on-screen fake phone at `/phone`; full dashboard wiring remains 1.4.
 - [ ] **1.4 Dashboard** (scenes 1 and 3): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
 
 ### Step 2: The player (demo) — AI lane, Jake
@@ -51,6 +51,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 ## Log
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
+
+- 2026-11-06 1.3: best-fit waitlist scoring through matching, cancellation/promotion in the same Sessions store, sequential fake-phone offers, Accept/Decline and recovered-revenue metric; /phone scene 3 verified in browser, acceptance tests and TypeScript pass (FILL-1, FILL-2, FILL-4). No payment flow.
 
 - 2026-11-06 1.2: demo-only in-memory sessions, capacity/waitlist and inclusive skill restrictions; acceptance tests and TypeScript checks pass (SESS-1, SESS-2). Payments and pricing/rule parsing cut, per Danny. UI wiring remains step 1.4.
 
