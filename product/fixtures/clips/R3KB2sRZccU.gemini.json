@@ -1,0 +1,32 @@
+{
+  "clipId": "R3KB2sRZccU",
+  "source": "https://www.youtube.com/watch?v=R3KB2sRZccU",
+  "player": "camera side, closest to the camera: gray t-shirt, dark green shorts, neon green shoes",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "windowSec": 180,
+  "assessment": {
+    "shots": {
+      "dink": 4,
+      "drive": 3,
+      "drop": 0,
+      "lob": 0,
+      "volley": 5,
+      "serve": 2,
+      "return": 3
+    },
+    "thirdShotDropShare": 0.0,
+    "unforcedErrors": 1,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.5,
+      "high": 4.0
+    },
+    "reasons": [
+      "Consistently hits deep, reliable serves and returns that allow him to take control of rallies.",
+      "Moves cleanly to the kitchen line after hitting returns of serve.",
+      "Capitalizes decisively on high balls with controlled overhead smashes and punch volleys.",
+      "Maintains good patience and low error rates, committing only one unforced error on an aggressive speedup."
+    ]
+  }
+}

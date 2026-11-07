@@ -1,0 +1,39 @@
+{
+  "clipId": "b2Pzi5_dBGg",
+  "source": "https://www.youtube.com/watch?v=b2Pzi5_dBGg",
+  "durationSec": 180.0,
+  "players": [
+    {
+      "trackId": 0,
+      "selected": true,
+      "measured": false,
+      "watched": {
+        "shots": {
+          "dink": 4,
+          "drive": 0,
+          "drop": 2,
+          "lob": 0,
+          "volley": 2,
+          "serve": 2,
+          "return": 4
+        },
+        "thirdShotDropShare": 1.0,
+        "unforcedErrors": 3,
+        "resetsUnderPressure": 0,
+        "levelEstimate": {
+          "low": 3.5,
+          "high": 4.0
+        },
+        "reasons": [
+          "Executes a clean, controlled third-shot drop from transition to advance up to the kitchen line.",
+          "Consistently follows deep returns of serve by transitioning directly up to the non-volley zone line.",
+          "Shows good anticipation and overhead put-away power to finish a high pop-up.",
+          "Commits unforced errors on routine dinks into the net, showing occasional lapses in consistency."
+        ]
+      }
+    }
+  ],
+  "channel": "The Pickleball Pirates",
+  "labeledLevel": 5.0,
+  "startSec": 0.0
+}

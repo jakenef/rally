@@ -1,0 +1,32 @@
+{
+  "clipId": "u6dqN2ReoOo",
+  "source": "https://www.youtube.com/watch?v=u6dqN2ReoOo",
+  "player": "near side: white graphic t-shirt, black shorts",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "windowSec": 180,
+  "assessment": {
+    "shots": {
+      "dink": 5,
+      "drive": 1,
+      "drop": 2,
+      "lob": 0,
+      "volley": 0,
+      "serve": 2,
+      "return": 1
+    },
+    "thirdShotDropShare": 0.67,
+    "unforcedErrors": 1,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.5,
+      "high": 4.0
+    },
+    "reasons": [
+      "Consistently gets up to the kitchen line quickly following deep serves and returns.",
+      "Shows good touch on third-shot drops and cross-court dinking, sustaining controlled rallies at the kitchen.",
+      "Committed an unforced error dumping a low ball into the net when trying to push the pace.",
+      "Demonstrates solid ready positioning and partner communication typical of the 3.5 to 4.0 range."
+    ]
+  }
+}

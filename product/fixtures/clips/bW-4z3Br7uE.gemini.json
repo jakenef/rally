@@ -1,0 +1,31 @@
+{
+  "clipId": "bW-4z3Br7uE",
+  "source": "https://www.youtube.com/watch?v=bW-4z3Br7uE",
+  "player": "near side: tan t-shirt, gray shorts",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "windowSec": 180,
+  "assessment": {
+    "shots": {
+      "dink": 17,
+      "drive": 3,
+      "drop": 0,
+      "lob": 0,
+      "volley": 1,
+      "serve": 2,
+      "return": 2
+    },
+    "thirdShotDropShare": null,
+    "unforcedErrors": 2,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.5,
+      "high": 4.0
+    },
+    "reasons": [
+      "Demonstrates solid patience and consistency at the kitchen line, comfortably sustaining extended dink rallies from both the forehand and backhand wings.",
+      "Moves up to the non-volley line promptly and reliably after hitting deep returns.",
+      "Occasionally attacks balls that are too low off the bounce, resulting in unforced errors into the net."
+    ]
+  }
+}

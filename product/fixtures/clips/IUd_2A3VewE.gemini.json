@@ -1,0 +1,32 @@
+{
+  "clipId": "IUd_2A3VewE",
+  "source": "https://www.youtube.com/watch?v=IUd_2A3VewE",
+  "player": "near side, left: white t-shirt, white cap, khaki shorts",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "windowSec": 180,
+  "assessment": {
+    "shots": {
+      "dink": 20,
+      "drive": 2,
+      "drop": 7,
+      "lob": 0,
+      "volley": 1,
+      "serve": 1,
+      "return": 5
+    },
+    "thirdShotDropShare": 1.0,
+    "unforcedErrors": 3,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 4.0,
+      "high": 4.5
+    },
+    "reasons": [
+      "Consistently executes third-shot drops with great touch, landing all attempted drops into the kitchen and advancing cleanly to the NVZ line.",
+      "Shows patience and solid balance in sustained crosscourt and middle dink exchanges.",
+      "Displays quick hands at the kitchen line, executing a sharp counter-volley winner off an incoming speed-up.",
+      "Commits only a couple of unforced errors when rushing drives from the transition zone."
+    ]
+  }
+}

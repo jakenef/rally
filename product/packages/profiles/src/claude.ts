@@ -15,8 +15,8 @@ const CardSchema = z.object({
 
 const SYSTEM = `You write player cards for Rally, an app that builds balanced pickleball sessions.
 Voice: short declaratives, the sport's own words (kitchen, dink, third-shot drop, reset), no emoji, no exclamation marks.
-The headline starts with the estimated DUPR range exactly as given, then athleticism, then one phrase on play style, joined with " · ".
-Reasons: two or three short sentences, each based only on what the coach observed. Never invent observations.
+The headline starts with the estimated DUPR range exactly as given, then athleticism only if a number is given, then one phrase on play style, joined with " · ". Never describe anything you weren't given.
+Reasons: two or three short sentences, each based only on what the coach observed. Never invent observations; if no observations are given, return an empty reasons list.
 Tip: one sentence, the single most useful thing this player could work on.
 The estimate is a range, never a single number, and it is labeled "Estimated DUPR".`;
 

@@ -100,7 +100,11 @@ def validate_clip_stats(c) -> list[str]:
     if not isinstance(players, list) or not players:
         return errs + ["players must be a non-empty list"]
     for i, p in enumerate(players):
+        if not isinstance(p.get("trackId"), int):
+            errs.append(f"players[{i}].trackId must be a whole number")
         for k, t in PLAYER_FIELDS.items():
+            if p.get("measured") is False and k != "trackId" and k not in p:
+                continue  # only Gemini watched this clip: measured fields are absent
             v = p.get(k)
             ok = isinstance(v, int) and not isinstance(v, bool) if t is int else _num(v)
             if not ok:
@@ -110,6 +114,9 @@ def validate_clip_stats(c) -> list[str]:
                 errs.append(f"players[{i}].{k} must be 0..1")
         if "watched" in p:
             errs += [f"players[{i}].watched: {e}" for e in validate_assessment(p["watched"])]
+    for k, kind in (("channel", str), ("labeledLevel", (int, float)), ("startSec", (int, float)), ("scene4", bool)):
+        if k in c and not isinstance(c[k], kind):
+            errs.append(f"{k} has the wrong type")
     if sum(1 for p in players if p.get("selected")) != 1:
         errs.append("exactly one player must be selected")
     return errs

@@ -32,7 +32,10 @@ def get_or_assess(client: GeminiClient, clip_id: str, source: str, player: str, 
     if path.exists() and not refresh:
         return json.loads(path.read_text())["assessment"]
     assessment = assess(client, source, player, **kw)
-    _write(path, {"clipId": clip_id, "source": source, "player": player, "assessment": assessment})
+    meta = {k: getattr(client, k) for k in ("used_model", "used_processing") if getattr(client, k, None) is not None}
+    window = kw.get("end_sec") - kw.get("start_sec") if kw.get("end_sec") is not None and kw.get("start_sec") is not None else None
+    _write(path, {"clipId": clip_id, "source": source, "player": player, **meta,
+                  **({"windowSec": window} if window else {}), "assessment": assessment})
     return assessment
 
 
@@ -42,17 +45,31 @@ def save_measured(clip_id: str, source: str, duration_sec: float, players: list[
     return path
 
 
-def build_clip(clip_id: str, *, base: Path = CLIPS_DIR) -> dict:
-    """Combine measured players and Gemini's assessment into the final ClipStats, and write it."""
-    measured = json.loads(_path(clip_id, "measured", base).read_text())
+def build_clip(clip_id: str, *, base: Path = CLIPS_DIR, meta: dict | None = None) -> dict:
+    """Combine measured players and Gemini's assessment into the final ClipStats, and write it.
+
+    Without a measured file (court mapping wasn't possible), the clip has one player: the one
+    Gemini graded, marked `measured: false`. `meta` adds channel, labeledLevel, startSec and
+    scene4 from demo/clips.md.
+    """
+    measured_path = _path(clip_id, "measured", base)
     gemini_path = _path(clip_id, "gemini", base)
-    players = [dict(p) for p in measured["players"]]
-    if gemini_path.exists():
-        watched = json.loads(gemini_path.read_text())["assessment"]
+    gemini = json.loads(gemini_path.read_text()) if gemini_path.exists() else None
+    if measured_path.exists():
+        measured = json.loads(measured_path.read_text())
+        players = [dict(p) for p in measured["players"]]
+        source, duration = measured["source"], measured["durationSec"]
+    elif gemini:
+        players = [{"trackId": 0, "selected": True, "measured": False}]
+        source, duration = gemini["source"], float(gemini.get("windowSec", 60))
+    else:
+        raise FileNotFoundError(f"{clip_id}: no measured or Gemini results yet")
+    if gemini:
         for p in players:
             if p.get("selected"):
-                p["watched"] = watched
-    stats = {"clipId": clip_id, "source": measured["source"], "durationSec": measured["durationSec"], "players": players}
+                p["watched"] = gemini["assessment"]
+    stats = {"clipId": clip_id, "source": source, "durationSec": duration, "players": players,
+             **{k: v for k, v in (meta or {}).items() if v is not None}}
     problems = validate_clip_stats(stats)
     if problems:
         raise ValueError(f"{clip_id}: " + "; ".join(problems))

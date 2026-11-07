@@ -19,3 +19,16 @@ def test_parse_time_takes_seconds_or_minutes():
 def test_assess_command_parses():
     args = build_parser().parse_args(["assess", "c1", "https://youtu.be/x", "--player", "near left", "--start", "0:30"])
     assert (args.cmd, args.clip_id, args.player, args.start, args.fps) == ("assess", "c1", "near left", 30, 5)
+
+
+def test_reads_the_clips_table(tmp_path):
+    from rally_vision.__main__ import read_clips_table
+
+    md = tmp_path / "clips.md"
+    md.write_text(
+        "| Clip | Channel | Labeled level | Players we use | Start time | Used in |\n| --- | --- | --- | --- | --- | --- |\n"
+        "| [abc](https://www.youtube.com/watch?v=abc) | Chan | 4.5+ | near side: red shirt | 1:15 | answer key |\n"
+    )
+    [row] = read_clips_table(md)
+    assert row == {"clipId": "abc", "source": "https://www.youtube.com/watch?v=abc", "channel": "Chan", "level": 4.5,
+                   "player": "near side: red shirt", "start": 75.0, "usedIn": "answer key"}

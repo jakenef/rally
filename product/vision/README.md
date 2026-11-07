@@ -15,6 +15,21 @@ python3 -m venv .venv
 
 Put `GEMINI_API_KEY=...` in `product/.env` or `product/.env.local` (both gitignored). Override the model with `GEMINI_MODEL`.
 
+## All clips at once
+
+```sh
+.venv/bin/python -m rally_vision assess-all          # every row in demo/clips.md not cached yet, with [n/N] progress
+.venv/bin/python -m rally_vision assess-all --only abc123 --refresh
+```
+
+About 25 seconds per clip when Gemini is healthy. Results are cached in `fixtures/clips/<id>.gemini.json`, so the demo never waits.
+
+Then build the clip files the app reads (works from Gemini alone when there's no measured file):
+
+```sh
+.venv/bin/python -m rally_vision build-all
+```
+
 ## Per clip (from `demo/clips.md`)
 
 ```sh
