@@ -13,7 +13,7 @@ python3 -m venv .venv
 .venv/bin/pytest
 ```
 
-Put `GEMINI_API_KEY=...` in `product/.env.local` (gitignored). Override the model with `GEMINI_MODEL`.
+Put `GEMINI_API_KEY=...` in `product/.env` or `product/.env.local` (both gitignored). Override the model with `GEMINI_MODEL`.
 
 ## Per clip (from `demo/clips.md`)
 
