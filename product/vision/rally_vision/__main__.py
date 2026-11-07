@@ -127,7 +127,7 @@ def assess_all(args) -> int:
     from .gemini import RealGemini
 
     rows = [r for r in read_clips_table() if not args.only or r["clipId"] in args.only]
-    gemini = RealGemini()
+    gemini = None
     done = failed = 0
     began = time.monotonic()
     for i, r in enumerate(rows, 1):
@@ -140,6 +140,8 @@ def assess_all(args) -> int:
         print(f"{tag}: Gemini is watching ({r['player']})", flush=True)
         t = time.monotonic()
         try:
+            if gemini is None:
+                gemini = RealGemini()
             a = clips.get_or_assess(gemini, r["clipId"], r["source"], r["player"], refresh=args.refresh,
                                     start_sec=r["start"], end_sec=r["start"] + 60)
             lvl = a["levelEstimate"]
