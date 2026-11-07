@@ -1,6 +1,6 @@
 # Overtime
 
-Rally's active visual language. Black, crimson, athletic type, useful information.
+Rally's active visual language. Black, white outlines, crimson actions, athletic type, useful information.
 The name belongs in the design docs, not in the app's navigation or marketing copy.
 
 ## Source of truth
@@ -22,9 +22,17 @@ Always start with `surface` (#080808), including when the OS prefers light mode.
 Use neutral charcoal for cards and wells. No brown, maroon, pink-tinted grounds,
 light sections, gradients, or shadows. Separate areas with hairlines and spacing.
 
-`crimson` is the sole accent. Use it for the primary action, large headline
-accents, and data marks. For small red text or focus rings use `crimson-text` for
-contrast. Text on red uses `on-crimson`. `ch-night` remains black, not burgundy.
+Display accents use black `accent-fill` (#080808) with an `accent-outline`
+(#F5F5F5) stroke. Use `size-accent-stroke` to scale the stroke from 1px to 2px
+with the type. This applies to headline accents, prominent rating text, and the
+opposing Mona Sans marquee row. Browsers without text-stroke support use solid
+white. Small text, hover boundaries, and keyboard focus use solid white for
+legibility; the legacy `crimson-text` and `night-crimson-text` tokens now resolve
+to white. Never use the former pale red (#FF5267).
+
+`crimson` remains the primary action fill and color for data marks, matching the
+reference's red buttons and stat bars. Text on red uses `on-crimson`.
+`ch-night` remains black, not burgundy.
 
 ## Type
 
@@ -32,15 +40,15 @@ contrast. Text on red uses `on-crimson`. `ch-night` remains black, not burgundy.
   tracking (-0.035 to -0.04em) and close leading. Do not synthesize bold.
 - **Mona Sans, 400–800:** body, navigation, controls, metadata. Use 400 for body,
   500 for labels, 600 for controls. Keep body readable and calmer than headings.
-- Headlines use `Headline`; mark red words with `{ text: "court time.", accent: true }`.
+- Headlines use `Headline`; mark outlined words with `{ text: "court time.", accent: true }`.
 - `serif` props and `--font-serif` are legacy compatibility aliases. They no
   longer load or render a serif. New code uses `accent`.
 
 The opposing marquee rows intentionally use different typefaces: white Anton
-moving left and red Mona Sans moving right. Keep the original short slogans,
+moving left and black-filled, white-outline Mona Sans moving right. Keep the original short slogans,
 "Same rating, different game." and "Mirror the teams."
-The red row uses `crimson`, matching the main headline and primary action; reserve
-the lighter `crimson-text` for small text and focus indicators.
+The outlined row uses the same fill and stroke as headline accents; keep its
+distinct Mona Sans font and opposite direction.
 
 ## Copy and composition
 

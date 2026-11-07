@@ -11,7 +11,6 @@
 .rl-section { padding: var(--space-xlarge) var(--space-container); }
 .rl-hero { min-height: min(720px, calc(100svh - 80px)); display: grid; align-items: center; padding: 64px var(--space-container) 72px; }
 .rl-hero-content { display: grid; gap: 32px; width: 100%; max-width: 1320px; margin: auto; }
-.rl-hero .ch-hl-accent { color: var(--crimson); }
 .rl-slogans { padding: 38px 0 48px; border-top: 1px solid var(--line); }
 .rl-body-lg { font-size: 20px; line-height: 25px; color: var(--ink-muted); max-width: 46ch; margin: 0; }
 .rl-body { font-size: 16px; line-height: 22px; color: var(--ink-muted); margin: 0; }

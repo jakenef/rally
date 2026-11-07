@@ -11,10 +11,12 @@
   --perforation: #262626;
   --crimson: #e5112d;
   --crimson-deep: #bd0e25;
-  --crimson-text: #ff5267;
+  --accent-fill: #080808;
+  --accent-outline: #f5f5f5;
+  --crimson-text: #f5f5f5;
   --on-crimson: #ffffff;
   --paper: #ffffff;
-  --focus: var(--crimson-text);
+  --focus: var(--accent-outline);
   --night: #080808;
   --night-raised: #141414;
   --night-ink: #f5f5f3;
@@ -22,7 +24,7 @@
   --night-ink-faint: #949494;
   --night-line: #686868;
   --night-perforation: #262626;
-  --night-crimson-text: #ff5267;
+  --night-crimson-text: #f5f5f5;
   --font-display: "Anton", Impact, "Arial Narrow", sans-serif;
   --font-sans: "Mona Sans", Arial, sans-serif;
   --font-accent: "Mona Sans", Arial, sans-serif;
@@ -39,6 +41,7 @@
   --radius-small: 2px;
   --radius-med: 4px;
   --radius-large: 8px;
+  --size-accent-stroke: clamp(1px, 0.018em, 2px);
   --size-control: 48px;
   --size-tagbar-w: 24px;
   --size-tagbar-h: 3px;

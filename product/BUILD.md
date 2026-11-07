@@ -34,6 +34,9 @@ Work through this list one step at a time, top to bottom (or take the step you w
 - [ ] **2.3 Get your rating** (`025`, ONB-1 to ONB-6; `010` VIS-7 to VIS-9). Upload, pick yourself, analyzing, your card with shot callouts, hidden demo controls. AI.
 - [x] **3.3 Accuracy chart** (scene 5): chart labeled level against estimated range for the calibration clips from 2.2. AI.
 
+### Requested presentation changes
+- [x] **White-outline accents.** Replace pale-red display accents with black fill and #F5F5F5 outlines across shared UI and the site; white small-text/focus accents, crimson actions/data retained. Presentation only.
+
 ## Checkpoints
 
 1. **Base layer merged** (step 0): split into lanes.
@@ -52,6 +55,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 ## Log
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
+
+- 2026-11-06 requested white-outline accents: Overtime tokens, shared headline/marquee, homepage, and prominent rating text updated; 37 tests, type checks, and production build pass. Browser preview unavailable. Presentation only; no feature criteria changed.
 
 - 2026-11-06 requested logo update: canonical supplied artwork in shared Logo/Wordmark, site navigation, phone, and browser/touch icons; original image preserved, responsive presentation checked. Presentation only.
 

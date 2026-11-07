@@ -22,3 +22,8 @@ Edit tokens in `brand-assets/overtime/tokens.json`, then run `npm run tokens`
 from `product/`. `styles/tokens.css` is generated. `ch-*` classes and older
 `serif` props remain compatibility aliases for screens being built in both lanes.
 Neither alias enables the archived palette or old font.
+
+Display accents use a black fill with a `#F5F5F5` outline, including headline
+parts and the opposing marquee row. Small accent text and focus rings are white;
+crimson stays on primary actions and data marks. Use `accent-fill`,
+`accent-outline`, and `size-accent-stroke` for prominent custom numbers.
