@@ -540,3 +540,11 @@
     padding-left: 7px;
   }
 }
+
+.facility-shuffling .facility-court-hit {
+  cursor: progress;
+}
+.dashboard-note {
+  max-width: 100%;
+  line-height: 1.7;
+}

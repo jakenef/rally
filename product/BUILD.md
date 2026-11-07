@@ -31,7 +31,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 ### Step 3: Polish (stretch)
 - [ ] **3.1 Ratings** (`060`, RATE-1 to RATE-3). Facility.
 - [ ] **3.2 Holy War Night** (bonus scene). Facility.
-- [ ] **2.3 Get your rating** (`025`, ONB-1 to ONB-6; `010` VIS-7 to VIS-9). Upload, pick yourself, analyzing, your card with shot callouts, hidden demo controls. AI.
+- [x] **2.3 Get your rating** (`025`, ONB-1 to ONB-6; `010` VIS-7 to VIS-9). Upload, pick yourself, analyzing, your card with shot callouts, hidden demo controls. AI.
 - [x] **3.3 Accuracy chart** (scene 5): chart labeled level against estimated range for the calibration clips from 2.2. AI.
 
 ### Requested presentation changes
@@ -68,6 +68,7 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 requested Overtime rebrand: active tokens, shared components and local fonts, minimal homepage with original pickleball texture and opposing two-font marquee, concise app screens, updated brand/agent guidance; alternative previews retired. Presentation change only; no feature criteria changed.
 
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
+- 2026-11-07 2.3: get your rating (ONB-1 to ONB-6, VIS-7 to VIS-9): drop a video, pick yourself in the paused video, live progress for tracking and Gemini (about a minute), YOUR card with shot callouts and counts, join with name and tempo; hidden demo controls (D key). 9 clips regraded with timed shot events.
 - 2026-11-07 2.1 overlay: YOLO + ByteTrack player boxes on the local clips, graded player followed by position and clothing; /player plays the local clip with the boxes (scene 2), YouTube embed otherwise.
 - 2026-11-07 2.2: shift calibration scored leave-one-out (PRO-6), Gemini-only clips, 3-minute windows, evidence rule; /player/accuracy (scene 5). Corrected error 0.62 vs 0.81 raw; see research/gemini-accuracy.md.
 - 2026-11-07 2.1: Gemini graded all 9 clips (about 25s each at 5 fps). Raw midpoint error 0.89, consistently low (mean -0.83); correlation with labels 0.44. assess-all command with progress; retries, timeouts and model fallback.
@@ -85,3 +86,7 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 requested facility reference styling: continuous 3D plaza, benches, bleachers, planters, shelter, crimson practical lighting and court labels; screenshot comparison caught and corrected court-base occlusion and oversized labels. Existing court/player drilldown retained.
 
 - 2026-11-06 1.4 requested planter cleanup: removed the red spike foliage from all four facility planters.
+
+- 2026-11-06 1.4 requested character demo: strongest-style 3D accessories, rating/star badges, identity-preserving Rally shuffle into actual assignments, staggered fairness reveal, and immediate reduced-motion fallback.
+
+- 2026-11-06 1.4 requested closer facility framing: moved the overview camera about 10% closer while preserving responsive fitting and court/player zoom positions.

@@ -16,6 +16,19 @@ export type GeminiAssessment = {
   levelEstimate: { low: number; high: number };
   /** What it saw, quoted on the player card. */
   reasons: string[];
+  /** Each shot the player hit, with its time on the video's own timeline (010 VIS-7). */
+  events?: ShotEvent[];
+};
+
+export type ShotKind = ShotType | "reset" | "speedup" | "putaway" | "error";
+
+/** One shot Gemini saw the graded player hit (010). */
+export type ShotEvent = {
+  /** Seconds on the video's own timeline. */
+  t: number;
+  shot: ShotKind;
+  /** A short callout, 1 to 3 words: "Third-shot drop". */
+  label: string;
 };
 
 /** The numbers measured locally from tracking (010). */

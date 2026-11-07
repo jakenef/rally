@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { Court, Profile } from "@rally/types";
 export type FacilityController = {
-  setCourts(courts: Court[]): void;
+  setCourts(courts: Court[], animate?: boolean): Promise<void>;
   dispose(): void;
 };
 type View = "facility" | "court" | "player";
@@ -155,6 +155,7 @@ export function mountFacility(
     lift: number;
   }[] = [];
   let figures: {
+    id: string;
     group: THREE.Group;
     ring: THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
     glow: THREE.Sprite;
@@ -174,7 +175,26 @@ export function mountFacility(
     lastFocus: HTMLElement | undefined,
     animation = 0,
     disposed = false;
+  let shuffle:
+    | {
+        started: number;
+        starts: Map<string, THREE.Vector3>;
+        oldScores: number[];
+        complete: () => void;
+      }
+    | undefined;
   const observers: ResizeObserver[] = [];
+  function playstyle(p: Profile) {
+    const styles = [
+      ["power", "Power hitter"],
+      ["kitchen", "Kitchen specialist"],
+      ["mobility", "High mobility"],
+      ["readiness", "High readiness"],
+    ] as const;
+    return styles.reduce((best, candidate) =>
+      p.style[candidate[0]] > p.style[best[0]] ? candidate : best,
+    );
+  }
   const origins = [
     [-12.2, -7],
     [12.2, -7],
@@ -188,6 +208,7 @@ export function mountFacility(
     [5.5, 2.5],
   ];
   function setView(next: View, c = courtIndex, p = playerIndex) {
+    if (shuffle && next !== "facility") return;
     if (level === "facility" && next !== "facility")
       lastFocus =
         document.activeElement instanceof HTMLElement
@@ -236,7 +257,7 @@ export function mountFacility(
   function renderProfile() {
     const p = profiles.get(assignments[courtIndex].teams.flat()[playerIndex])!;
     const jersey = `${playerIndex < 2 ? "A" : "B"}${(playerIndex % 2) + 1}`;
-    profile.innerHTML = `<div class="eyebrow">Court ${courtIndex + 1} / Team ${playerIndex < 2 ? "A · crimson" : "B · paper"}</div><h2 class="ch-hl ch-hl-h2">${escape(p.name)}</h2><div class="signature-meta">${jersey} · Skill ${p.skill.mu.toFixed(1)} · ${escape(p.tempo)} tempo</div><div class="signature-stats">${(
+    profile.innerHTML = `<div class="eyebrow">Court ${courtIndex + 1} / Team ${playerIndex < 2 ? "A · crimson" : "B · paper"}</div><h2 class="ch-hl ch-hl-h2">${escape(p.name)}</h2><div class="signature-meta">${jersey} · Skill ${p.skill.mu.toFixed(1)} · ${escape(playstyle(p)[1])} · ${escape(p.tempo)} tempo</div><div class="signature-stats">${(
       [
         ["Power", p.style.power],
         ["Kitchen tendency", p.style.kitchen],
@@ -291,12 +312,174 @@ export function mountFacility(
       }
     }
   });
+  function addAccessories(group: THREE.Group, p: Profile) {
+    const kind = playstyle(p)[0];
+    const paper = new THREE.MeshStandardMaterial({
+      color: token("--paper"),
+      roughness: 0.55,
+    });
+    const ink = new THREE.MeshStandardMaterial({
+      color: token("--line"),
+      roughness: 0.6,
+    });
+    const crimson = new THREE.MeshStandardMaterial({
+      color: token("--crimson"),
+      roughness: 0.5,
+    });
+    const kit = new THREE.Group();
+    // Counter the ball tilt so hats, shoes and the badge stay upright.
+    kit.quaternion.copy(group.quaternion).invert();
+    group.add(kit);
+    const add = (
+      geo: THREE.BufferGeometry,
+      material: THREE.Material,
+      x: number,
+      y: number,
+      z: number,
+    ) => {
+      const mesh = new THREE.Mesh(geo, material);
+      mesh.position.set(x, y, z);
+      kit.add(mesh);
+      return mesh;
+    };
+    if (kind === "power") {
+      const paddle = new THREE.Group();
+      paddle.position.set(0.75, 0.2, -0.2);
+      paddle.rotation.z = -0.45;
+      kit.add(paddle);
+      const face = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.48, 0.48, 0.14, 32),
+        ink,
+      );
+      face.rotation.x = Math.PI / 2;
+      face.scale.y = 1.2;
+      face.position.y = 0.55;
+      paddle.add(face);
+      const inset = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.38, 0.38, 0.16, 32),
+        paper,
+      );
+      inset.rotation.x = Math.PI / 2;
+      inset.position.y = 0.55;
+      paddle.add(inset);
+      const grip = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.1, 0.1, 0.7, 12),
+        crimson,
+      );
+      grip.position.y = -0.1;
+      paddle.add(grip);
+    } else if (kind === "kitchen") {
+      add(new THREE.CylinderGeometry(0.51, 0.51, 0.35, 24), paper, 0, 0.9, 0);
+      for (const [x, y, z] of [
+        [-0.28, 1.2, 0],
+        [0.28, 1.2, 0],
+        [0, 1.4, 0],
+        [0, 1.2, 0.25],
+      ])
+        add(new THREE.SphereGeometry(0.37, 16, 12), paper, x, y, z);
+      add(
+        new THREE.CylinderGeometry(0.52, 0.52, 0.09, 24),
+        crimson,
+        0,
+        0.76,
+        0,
+      );
+    } else if (kind === "mobility") {
+      for (const x of [-0.48, 0.48]) {
+        const shoe = add(
+          new THREE.SphereGeometry(1, 20, 12),
+          paper,
+          x,
+          -0.7,
+          0.3,
+        );
+        shoe.scale.set(0.32, 0.23, 0.6);
+        add(new THREE.BoxGeometry(0.56, 0.1, 0.95), crimson, x, -0.87, 0.3);
+        for (let k = 0; k < 3; k++)
+          add(
+            new THREE.BoxGeometry(0.28, 0.04, 0.035),
+            ink,
+            x,
+            -0.48,
+            0.2 + k * 0.14,
+          );
+      }
+    } else {
+      const band = add(
+        new THREE.TorusGeometry(0.77, 0.11, 8, 40),
+        paper,
+        0,
+        0.32,
+        0,
+      );
+      band.rotation.x = Math.PI / 2;
+      const knot = add(
+        new THREE.SphereGeometry(0.15, 12, 8),
+        crimson,
+        0.77,
+        0.3,
+        0,
+      );
+      for (const turn of [-0.3, 0.4]) {
+        const tail = add(
+          new THREE.BoxGeometry(0.16, 0.5, 0.06),
+          paper,
+          0.9,
+          0.05,
+          0,
+        );
+        tail.rotation.z = turn;
+      }
+      knot.scale.setScalar(1);
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = 384;
+    canvas.height = 96;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = token("--surface");
+    ctx.beginPath();
+    ctx.roundRect(2, 2, 380, 92, 22);
+    ctx.fill();
+    ctx.strokeStyle = token("--line-strong");
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    const stars = Math.max(1, Math.min(5, Math.round(p.skill.mu - 1)));
+    ctx.fillStyle = token("--paper");
+    ctx.font = "600 32px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("★".repeat(stars) + "  ·  " + p.skill.mu.toFixed(1), 192, 60);
+    const badge = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: new THREE.CanvasTexture(canvas),
+        transparent: true,
+        depthWrite: false,
+      }),
+    );
+    badge.material.map!.colorSpace = THREE.SRGBColorSpace;
+    badge.position.set(0, kind === "kitchen" ? 2.15 : 1.65, 0);
+    badge.scale.set(2.7, 0.675, 1);
+    kit.add(badge);
+    // Dispose materials unused by a particular accessory as well.
+    const used = new Set<THREE.Material>();
+    kit.traverse((o) => {
+      if (o instanceof THREE.Mesh) used.add(o.material as THREE.Material);
+    });
+    for (const material of [paper, ink, crimson])
+      if (!used.has(material)) material.dispose();
+  }
   function rebuildPlayers() {
     if (!renderer) return;
     figures.forEach((f) => {
       f.group.parent?.remove(f.group);
       f.ring.parent?.remove(f.ring);
       f.group.traverse((o) => {
+        if (
+          o instanceof THREE.Mesh &&
+          o.geometry !== pickleGeometry?.outer &&
+          o.geometry !== pickleGeometry?.inner &&
+          o.geometry !== pickleGeometry?.walls
+        )
+          o.geometry.dispose();
         if (o instanceof THREE.Mesh || o instanceof THREE.Sprite) {
           if (o instanceof THREE.Mesh || o instanceof THREE.Sprite) {
             const materials = Array.isArray(o.material)
@@ -357,6 +540,7 @@ export function mountFacility(
           ),
           emissiveIntensity: 0,
         });
+        addAccessories(group, p);
         const shell = new THREE.Mesh(geometry.outer, m);
         shell.castShadow = false;
         shell.receiveShadow = true;
@@ -441,7 +625,16 @@ export function mountFacility(
         contactShadow.rotation.x = -Math.PI / 2;
         contactShadow.position.set(0, -1.28, 0);
         group.add(contactShadow);
-        figures.push({ group, ring, glow, material: m, c, pIndex, lift: 0 });
+        figures.push({
+          id,
+          group,
+          ring,
+          glow,
+          material: m,
+          c,
+          pIndex,
+          lift: 0,
+        });
         const label = document.createElement("button");
         label.type = "button";
         label.className = "facility-player-hit";
@@ -485,6 +678,7 @@ export function mountFacility(
     if (!renderer) return;
     courtButtons.forEach((button, i) => {
       button.hidden = level !== "facility";
+      button.disabled = !!shuffle;
       if (button.hidden) return;
       const [x, z] = origins[i];
       const corners = [
@@ -522,7 +716,7 @@ export function mountFacility(
   if (THREE) {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(42, 1, 0.1, 250);
-    camera.position.set(0, 43, 37);
+    camera.position.set(0, 38.1, 33);
     try {
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     } catch (error) {
@@ -770,7 +964,9 @@ export function mountFacility(
         add(
           new THREE.BoxGeometry(20, 0.07, 9.09),
           mat("--crimson-deep", {
-            color: new THREE.Color(token("--crimson-deep")).multiplyScalar(0.65),
+            color: new THREE.Color(token("--crimson-deep")).multiplyScalar(
+              0.65,
+            ),
             roughness: 1,
           }),
           0,
@@ -865,7 +1061,7 @@ export function mountFacility(
         const speed = reduce.matches ? 1 : 1 - Math.exp(-dt * 4.5);
         const [ox, oz] = origins[courtIndex];
         if (level === "facility") {
-          const fit = 1.15 * Math.max(1, 1.85 / camera.aspect);
+          const fit = 1.03 * Math.max(1, 1.85 / camera.aspect);
           desiredCamera.set(0, 37 * fit, 32 * fit);
           desiredLook.set(0, 0, 0);
         } else if (level === "court") {
@@ -887,7 +1083,39 @@ export function mountFacility(
           g.root.position.y = g.lift;
           g.outline.material.opacity = hover ? 1 : 0;
         });
-        figures.forEach((f) => {
+        const progress = shuffle
+          ? Math.min(1, (time - shuffle.started) / 3600)
+          : 1;
+        const ease = (v: number) => {
+          const t = THREE.MathUtils.clamp(v, 0, 1);
+          return t * t * (3 - 2 * t);
+        };
+        figures.forEach((f, index) => {
+          if (shuffle) {
+            const start = shuffle.starts.get(f.id)!;
+            const [cx, cz] = origins[f.c];
+            const [px, pz] = playerPositions[f.pIndex];
+            const destination = new THREE.Vector3(cx + px, 1.35, cz + pz);
+            const angle =
+              (index / figures.length) * Math.PI * 2 +
+              ease(progress / 0.6) * Math.PI * 1.5;
+            const orbit = new THREE.Vector3(
+              Math.cos(angle) * 9,
+              5.5 + (index % 3) * 0.8,
+              Math.sin(angle) * 4.5,
+            );
+            if (progress < 0.55)
+              f.group.position.lerpVectors(start, orbit, ease(progress / 0.3));
+            else {
+              const arrival = ease((progress - 0.55 - f.c * 0.04) / 0.33);
+              f.group.position.lerpVectors(orbit, destination, arrival);
+              f.group.position.y += Math.sin(arrival * Math.PI) * 2;
+            }
+            f.group.rotation.y += dt * (1 - ease((progress - 0.55) / 0.35)) * 2;
+            f.glow.material.opacity = Math.sin(progress * Math.PI) * 0.35;
+            f.ring.visible = false;
+            return;
+          }
           const hovered =
             level === "court" && f.c === courtIndex && hoverPlayer === f.pIndex;
           f.lift +=
@@ -906,6 +1134,31 @@ export function mountFacility(
             f.c === courtIndex &&
             f.pIndex === playerIndex;
         });
+        if (shuffle) {
+          courtButtons.forEach((button, i) => {
+            const t = ease((progress - 0.65 - i * 0.04) / 0.2);
+            const score = THREE.MathUtils.lerp(
+              shuffle!.oldScores[i],
+              assignments[i].fairness,
+              t,
+            );
+            button.querySelector(
+              ".facility-court-tag span:last-child",
+            )!.textContent = `Fairness ${score.toFixed(0)}`;
+          });
+          if (progress === 1) {
+            figures.forEach((f) => {
+              groups[f.c].root.attach(f.group);
+              const [x, z] = playerPositions[f.pIndex];
+              f.group.position.set(x, 1.35, z);
+              f.group.rotation.set(0.3, f.pIndex * 0.6, 0.2);
+            });
+            const complete = shuffle.complete;
+            shuffle = undefined;
+            stage.classList.remove("facility-shuffling");
+            complete();
+          }
+        }
         renderer!.render(scene, camera);
         updateLabels();
         animation = requestAnimationFrame(frame);
@@ -920,13 +1173,33 @@ export function mountFacility(
   }
 
   return {
-    setCourts(courts: Court[]) {
+    async setCourts(courts: Court[], animate = false) {
+      shuffle?.complete();
+      shuffle = undefined;
+      const starts = new Map(
+        figures.map((f) => [
+          f.id,
+          f.group.getWorldPosition(new THREE.Vector3()),
+        ]),
+      );
+      const oldScores = assignments.map((c) => c.fairness);
       assignments = courts;
       setView("facility");
       rebuildPlayers();
+      if (!animate || reduce.matches || !renderer) return;
+      await new Promise<void>((complete) => {
+        shuffle = { started: performance.now(), starts, oldScores, complete };
+        figures.forEach((f) => {
+          scene.attach(f.group);
+          f.group.position.copy(starts.get(f.id)!);
+        });
+        stage.classList.add("facility-shuffling");
+      });
     },
     dispose() {
       disposed = true;
+      shuffle?.complete();
+      shuffle = undefined;
       cancelAnimationFrame(animation);
       observers.forEach((observer) => observer.disconnect());
       document.body.classList.remove("facility-focus-open");

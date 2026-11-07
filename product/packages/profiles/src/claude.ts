@@ -33,10 +33,17 @@ function prompt({ profile, watched }: CardRequest): string {
     .join("\n");
 }
 
-/** A CardWriter backed by Claude, or undefined when there's no ANTHROPIC_API_KEY (the template is used then). */
-export function claudeCardWriter(apiKey = process.env.ANTHROPIC_API_KEY): CardWriter | undefined {
+const YOU = `
+Write to the player directly, in the second person (you, your): "You get to the kitchen line after every return." The tip is advice to them: "Hold your drive from the transition zone."`;
+
+/**
+ * A CardWriter backed by Claude, or undefined when there's no ANTHROPIC_API_KEY (the template is used then).
+ * `voice: "you"` writes the card to the player themselves (025 onboarding).
+ */
+export function claudeCardWriter(apiKey = process.env.ANTHROPIC_API_KEY, voice: "you" | "third" = "third"): CardWriter | undefined {
   if (!apiKey) return undefined;
   const client = new Anthropic({ apiKey });
+  const system = voice === "you" ? SYSTEM + YOU : SYSTEM;
   return async (req) => {
     const response = await client.beta.messages.parse({
       model: MODEL,
@@ -44,7 +51,7 @@ export function claudeCardWriter(apiKey = process.env.ANTHROPIC_API_KEY): CardWr
       // On a safety decline the API retries on a fallback model inside the same call.
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      system: SYSTEM,
+      system,
       messages: [{ role: "user", content: prompt(req) }],
       output_config: { effort: "low", format: zodOutputFormat(CardSchema) },
     });
