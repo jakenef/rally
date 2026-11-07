@@ -77,6 +77,15 @@ def build_parser() -> argparse.ArgumentParser:
     o.add_argument("--refresh", action="store_true", help="Redo clips that already have an overlay")
     o.add_argument("--refollow", action="store_true", help="Only redo following the graded player on saved boxes (fast)")
 
+    pl = sub.add_parser("players", help="People on one frame of a video, as JSON (025 pick yourself)")
+    pl.add_argument("video")
+    pl.add_argument("--t", type=float, default=2.0, help="Seconds into the video")
+
+    an = sub.add_parser("analyze", help="Track and grade the picked player in an uploaded clip (025)")
+    an.add_argument("job_dir")
+    an.add_argument("--t", type=float, required=True, help="When the player was picked, seconds")
+    an.add_argument("--box", required=True, help="The picked box, x1,y1,x2,y2 in 0..1")
+
     b = sub.add_parser("build", help="Combine into the ClipStats the app reads")
     b.add_argument("clip_id")
     sub.add_parser("build-all", help="Build every clip in demo/clips.md that Gemini has graded")
@@ -95,6 +104,25 @@ def main(argv: list[str] | None = None) -> int:
                                      fps=args.fps, start_sec=args.start, end_sec=end)
         print(json.dumps(result, indent=2))
         return 0
+    if args.cmd == "players":
+        from pathlib import Path
+
+        from .job import players_on_frame, video_info
+
+        try:
+            info = video_info(Path(args.video))
+            out = players_on_frame(Path(args.video), min(args.t, max(info["durationSec"] - 0.5, 0)))
+            print(json.dumps({**out, "durationSec": info["durationSec"], "width": info["width"], "height": info["height"]}))
+            return 0
+        except ValueError as e:
+            print(json.dumps({"error": str(e)}))
+            return 1
+    if args.cmd == "analyze":
+        from pathlib import Path
+
+        from .job import run_analyze
+
+        return run_analyze(Path(args.job_dir), args.t, [float(v) for v in args.box.split(",")])
     if args.cmd == "overlay-all":
         return overlay_all(args)
     if args.cmd == "assess-all":

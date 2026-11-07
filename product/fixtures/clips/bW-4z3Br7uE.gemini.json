@@ -4,28 +4,155 @@
   "player": "near side: tan t-shirt, gray shorts",
   "used_model": "gemini-3.8-flash",
   "used_processing": true,
-  "windowSec": 180,
+  "windowSec": 180.0,
   "assessment": {
     "shots": {
-      "dink": 17,
-      "drive": 3,
-      "drop": 0,
+      "dink": 9,
+      "drive": 0,
+      "drop": 2,
       "lob": 0,
-      "volley": 1,
+      "volley": 9,
       "serve": 2,
-      "return": 2
+      "return": 3
     },
-    "thirdShotDropShare": null,
-    "unforcedErrors": 2,
+    "thirdShotDropShare": 1.0,
+    "unforcedErrors": 0,
     "resetsUnderPressure": 0,
     "levelEstimate": {
-      "low": 3.5,
-      "high": 4.0
+      "low": 4.0,
+      "high": 4.5
     },
     "reasons": [
-      "Demonstrates solid patience and consistency at the kitchen line, comfortably sustaining extended dink rallies from both the forehand and backhand wings.",
-      "Moves up to the non-volley line promptly and reliably after hitting deep returns.",
-      "Occasionally attacks balls that are too low off the bounce, resulting in unforced errors into the net."
+      "Demonstrated excellent touch on third-shot drops, reliably dropping into the kitchen to advance forward.",
+      "Maintained patience and consistency throughout extended dink exchanges with sound footwork.",
+      "Showed fast paddle preparation and reliable hands at the kitchen line, committing zero unforced errors."
+    ],
+    "events": [
+      {
+        "t": 107.8,
+        "shot": "serve",
+        "label": "Deep serve"
+      },
+      {
+        "t": 110.4,
+        "shot": "drop",
+        "label": "Third-shot drop"
+      },
+      {
+        "t": 130.2,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 132.8,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 156.0,
+        "shot": "volley",
+        "label": "Backhand volley"
+      },
+      {
+        "t": 163.8,
+        "shot": "serve",
+        "label": "Deep serve"
+      },
+      {
+        "t": 168.4,
+        "shot": "drop",
+        "label": "Third-shot drop"
+      },
+      {
+        "t": 170.2,
+        "shot": "volley",
+        "label": "Volley dink"
+      },
+      {
+        "t": 173.0,
+        "shot": "volley",
+        "label": "Backhand volley"
+      },
+      {
+        "t": 177.0,
+        "shot": "volley",
+        "label": "Punch volley"
+      },
+      {
+        "t": 196.2,
+        "shot": "dink",
+        "label": "Crosscourt dink"
+      },
+      {
+        "t": 198.8,
+        "shot": "dink",
+        "label": "Backhand dink"
+      },
+      {
+        "t": 200.8,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 202.8,
+        "shot": "dink",
+        "label": "Patient dink"
+      },
+      {
+        "t": 203.6,
+        "shot": "volley",
+        "label": "Volley dink"
+      },
+      {
+        "t": 205.6,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 218.2,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 236.2,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 238.0,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 239.0,
+        "shot": "volley",
+        "label": "Volley push"
+      },
+      {
+        "t": 242.4,
+        "shot": "volley",
+        "label": "Quick reaction"
+      },
+      {
+        "t": 243.2,
+        "shot": "putaway",
+        "label": "Overhead smash"
+      },
+      {
+        "t": 248.2,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 252.0,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 254.2,
+        "shot": "volley",
+        "label": "Backhand volley"
+      }
     ]
   }
 }

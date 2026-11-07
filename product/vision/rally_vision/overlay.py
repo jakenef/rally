@@ -33,8 +33,10 @@ def _device() -> str:
         return "cpu"
 
 
-def track_boxes(video: Path, select_px: tuple[float, float], select_at_sec: float = 10.0) -> dict:
-    """Boxes per sampled frame, plus which track is the graded player (nearest select_px at select_at_sec)."""
+def track_boxes(video: Path, select_px: tuple[float, float], select_at_sec: float = 10.0, *,
+                max_sec: float | None = None, progress=None) -> dict:
+    """Boxes per sampled frame, plus which track is the graded player (nearest select_px at select_at_sec).
+    `max_sec` stops after that much video; `progress(fraction)` is called as tracking goes."""
     import cv2
     from ultralytics import YOLO
 
@@ -50,9 +52,14 @@ def track_boxes(video: Path, select_px: tuple[float, float], select_at_sec: floa
     frames: list[list] = []
     started = time.monotonic()
     log(f"tracking {total} frames ({total / fps:.0f}s at {fps:.0f} fps) on {device}, every {STRIDE}nd frame")
+    limit = min(total, int(max_sec * fps)) if max_sec else total
     for i, result in enumerate(model.track(source=str(video), tracker="bytetrack.yaml", stream=True, verbose=False,
                                            classes=[0], vid_stride=STRIDE, device=device, persist=True)):
         t = round(i * STRIDE / fps, 3)
+        if max_sec and t > max_sec:
+            break
+        if progress and i % 15 == 0:
+            progress(min(i * STRIDE / max(limit, 1), 1.0))
         boxes = []
         if result.boxes is not None and result.boxes.id is not None:
             for tid, (x1, y1, x2, y2) in zip(result.boxes.id.int().tolist(), result.boxes.xyxy.tolist()):

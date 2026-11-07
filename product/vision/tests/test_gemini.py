@@ -13,6 +13,7 @@ GOOD = {
     "resetsUnderPressure": 2,
     "levelEstimate": {"low": 3.5, "high": 4.0},
     "reasons": ["Gets to the kitchen line after every return"],
+    "events": [],
 }
 
 
@@ -108,3 +109,35 @@ def test_build_works_from_gemini_alone_and_adds_clip_metadata(tmp_path):
     assert stats["players"] == [{"trackId": 0, "selected": True, "measured": False, "watched": GOOD}]
     assert (stats["channel"], stats["labeledLevel"], stats["startSec"]) == ("Chan", 4.5, 30)
     assert "scene4" not in stats
+
+
+def test_VIS_7_events_are_cleaned_sorted_and_kept_inside_the_window():
+    from rally_vision.gemini import clean_events
+
+    raw = [
+        {"t": 45.0, "shot": "drop", "label": "Third-shot drop"},
+        {"t": 31.5, "shot": "dink", "label": "Dink"},
+        {"t": 40.0, "shot": "smash", "label": "Smash"},  # not a kind we know
+        {"t": 41.0, "shot": "drive", "label": "A very long callout here"},  # over 3 words
+        {"t": 400.0, "shot": "lob", "label": "Lob"},  # outside the window
+        "nonsense",
+    ]
+    assert clean_events(raw, 30, 90) == [
+        {"t": 31.5, "shot": "dink", "label": "Dink"},
+        {"t": 45.0, "shot": "drop", "label": "Third-shot drop"},
+    ]
+    assert clean_events(None, 0, 60) == []
+
+
+def test_VIS_7_times_counted_from_the_window_start_are_moved_onto_the_video_timeline():
+    from rally_vision.gemini import clean_events
+
+    assert clean_events([{"t": 5.0, "shot": "dink", "label": "Dink"}], 100, 280) == [{"t": 105.0, "shot": "dink", "label": "Dink"}]
+
+
+def test_VIS_8_a_reference_crop_changes_who_the_prompt_asks_about():
+    fake = FakeGemini([json.dumps(GOOD)])
+    assess(fake, "/tmp/upload.mp4", "at 0:12", rubric="r", reference_jpeg=b"jpeg")
+    req = fake.calls[0]
+    assert req.is_local and req.reference_jpeg == b"jpeg"
+    assert "attached image" in req.prompt
