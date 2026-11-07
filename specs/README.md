@@ -19,9 +19,9 @@ New spec: copy `_template.md`, pick the next free number, add it to the map belo
 | [000](000-overview.md) | Overview, glossary, data flow | | |
 | [010](010-vision.md) | `vision`: clip in, per-player stats out | `VIS` | 2.1 |
 | [020](020-profiles.md) | `profiles`: style profile, skill range, player card | `PRO` | 2.2 |
-| [030](030-matching.md) | `matching`: courts and teams, fairness score | `MATCH` | 1.2 |
-| [040](040-sessions.md) | `sessions`: sessions, sign-ups, pricing rules, payment | `SESS` | 1.3 |
-| [050](050-backfill.md) | `backfill`: cancellations, ranked waitlist, offers | `FILL` | 1.4 |
+| [030](030-matching.md) | `matching`: courts and teams, fairness score | `MATCH` | 1.1 |
+| [040](040-sessions.md) | `sessions`: sessions, sign-ups, pricing rules, payment | `SESS` | 1.2 |
+| [050](050-backfill.md) | `backfill`: cancellations, ranked waitlist, offers | `FILL` | 1.3 |
 | [060](060-ratings.md) | `ratings`: OpenSkill updates after games | `RATE` | 3.1 |
 
 ## Data flow

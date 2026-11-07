@@ -2,7 +2,7 @@
 
 Status: Draft
 Prefix: `SESS`
-Step: 1.3
+Step: 1.2
 
 ## Purpose
 

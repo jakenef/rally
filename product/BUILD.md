@@ -19,10 +19,10 @@ Work through this list one step at a time, top to bottom (or take the step you w
 - [ ] **0.2 Demo roster.** `fixtures/roster.json`: 16 to 18 players with names, skill and style chosen so random assignment looks bad and balanced assignment looks good.
 
 ### Step 1: The engine (demo)
-- [ ] **1.2 Matching** (`030`, MATCH-1 to MATCH-6).
-- [ ] **1.3 Sessions** (`040`, SESS-1 to SESS-4), Stripe faked.
-- [ ] **1.4 Backfill** (`050`, FILL-1 to FILL-4), SMS faked.
-- [ ] **1.5 Dashboard** (demo flow B and C): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
+- [ ] **1.1 Matching** (`030`, MATCH-1 to MATCH-6).
+- [ ] **1.2 Sessions** (`040`, SESS-1 to SESS-4), Stripe faked.
+- [ ] **1.3 Backfill** (`050`, FILL-1 to FILL-4), SMS faked.
+- [ ] **1.4 Dashboard** (demo flow B and C): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
 
 ### Step 2: The player (demo)
 - [ ] **2.1 Vision** (`010`, VIS-1 to VIS-4). Fork Pickleball-Vision, run it on our clips, cache the JSON in `fixtures/`.
