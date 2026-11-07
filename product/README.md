@@ -16,7 +16,7 @@ Each path belongs to a lane (`specs/README.md`, Lanes).
 | `packages/ratings/` | 060, TypeScript |
 | `packages/types/` | Shared types from the specs: the contract between lanes |
 | `packages/fakes/` | In-memory fakes for Claude and Gemini, used by tests |
-| `packages/ui/` | The crimsonhacks design system: tokens as CSS variables and React components |
+| `packages/ui/` | The Overtime design system: black/red tokens, Anton and Mona Sans fonts, and shared React components |
 | `vision/` | 010, Python, our fork of Pickleball-Vision |
 | `fixtures/` | `roster.json` (shared), `sample-stats.json`, and `clips/` for cached clip results (AI lane) |
 
@@ -29,7 +29,7 @@ npm install
 npm run dev          # the app at http://localhost:3000
 npm test             # vitest: packages and fixtures
 npm run typecheck    # packages and the app
-npm run tokens       # regenerate packages/ui/styles/tokens.css after re-copying the design system
+npm run tokens       # regenerate shared CSS from brand-assets/overtime/tokens.json
 ```
 
 Python (AI lane), from `product/vision/`: see `vision/README.md`.

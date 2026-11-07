@@ -1,6 +1,6 @@
 // AI lane (Jake). Scene 2, "Video to court": a YouTube rec clip, the player Gemini graded, their card, and Join.
 import { tonight } from "@rally/fixtures";
-import { Button, Caption, Headline } from "@rally/ui";
+import { Button, Headline } from "@rally/ui";
 import { joinSession } from "./actions";
 import { embedUrl, loadClips, profileForClip, selectedPlayer } from "./data";
 import { localVideoPath } from "./local";
@@ -21,10 +21,9 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
 
   return (
     <main className="rl-page">
-      <Caption>{usingSample ? "Sample clip" : "Rec play, from YouTube"}</Caption>
-      <Headline size="h1" parts={["Video to", { text: "court", serif: true }]} />
+      <Headline size="h1" parts={["Video to", { text: "court", accent: true }]} />
       {usingSample ? (
-        <p className="rl-note">No clips processed yet. Showing the sample stats from fixtures; run the vision pipeline on the clips in demo/clips.md.</p>
+        <p className="rl-note">Showing a sample player.</p>
       ) : null}
       {clips.length > 1 ? (
         <nav className="pl-clips" aria-label="Clips">
@@ -45,7 +44,7 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
               {embed ? (
                 <iframe src={embed} title={`Clip ${clip.clipId}`} allow="encrypted-media; picture-in-picture" allowFullScreen />
               ) : (
-                <div className="pl-video-empty">The clip plays here once it has a YouTube link.</div>
+                <div className="pl-video-empty">No video available.</div>
               )}
             </div>
           )}
@@ -56,19 +55,19 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
           </span>
         </div>
         <div style={{ display: "grid", gap: "var(--space-mini)" }}>
-          <PlayerCard profile={profile} title="The player Gemini watched" />
+          <PlayerCard profile={profile} title="Player profile" />
           <form action={joinSession}>
             <input type="hidden" name="clip" value={clip.clipId} />
             <Button type="submit" iconAfter="arrow">
-              Join Tuesday session, ${(tonight.priceCents / 100).toFixed(0)}
+              Join session · ${(tonight.priceCents / 100).toFixed(0)}
             </Button>
           </form>
           <div className="rl-row">
             <Button href="/player/compare" variant="outline">
-              Compare two players
+              Compare players
             </Button>
             <Button href="/player/accuracy" variant="outline">
-              Check the accuracy
+              View accuracy
             </Button>
           </div>
         </div>

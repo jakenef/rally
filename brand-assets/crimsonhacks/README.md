@@ -1,3 +1,6 @@
+> Archived original artifact. Rally now uses [Overtime](../overtime/README.md).
+> This book is historical reference; do not apply its palette or font rules to new screens.
+
 crimsonhacks is red, white and loud: a pickleball identity built on uppercase sans headlines broken by thin serif accent words, a single crimson that does all the shouting, and the hole pattern of a pickleball as its only texture. Keep pages sparse and oversized. One idea per screen, said big.
 
 ## Voice
