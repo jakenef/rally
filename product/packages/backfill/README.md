@@ -18,7 +18,7 @@ if (next) backfill.reply(next.offerId, "yes");
 const { session, courts, recoveredRevenueCents } = backfill.getState(tonight.id);
 ```
 
-The default exported functions share the default `@rally/sessions` store. Seed that Sessions store and call `registerAssignment` before cancelling. Isolated factories let the demo reset without changing fixtures or another session.
+The default exported functions share the default `@rally/sessions` store, which starts with tonight's demo session. Call `registerAssignment` before cancelling. Isolated factories let the demo reset without changing fixtures or another session.
 
 `rankWaitlist(session, leaving, profiles, courts?)` is pure. Pass the displayed courts: each candidate replaces the departing player in exactly the same team/seat, scored by the matching module's `fairness`. The three-argument spec interface uses matching's default assignment of the pre-cancellation roster. Candidates outside skill limits are excluded. Scores sort descending; ties preserve waitlist order.
 

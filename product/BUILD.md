@@ -57,6 +57,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
+- 2026-11-06 integration: combined Sessions and Backfill, default-session QA, current facility dashboard, video-upload onboarding, offline-cache QA, and selective crimson/outline styling under Danny's explicit merge-everything request. Preserved live onboarding over the older player page and kept both cache/job tests. 51 Vitest tests, 31 Python tests, TypeScript and production build pass.
+
 - 2026-11-06 1.3: best-fit waitlist scoring through matching, cancellation/promotion in the same Sessions store, sequential fake-phone offers, Accept/Decline and recovered-revenue metric; /phone scene 3 verified in browser, acceptance tests and TypeScript pass (FILL-1, FILL-2, FILL-4). No payment flow.
 
 - 2026-11-06 1.2: demo-only in-memory sessions, capacity/waitlist and inclusive skill restrictions; acceptance tests and TypeScript checks pass (SESS-1, SESS-2). Payments and pricing/rule parsing cut, per Danny. UI wiring remains step 1.4.
