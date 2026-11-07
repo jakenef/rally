@@ -113,3 +113,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 facility playstyle markers: reuse card icons beside every overview ball, following players through Rally reassignment. Inspected pre/post-Rally screenshots in Chrome; TypeScript and production build pass.
 
 - 2026-11-06 1.4 requested icon/skill matching: star tiers beneath overview icons, shared card/marker stars, and exhaustive icon-aware court assignments that retain tempo constraints and optimize skill fairness. 58 tests, TypeScript, production build, and pre/post-Rally Chrome screenshots pass. Exact pairs for the odd-count demo roster await profile-adjustment choice.
+
+- 2026-11-06 1.4 requested mixed-to-tiered demo: session lineup starts with mixed skills, then the real matcher produces full 5-, 3-, 2-, and 1-star courts with exact mirrored icons and compatible tempo. Cards and stars use the same demo profiles. 61 tests, TypeScript, production build pass; pre/post-Rally screenshots inspected in Chrome on localhost:3000.

@@ -23,3 +23,5 @@ Cards follow projected ball positions in separated team/row regions, clearing bo
 Facility overview shows a compact playstyle marker beside every ball, reusing the exact icon drawing used by the player cards. Markers follow their players throughout Rally reassignment, remain a stable readable screen size, and disappear in court/player views. Their texture/material resources follow the existing player disposal lifecycle.
 
 Overview markers show skill stars directly beneath each icon, using the same tier calculation and drawing as the cards. Rally assignments align matching icons in opposing team rows wherever roster counts and tempo allow, then optimize numeric skill fairness. Odd style counts can require unmatched rows; profiles remain unchanged unless the demo roster is explicitly adjusted.
+
+The session presentation uses demo-lineup.ts for four players each at 1, 2, 3, and 5 stars. Baseline/reset mixes the same players using seed 42; the real matcher separates them into skill-homogeneous courts with exact opposing icon pairs. Ratings and two style overrides are scoped to this facility demo; original roster fixtures remain unchanged.
