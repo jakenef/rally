@@ -15,9 +15,9 @@ export async function joinSession(formData: FormData) {
   } else {
     try {
       const r = signUp(tonight.id, await profileForClip(clip, clips));
-      result = r.status === "rejected" ? `Not added: ${r.reason}` : r.status === "joined" ? "Joined Tuesday 7 pm." : "On the waitlist for Tuesday 7 pm.";
+      result = r.status === "rejected" ? `Not added: ${r.reason}` : r.status === "joined" ? "Joined session." : "Added to the waitlist.";
     } catch {
-      result = "Sessions aren't built yet (Facility lane, BUILD.md step 1.2). Your profile is ready.";
+      result = "Session unavailable. Your profile is ready.";
     }
   }
   redirect(`/player?clip=${encodeURIComponent(clipId)}&joined=${encodeURIComponent(result)}`);

@@ -1,17 +1,19 @@
-# Brand assets
+# Rally design system: Overtime
 
-Rally uses the **crimsonhacks** design system. The source of truth is Jake's design system artifact, [crimsonhacks](https://claude.ai/artifact/HFPTXMktfVdCmGHA5jpQ9v) (private to Jake). `crimsonhacks/` is a copy of its files, taken 2026-11-07:
+**Overtime is the active system.** Read [overtime/README.md](overtime/README.md)
+before changing a screen. Its source tokens are in
+[overtime/tokens.json](overtime/tokens.json); shared components, CSS, and bundled
+fonts live in `product/packages/ui`.
 
-- `crimsonhacks/README.md`: the brand book (voice, colour, type, texture, layout, motion, icons). **Read this before building any screen.**
-- `crimsonhacks/tokens.json`: every colour, type style, spacing step, radius and size, with usage notes.
-- `crimsonhacks/components/`: the original React components (`bundle.js`, `bundle.css`, `index.d.ts`) and a README per component.
+- Black by default, charcoal surfaces, crimson accents.
+- Anton for display type; Mona Sans for UI and the alternate slogan row.
+- Minimal copy: a clear title, relevant information, and the actions needed.
+- Keep the homepage pickleball pattern and two opposing marquee rows.
+- No decorative locations, dates, badges, filler slogans, or design selectors.
 
-The app doesn't load `bundle.js`. It uses a TypeScript port in `product/packages/ui` (tokens as CSS variables plus the components we need). If the design system changes, re-copy these files and update the port.
+Run `npm run tokens` from `product/` after editing the source tokens. Do not edit
+the generated CSS manually.
 
-## Quick rules for Rally screens
-
-- One brand colour: `crimson`. No second hue (no optic yellow, no court blue or green).
-- Headlines are uppercase Mona Sans; swap one to three words into the Italiana serif in `crimson-text`.
-- Alternate light sections and night sections (`.ch-night`).
-- No emoji, no exclamation marks, no shadows. Buttons start with a verb.
-- Keep it free of BYU and Utah logos and marks; colours and words only.
+`crimsonhacks/` is the archived original source artifact. It is retained for
+reference, especially the pickleball texture and marquee, and is not the active
+palette or typography. Do not copy its bundle over the current UI package.

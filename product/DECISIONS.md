@@ -4,6 +4,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 
 ## Product
 
+- 2026-11-06 Overtime rollout: Jake selected Overtime and authorized the shared rebrand across both lanes. Anton/Mona Sans and neutral black/crimson tokens replace the active crimsonhacks palette; the original artifact remains archived. Keep the original homepage headline, pickleball texture, and opposing two-font slogans, with minimal supporting copy. The four-option design study is retired rather than merged into the app.
+
 - Rally is a hackathon proof of concept: anything the demo doesn't show is faked or left out (see `AGENTS.md`). Dropped SESS-4 (unpaid sign-up timeout) and FILL-3 (offer expiry) for that reason.
 
 - Rally's product is matchmaking, sessions and backfill; the video rating is an input, because DUPR and PB Vision already rate players from video (see `idea/positioning.md`).
@@ -17,6 +19,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 - Gemini is required: it's the only practical way to judge shot quality from video in hours. Local open-source vision (Pickleball-Vision, YOLO, ByteTrack, RTMPose) measures movement; Gemini judges play; 020 combines them into an estimated DUPR range and an athleticism score.
 
 ## Asks
+
+- 2026-11-06 shared design notice for Jake and Danny: the selected Overtime rollout updates `@rally/ui`, the root layout/homepage, and screen presentation only. Keep module interfaces and functional state unchanged. New UI follows `brand-assets/overtime/README.md`; existing `ch-*` classes and `serif` props remain compatible. The rebrand PR carries both lane labels.
 
 Things one lane needs from the other, or from a shared file: `- <date> <who> asks <whom>: ...`.
 

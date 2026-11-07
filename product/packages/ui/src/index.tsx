@@ -1,6 +1,5 @@
-// crimsonhacks components, ported to TypeScript from brand-assets/crimsonhacks/components/bundle.js.
-// Class names and markup match the original, so components.css styles them unchanged.
-// Shared file: tell the other lane before changing it.
+// Rally's Overtime design system. Existing ch-* classes and legacy serif props
+// remain compatible with both lanes; typography and colors come from shared tokens.
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactNode } from "react";
 
 const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
@@ -67,22 +66,24 @@ export function Icon({ name, size = 24, title, className }: { name: IconName; si
 
 // ---------- Wordmark ----------
 
-/** The stacked serif-over-sans mark. Defaults to crimsonhacks; Rally passes its own words. */
+/** Anton wordmark. Legacy word props remain supported for existing callers. */
 export function Wordmark({
-  serif = "Crimson",
-  sans = "Hacks",
+  text,
+  serif = "Rally",
+  sans = "",
   size = "md",
   className,
 }: {
+  text?: string;
   serif?: string;
   sans?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
   return (
-    <span className={cx("ch-wordmark", `ch-wordmark-${size}`, className)} role="img" aria-label={[serif, sans].filter(Boolean).join(" ")}>
-      <span className="ch-wm-serif" aria-hidden="true">
-        {serif}
+    <span className={cx("ch-wordmark", `ch-wordmark-${size}`, className)} role="img" aria-label={[text ?? serif, sans].filter(Boolean).join(" ")}>
+      <span className="ch-wm-display" aria-hidden="true">
+        {text ?? serif}
       </span>
       {sans ? (
         <span className="ch-wm-sans" aria-hidden="true">
@@ -100,7 +101,7 @@ export type ButtonProps =
   | (ButtonBase & { href: string } & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "className" | "children">)
   | (ButtonBase & { href?: undefined } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className" | "children">);
 
-/** 48px uppercase action. Primary once per view. Start the label with a verb. */
+/** 48px action. Use one primary action per view and start labels with a verb. */
 export function Button(props: ButtonProps) {
   const { variant = "primary", icon, iconAfter, children, className, ...rest } = props;
   const inner = (
@@ -127,9 +128,9 @@ export function Button(props: ButtonProps) {
 
 // ---------- Headline ----------
 
-export type HeadlinePart = string | { text: string; serif: true };
+export type HeadlinePart = string | { text: string; accent: true; serif?: never } | { text: string; serif: true; accent?: never };
 
-/** Uppercase sans headline. Swap one to three words into the serif with `parts`. */
+/** Anton headline with optional red accent words. `serif` is a legacy alias. */
 export function Headline({
   size = "h2",
   as,
@@ -152,7 +153,7 @@ export function Headline({
         typeof part === "string" ? (
           part
         ) : (
-          <span key={i} className="ch-hl-serif">
+          <span key={i} className="ch-hl-accent">
             {part.text}
           </span>
         ),
@@ -163,7 +164,7 @@ export function Headline({
 
 // ---------- Caption ----------
 
-/** Crimson tag bar with an uppercase caption. Write captions as PLACE, YEAR. */
+/** Optional tag bar and a concise, useful label. Omit decorative captions. */
 export function Caption({ children, bar = true, className }: { children?: ReactNode; bar?: boolean; className?: string }) {
   return (
     <div className={cx("ch-caption", className)}>
@@ -176,16 +177,16 @@ export function Caption({ children, bar = true, className }: { children?: ReactN
 // ---------- Marquee ----------
 
 /** The one moving piece per page. Stops under prefers-reduced-motion. */
-export function Marquee({ rows, speed = 40, className }: { rows: { text: string; serif?: boolean }[]; speed?: number; className?: string }) {
+export function Marquee({ rows, speed = 40, className }: { rows: { text: string; accent?: boolean; serif?: boolean }[]; speed?: number; className?: string }) {
   return (
     <div
       className={cx("ch-marquee", className)}
       style={{ "--ch-mq-speed": `${speed}s` } as CSSProperties}
-      role="text"
+      role="img"
       aria-label={rows.map((r) => r.text).join(". ")}
     >
       {rows.map((r, i) => (
-        <div key={i} aria-hidden="true" className={cx("ch-mq-row", r.serif ? "ch-mq-serif" : "ch-mq-sans", i % 2 === 1 && "ch-mq-rev")}>
+        <div key={i} aria-hidden="true" className={cx("ch-mq-row", r.accent || r.serif ? "ch-mq-accent" : "ch-mq-display", i % 2 === 1 && "ch-mq-rev")}>
           {[0, 1, 2, 3].map((k) => (
             <span key={k}>{r.text}</span>
           ))}
