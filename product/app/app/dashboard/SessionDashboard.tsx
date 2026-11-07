@@ -105,9 +105,8 @@ export default function SessionDashboard() {
         </p>
       )}
       <p className="dashboard-note">
-        Paddle · power | Chef’s hat · kitchen | Sneakers · mobility | Headband ·
-        readiness. Stars show skill tier; the badge shows the rating. Demo
-        profiles.
+        Enter a court to view player cards. Stars show skill tier; ratings and
+        attributes use demo profiles.
       </p>
       {!toolsOpen && (
         <div className="dashboard-demo-edge">

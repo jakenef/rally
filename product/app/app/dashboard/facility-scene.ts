@@ -291,7 +291,8 @@ export function mountFacility(
       stage.classList.toggle("facility-focused", focused);
       document.body.classList.toggle("facility-focus-open", focused);
       placeholder.hidden = !focused;
-      if (focused && !wasFocused) placeholder.style.height = previousRect.height + "px";
+      if (focused && !wasFocused)
+        placeholder.style.height = previousRect.height + "px";
     }
     stage.classList.toggle("facility-camera-moving", !!cameraMove);
     chrome.hidden = !focused;
@@ -379,162 +380,179 @@ export function mountFacility(
       }
     }
   });
-  function addAccessories(group: THREE.Group, p: Profile) {
-    const kind = playstyle(p)[0];
-    const paper = new THREE.MeshStandardMaterial({
-      color: token("--paper"),
-      roughness: 0.55,
-    });
-    const ink = new THREE.MeshStandardMaterial({
-      color: token("--line"),
-      roughness: 0.6,
-    });
-    const crimson = new THREE.MeshStandardMaterial({
-      color: token("--crimson"),
-      roughness: 0.5,
-    });
-    const kit = new THREE.Group();
-    // Counter the ball tilt so hats, shoes and the badge stay upright.
-    kit.quaternion.copy(group.quaternion).invert();
-    group.add(kit);
-    const add = (
-      geo: THREE.BufferGeometry,
-      material: THREE.Material,
-      x: number,
-      y: number,
-      z: number,
-    ) => {
-      const mesh = new THREE.Mesh(geo, material);
-      mesh.position.set(x, y, z);
-      kit.add(mesh);
-      return mesh;
-    };
-    if (kind === "power") {
-      const paddle = new THREE.Group();
-      paddle.position.set(0.75, 0.2, -0.2);
-      paddle.rotation.z = -0.45;
-      kit.add(paddle);
-      const face = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.48, 0.48, 0.14, 32),
-        ink,
-      );
-      face.rotation.x = Math.PI / 2;
-      face.scale.y = 1.2;
-      face.position.y = 0.55;
-      paddle.add(face);
-      const inset = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.38, 0.38, 0.16, 32),
-        paper,
-      );
-      inset.rotation.x = Math.PI / 2;
-      inset.position.y = 0.55;
-      paddle.add(inset);
-      const grip = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.1, 0.1, 0.7, 12),
-        crimson,
-      );
-      grip.position.y = -0.1;
-      paddle.add(grip);
-    } else if (kind === "kitchen") {
-      add(new THREE.CylinderGeometry(0.51, 0.51, 0.35, 24), paper, 0, 0.9, 0);
-      for (const [x, y, z] of [
-        [-0.28, 1.2, 0],
-        [0.28, 1.2, 0],
-        [0, 1.4, 0],
-        [0, 1.2, 0.25],
-      ])
-        add(new THREE.SphereGeometry(0.37, 16, 12), paper, x, y, z);
-      add(
-        new THREE.CylinderGeometry(0.52, 0.52, 0.09, 24),
-        crimson,
-        0,
-        0.76,
-        0,
-      );
-    } else if (kind === "mobility") {
-      for (const x of [-0.48, 0.48]) {
-        const shoe = add(
-          new THREE.SphereGeometry(1, 20, 12),
-          paper,
-          x,
-          -0.7,
-          0.3,
-        );
-        shoe.scale.set(0.32, 0.23, 0.6);
-        add(new THREE.BoxGeometry(0.56, 0.1, 0.95), crimson, x, -0.87, 0.3);
-        for (let k = 0; k < 3; k++)
-          add(
-            new THREE.BoxGeometry(0.28, 0.04, 0.035),
-            ink,
-            x,
-            -0.48,
-            0.2 + k * 0.14,
-          );
-      }
-    } else {
-      const band = add(
-        new THREE.TorusGeometry(0.77, 0.11, 8, 40),
-        paper,
-        0,
-        0.32,
-        0,
-      );
-      band.rotation.x = Math.PI / 2;
-      const knot = add(
-        new THREE.SphereGeometry(0.15, 12, 8),
-        crimson,
-        0.77,
-        0.3,
-        0,
-      );
-      for (const turn of [-0.3, 0.4]) {
-        const tail = add(
-          new THREE.BoxGeometry(0.16, 0.5, 0.06),
-          paper,
-          0.9,
-          0.05,
-          0,
-        );
-        tail.rotation.z = turn;
-      }
-      knot.scale.setScalar(1);
-    }
+  function addPlayerCard(group: THREE.Group, p: Profile) {
+    const [kind, label] = playstyle(p);
     const canvas = document.createElement("canvas");
-    canvas.width = 384;
-    canvas.height = 96;
+    canvas.width = 640;
+    canvas.height = 800;
     const ctx = canvas.getContext("2d")!;
-    ctx.fillStyle = token("--surface");
-    ctx.beginPath();
-    ctx.roundRect(2, 2, 380, 92, 22);
-    ctx.fill();
+    const paper = token("--paper"),
+      muted = token("--ink-muted"),
+      accent = token("--crimson");
+    const font = token("--font-sans");
+    ctx.fillStyle = token("--surface-raised");
+    ctx.fillRect(0, 0, 640, 800);
     ctx.strokeStyle = token("--line-strong");
     ctx.lineWidth = 3;
-    ctx.stroke();
+    ctx.strokeRect(2, 2, 636, 796);
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, 0, 640, 9);
+    ctx.fillStyle = paper;
+    ctx.font = `600 38px ${font}`;
+    let nameSize = 38;
+    while (ctx.measureText(p.name).width > 552 && nameSize > 22)
+      ctx.font = `600 ${--nameSize}px ${font}`;
+    ctx.fillText(p.name, 44, 72);
+
+    // Flat line icons are printed onto the face of the physical 3D card.
+    ctx.save();
+    ctx.translate(92, 161);
+    ctx.strokeStyle = paper;
+    ctx.fillStyle = paper;
+    ctx.lineWidth = 6;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    if (kind === "power") {
+      ctx.rotate(-0.5);
+      ctx.beginPath();
+      ctx.ellipse(0, -12, 28, 36, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-7, 23);
+      ctx.lineTo(-7, 52);
+      ctx.lineTo(7, 52);
+      ctx.lineTo(7, 23);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-12, -18);
+      ctx.lineTo(12, -18);
+      ctx.moveTo(-12, -4);
+      ctx.lineTo(12, -4);
+      ctx.stroke();
+    } else if (kind === "kitchen") {
+      ctx.beginPath();
+      ctx.moveTo(-28, 10);
+      ctx.bezierCurveTo(-62, 0, -45, -48, -17, -31);
+      ctx.bezierCurveTo(-12, -65, 28, -63, 31, -32);
+      ctx.bezierCurveTo(62, -42, 65, 3, 31, 10);
+      ctx.lineTo(29, 37);
+      ctx.lineTo(-28, 37);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-27, 22);
+      ctx.lineTo(29, 22);
+      ctx.stroke();
+    } else if (kind === "mobility") {
+      ctx.beginPath();
+      ctx.moveTo(-39, -26);
+      ctx.lineTo(-12, -26);
+      ctx.lineTo(1, -5);
+      ctx.lineTo(39, 8);
+      ctx.quadraticCurveTo(49, 12, 46, 31);
+      ctx.lineTo(-43, 31);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-40, 18);
+      ctx.lineTo(45, 18);
+      ctx.moveTo(-8, -8);
+      ctx.lineTo(-17, 3);
+      ctx.moveTo(5, -2);
+      ctx.lineTo(-2, 9);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.ellipse(-4, 0, 40, 23, -0.15, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(33, 0);
+      ctx.lineTo(55, 29);
+      ctx.lineTo(38, 25);
+      ctx.lineTo(42, 45);
+      ctx.lineTo(22, 13);
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.fillStyle = muted;
+    ctx.font = `500 22px ${font}`;
+    ctx.fillText("PLAYSTYLE", 166, 146);
+    ctx.fillStyle = paper;
+    ctx.font = `600 28px ${font}`;
+    ctx.fillText(label, 166, 184);
+    ctx.fillStyle = token("--surface");
+    ctx.fillRect(40, 239, 560, 112);
+    ctx.fillStyle = paper;
+    ctx.font = `600 55px ${font}`;
+    ctx.fillText(p.skill.mu.toFixed(1), 65, 311);
+    ctx.fillStyle = muted;
+    ctx.font = `500 19px ${font}`;
+    ctx.fillText("SKILL", 177, 279);
     const stars = Math.max(1, Math.min(5, Math.round(p.skill.mu - 1)));
-    ctx.fillStyle = token("--paper");
-    ctx.font = "600 32px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("★".repeat(stars) + "  ·  " + p.skill.mu.toFixed(1), 192, 60);
-    const badge = new THREE.Sprite(
-      new THREE.SpriteMaterial({
-        map: new THREE.CanvasTexture(canvas),
-        transparent: true,
-        depthWrite: false,
+    for (let i = 0; i < 5; i++) {
+      ctx.fillStyle = i < stars ? paper : token("--line");
+      ctx.beginPath();
+      for (let j = 0; j < 10; j++) {
+        const angle = -Math.PI / 2 + (j * Math.PI) / 5;
+        const radius = j % 2 ? 8 : 17;
+        const x = 193 + i * 43 + Math.cos(angle) * radius,
+          y = 311 + Math.sin(angle) * radius;
+        if (j === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+    const stats: [string, number][] = [
+      ["Power", p.style.power],
+      ["Kitchen", p.style.kitchen],
+      ["Mobility", p.style.mobility],
+      ["Readiness", p.style.readiness],
+    ];
+    stats.forEach(([name, value], i) => {
+      const y = 402 + i * 87;
+      ctx.fillStyle = muted;
+      ctx.font = `500 25px ${font}`;
+      ctx.textAlign = "left";
+      ctx.fillText(name, 44, y);
+      ctx.fillStyle = paper;
+      ctx.font = `600 27px ${font}`;
+      ctx.textAlign = "right";
+      ctx.fillText(String(Math.round(value * 100)), 596, y);
+      ctx.fillStyle = token("--line");
+      ctx.fillRect(44, y + 19, 552, 8);
+      ctx.fillStyle = accent;
+      ctx.fillRect(44, y + 19, 552 * value, 8);
+    });
+    ctx.textAlign = "left";
+    ctx.fillStyle = muted;
+    ctx.font = `500 20px ${font}`;
+    ctx.fillText(`${p.tempo.toUpperCase()} TEMPO`, 44, 759);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(
+      8,
+      renderer?.capabilities.getMaxAnisotropy() ?? 1,
+    );
+    const card = new THREE.Group();
+    card.name = "player-card";
+    card.visible = false;
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(3.52, 4.4, 0.12),
+      new THREE.MeshStandardMaterial({
+        color: token("--line"),
+        roughness: 0.45,
+        metalness: 0.25,
       }),
     );
-    badge.name = "rating-badge";
-    badge.visible = false;
-    badge.material.map!.colorSpace = THREE.SRGBColorSpace;
-    badge.position.set(0, kind === "kitchen" ? 2.15 : 1.65, 0);
-    badge.scale.set(2.7, 0.675, 1);
-    kit.add(badge);
-    // Dispose materials unused by a particular accessory as well.
-    const used = new Set<THREE.Material>();
-    kit.traverse((o) => {
-      if (o instanceof THREE.Mesh) used.add(o.material as THREE.Material);
-    });
-    for (const material of [paper, ink, crimson])
-      if (!used.has(material)) material.dispose();
+    card.add(body);
+    const face = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.5, 4.375),
+      new THREE.MeshBasicMaterial({ map: texture, toneMapped: false }),
+    );
+    face.position.z = 0.065;
+    card.add(face);
+    group.add(card);
   }
   function rebuildPlayers() {
     if (!renderer) return;
@@ -609,7 +627,7 @@ export function mountFacility(
           ),
           emissiveIntensity: 0,
         });
-        addAccessories(group, p);
+        addPlayerCard(group, p);
         const shell = new THREE.Mesh(geometry.outer, m);
         shell.castShadow = false;
         shell.receiveShadow = true;
@@ -707,7 +725,10 @@ export function mountFacility(
         const label = document.createElement("button");
         label.type = "button";
         label.className = "facility-player-hit";
-        label.setAttribute("aria-label", `Inspect ${p.name}`);
+        label.setAttribute(
+          "aria-label",
+          `Inspect ${p.name}, ${playstyle(p)[1]}, skill ${p.skill.mu.toFixed(1)}, power ${Math.round(p.style.power * 100)}, kitchen ${Math.round(p.style.kitchen * 100)}, mobility ${Math.round(p.style.mobility * 100)}, readiness ${Math.round(p.style.readiness * 100)}`,
+        );
         label.innerHTML = `<span class="player-target"></span><span class="facility-player-name">${escape(p.name)}</span>`;
         label.addEventListener("pointerenter", () => (hoverPlayer = pIndex));
         label.addEventListener("pointerleave", () => (hoverPlayer = null));
@@ -1201,10 +1222,14 @@ export function mountFacility(
           return t * t * (3 - 2 * t);
         };
         figures.forEach((f, index) => {
-          const badge = f.group.getObjectByName("rating-badge");
-          if (badge)
-            badge.visible =
-              level !== "facility" && f.c === courtIndex && !cameraMove;
+          const card = f.group.getObjectByName("player-card");
+          if (card)
+            card.visible =
+              level !== "facility" &&
+              f.c === courtIndex &&
+              !cameraMove &&
+              !shuffle &&
+              (level === "court" || f.pIndex === playerIndex);
           if (shuffle) {
             const start = shuffle.starts.get(f.id)!;
             const [cx, cz] = origins[f.c];
@@ -1241,6 +1266,22 @@ export function mountFacility(
             (reduce.matches
               ? 0
               : Math.sin(time * 0.00085 + f.pIndex * 0.8) * 0.13);
+          if (card?.visible) {
+            const side = level === "player" ? -1 : f.pIndex < 2 ? -1 : 1;
+            const position = f.group.getWorldPosition(new THREE.Vector3());
+            const right = new THREE.Vector3(1, 0, 0).applyQuaternion(
+              camera.quaternion,
+            );
+            position.addScaledVector(right, side * 2.9);
+            position.y += 1.05;
+            card.position.copy(f.group.worldToLocal(position));
+            const parentRotation = f.group.getWorldQuaternion(
+              new THREE.Quaternion(),
+            );
+            card.quaternion
+              .copy(parentRotation.invert())
+              .multiply(camera.quaternion);
+          }
           f.material.emissiveIntensity = f.lift * 0.7;
           f.glow.material.opacity = f.lift * 1.4;
           f.ring.visible =
