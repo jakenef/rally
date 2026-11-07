@@ -8,7 +8,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 2. **Tests carry criterion IDs.** Every criterion in scope gets at least one test whose name starts with its ID. A criterion that needs real video, a real phone or a real model gets a skipped test (`it.todo`) and a line in `DECISIONS.md` saying why.
 3. **Ambiguity:** don't stop and don't edit the spec. Pick the simplest reading, write it in `DECISIONS.md` (`- 030 MATCH-2: ...`), and continue.
 4. **Modules only use each other's exported interface.**
-5. **Everything external sits behind an interface with a fake** in `packages/fakes`: Claude and Gemini. Messages and payments are never real: the on-screen fake phone and a simulated Pay button are the product for the hackathon.
+5. **Everything external sits behind an interface with a fake** in `packages/fakes`: Claude and Gemini. Offers appear on the on-screen fake phone. There is no payment flow, including simulated payments, in the demo.
 6. **The demo is the deadline.** Steps marked (demo) must work before anything marked (stretch).
 7. **Finish a step:** checks pass (see `product/README.md`), tick the box, add one line to the log, commit with the step and criteria in the message, open a small PR and merge it once green (PRs are only there to catch merge conflicts; see `AGENTS.md`, What needs a PR).
 
@@ -20,7 +20,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 ### Step 1: The engine (demo) — Facility lane, Danny
 - [ ] **1.1 Matching** (`030`, MATCH-1 to MATCH-6).
-- [x] **1.2 Sessions** (`040`, SESS-1 to SESS-3), displayed price only; no payment flow.
+- [x] **1.2 Sessions** (`040`, SESS-1, SESS-2): sign-ups, skill limits and waitlist only. Payments and pricing rules cut from demo scope by Danny.
 - [ ] **1.3 Backfill** (`050`, FILL-1, FILL-2, FILL-4), offers on the on-screen fake phone.
 - [ ] **1.4 Dashboard** (scenes 1 and 3): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
 
@@ -52,7 +52,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
-- 2026-11-06 1.2: demo-only in-memory sessions, capacity/waitlist, inclusive skill restrictions, Claude structured rule drafts and explicit owner approval; acceptance tests and TypeScript checks pass (SESS-1 to SESS-3). No payment flow, per Danny. UI wiring remains step 1.4.
+- 2026-11-06 1.2: demo-only in-memory sessions, capacity/waitlist and inclusive skill restrictions; acceptance tests and TypeScript checks pass (SESS-1, SESS-2). Payments and pricing/rule parsing cut, per Danny. UI wiring remains step 1.4.
 
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
 - 2026-11-07 2.1 (partial): Gemini assessment with rubric, schema check and one retry (VIS-4), cache (VIS-6), measured stats from tracks (VIS-2, VIS-3, VIS-5), combine to ClipStats (VIS-1), detection adapter on Ultralytics (untested). Waiting on clips and the Gemini key.

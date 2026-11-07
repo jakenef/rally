@@ -4,7 +4,7 @@ About three minutes on stage. Footage is public YouTube rec play (`clips.md`). N
 
 ## Scenes
 
-**Scene 1: Chaos vs. Rally** (~1 min, no video). The facility dashboard shows tonight's open play with random courts: a strong player stuck with two beginners, a court fairness score of 41. Press **Rally it**: everyone reshuffles onto balanced courts and scores jump to 90+. Then the money: balanced sessions sell at a premium, and the owner types a pricing rule in plain English.
+**Scene 1: Chaos vs. Rally** (~1 min, no video). The facility dashboard shows tonight's open play with random courts: a strong player stuck with two beginners, a court fairness score of 41. Press **Rally it**: everyone reshuffles onto balanced courts and scores jump to 90+. Then show the value: balanced sessions can sell at a premium. Use the fixed demo price; no pricing-rule entry flow.
 
 **Scene 2: Video to court** (~1 min, one YouTube clip). Paste a YouTube link and click one player. Tracking boxes and a court heatmap play over the video (cached), then the player card appears: "3.5 to 4.0, medium confidence · dinker · lives at the kitchen line." Tap **Join Tuesday session** and they land on the right court.
 
