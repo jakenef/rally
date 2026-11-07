@@ -15,7 +15,7 @@
           "lob": 0,
           "volley": 2,
           "serve": 2,
-          "return": 3
+          "return": 1
         },
         "thirdShotDropShare": null,
         "unforcedErrors": 0,
@@ -25,9 +25,41 @@
           "high": 4.0
         },
         "reasons": [
-          "Consistently hit deep returns and immediately transitioned all the way up to the non-volley zone line.",
-          "Demonstrated good composure and paddle-ready positioning at the kitchen line, executing a clean dink and controlling mid-rally volleys.",
-          "Maintained high shot consistency across all her touches without committing any unforced errors."
+          "Advances smoothly to the non-volley zone line following deep returns.",
+          "Shows quick hands at the net, countering a fast speed-up with a compact punch volley.",
+          "Maintains good balance and ready position at the kitchen line throughout rallies."
+        ],
+        "events": [
+          {
+            "t": 11.4,
+            "shot": "dink",
+            "label": "Kitchen dink"
+          },
+          {
+            "t": 24.0,
+            "shot": "serve",
+            "label": "Deep serve"
+          },
+          {
+            "t": 106.0,
+            "shot": "return",
+            "label": "Backhand return"
+          },
+          {
+            "t": 121.0,
+            "shot": "volley",
+            "label": "Controlled volley"
+          },
+          {
+            "t": 123.0,
+            "shot": "volley",
+            "label": "Punch volley"
+          },
+          {
+            "t": 144.4,
+            "shot": "serve",
+            "label": "Clean serve"
+          }
         ]
       }
     }

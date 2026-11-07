@@ -4,29 +4,105 @@
   "player": "near side: white graphic t-shirt, black shorts",
   "used_model": "gemini-3.8-flash",
   "used_processing": true,
-  "windowSec": 180,
+  "windowSec": 180.0,
   "assessment": {
     "shots": {
       "dink": 5,
-      "drive": 1,
-      "drop": 2,
+      "drive": 2,
+      "drop": 1,
       "lob": 0,
-      "volley": 0,
-      "serve": 2,
+      "volley": 1,
+      "serve": 5,
       "return": 1
     },
-    "thirdShotDropShare": 0.67,
-    "unforcedErrors": 1,
+    "thirdShotDropShare": 0.33,
+    "unforcedErrors": 3,
     "resetsUnderPressure": 0,
     "levelEstimate": {
-      "low": 3.5,
-      "high": 4.0
+      "low": 3.0,
+      "high": 3.5
     },
     "reasons": [
-      "Consistently gets up to the kitchen line quickly following deep serves and returns.",
-      "Shows good touch on third-shot drops and cross-court dinking, sustaining controlled rallies at the kitchen.",
-      "Committed an unforced error dumping a low ball into the net when trying to push the pace.",
-      "Demonstrates solid ready positioning and partner communication typical of the 3.5 to 4.0 range."
+      "Understands court positioning well, moving up to the non-volley zone line following deep returns and well-placed drops.",
+      "Can sustain short dink rallies at the kitchen line, though occasionally makes unforced errors into the net.",
+      "Displays mixed third-shot execution, successfully dropping one into the kitchen but netting multiple third-shot drives."
+    ],
+    "events": [
+      {
+        "t": 30.0,
+        "shot": "serve",
+        "label": "Deep serve"
+      },
+      {
+        "t": 32.6,
+        "shot": "drive",
+        "label": "Drive into net"
+      },
+      {
+        "t": 59.6,
+        "shot": "serve",
+        "label": "Underhand serve"
+      },
+      {
+        "t": 76.4,
+        "shot": "dink",
+        "label": "Forehand dink"
+      },
+      {
+        "t": 79.4,
+        "shot": "dink",
+        "label": "Backhand dink"
+      },
+      {
+        "t": 93.0,
+        "shot": "return",
+        "label": "Deep return"
+      },
+      {
+        "t": 95.0,
+        "shot": "dink",
+        "label": "Kitchen dink"
+      },
+      {
+        "t": 97.0,
+        "shot": "dink",
+        "label": "Crosscourt dink"
+      },
+      {
+        "t": 104.6,
+        "shot": "serve",
+        "label": "Inbound serve"
+      },
+      {
+        "t": 107.0,
+        "shot": "drop",
+        "label": "Third-shot drop"
+      },
+      {
+        "t": 110.4,
+        "shot": "dink",
+        "label": "Dink into net"
+      },
+      {
+        "t": 140.8,
+        "shot": "serve",
+        "label": "Forehand serve"
+      },
+      {
+        "t": 144.4,
+        "shot": "drive",
+        "label": "Third-shot drive"
+      },
+      {
+        "t": 192.8,
+        "shot": "serve",
+        "label": "Crosscourt serve"
+      },
+      {
+        "t": 195.6,
+        "shot": "volley",
+        "label": "Reaction volley"
+      }
     ]
   }
 }

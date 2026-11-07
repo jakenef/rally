@@ -32,3 +32,10 @@ def test_reads_the_clips_table(tmp_path):
     [row] = read_clips_table(md)
     assert row == {"clipId": "abc", "source": "https://www.youtube.com/watch?v=abc", "channel": "Chan", "level": 4.5,
                    "player": "near side: red shirt", "start": 75.0, "usedIn": "answer key"}
+
+
+def test_job_commands_parse():
+    a = build_parser().parse_args(["analyze", "/tmp/job", "--t", "12.5", "--box", "0.1,0.2,0.3,0.9"])
+    assert (a.cmd, a.t, a.box) == ("analyze", 12.5, "0.1,0.2,0.3,0.9")
+    p = build_parser().parse_args(["players", "clip.mp4", "--t", "4"])
+    assert (p.cmd, p.t) == ("players", 4.0)

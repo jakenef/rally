@@ -34,6 +34,15 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 
 ## Build
 
+- 025: uploads are processed on the laptop running the app: the browser posts the file to `/player/api/jobs`, and the app runs `rally_vision players` and `rally_vision analyze` as subprocesses from `product/vision/.venv`. Job folders live in `product/.uploads/` (gitignored). Never deployed.
+- 025: picking yourself happens in your own paused video: each time you pause or scrub, YOLO finds the people on that frame (about 4 seconds). Rally crops your box itself and sends it to Gemini with the video (Files API), so you never upload a photo.
+- 025: tracking (first 60 s) and Gemini (first 3 min) run side by side; status.json is rewritten atomically after each step so the page can poll it every second. Once tracking finishes, the analyzing screen plays your clip with the YOU box while Gemini keeps watching.
+- 025: shot callouts come from Gemini's timed events (`events`, VIS-7), mapped onto the playing video by `offsetSec` (prepared clips are local excerpts starting at `startSec`). Gemini's times are approximate; a callout can land a second early or late.
+- 025: the result card is written in the second person by Claude (`claudeCardWriter(.., "you")`); the comparison page keeps the third person.
+- 025: Join sends the profile already on the page with the form, instead of rebuilding it (which re-called Claude and took about 5 seconds). Until sessions (040) is in main, Join says the rating is saved.
+- 025: the demo controls open with the D key (ignored while typing) or a faint 18 px button in the bottom-right corner; they load a prepared clip's saved analysis without calling Gemini (ONB-5).
+- vitest now also runs `app/app/**/*.test.ts` (shared config), so the AI lane's screen logic (shot callouts) is tested.
+
 - 010: we don't fork Pickleball-Vision, because it has no licence file; `detect.py` uses Ultralytics YOLO pose and ByteTrack directly (AGPL-3.0, fine for a public repo).
 - 010: Gemini model is `gemini-3.8-flash` (stable, video input; checked 2026-11-07), through the Interactions API with the YouTube link. Custom fps is documented only for uploaded files, so the adapter tries `fps: 5` and falls back to default sampling if refused.
 - 010: the pipeline caches three files per clip in `fixtures/clips/` (`.gemini.json`, `.measured.json`, final `.json`), so the measured half can be written by hand if detection fails, and Gemini is never called twice for a clip.
