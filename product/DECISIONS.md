@@ -90,3 +90,5 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 - 2026-11-06 Danny approved one strongest-style accessory per player (power paddle, kitchen chef hat, mobility sneakers, readiness headband) plus skill badge. Strongest-stat ties use that order; stars are illustrative tiers 1–5 derived from round(skill - 1), with numerical skill alongside. Rally animation follows real matching assignments; it does not alter matching logic.
 
 - 2026-11-06 Danny replaced wearable accessories and separate badges with one floating physical 3D card per player: flat playstyle icon, numerical rating and stars, four attribute bars, name and tempo. Cards face the camera, appear only after entering a court, and replace the visible spotlight sidebar. Equivalent player data remains accessible in text.
+
+- 2026-11-06 1.4 card clearance: preserve physical 3D cards, but position them on a foreground camera plane in reserved side columns. Fit the selected court between the columns; cards no longer inherit player depth, where court geometry could occlude them. Browser screenshot review remains pending because the browser access host was unavailable.

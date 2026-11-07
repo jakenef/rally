@@ -105,3 +105,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 requested player cards: replaced ball accessories and separate rating badges with camera-facing 3D cards containing 2D playstyle icons, name, skill/stars, tempo and all four attributes. Cards remain hidden in the facility overview.
 
 - 2026-11-06 1.4 player card layout: fit 3D cards to screen-safe bounds, separate court cards into two rows per side, and constrain spotlight card size/position below navigation and above player controls.
+
+- 2026-11-06 1.4 requested card clearance: reserved side columns, court camera fit, and foreground 3D panels prevent card/court intersections. Five viewport geometry tests, TypeScript, and production build pass. Browser visual verification pending: browser access host unavailable.

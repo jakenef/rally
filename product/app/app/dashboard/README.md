@@ -15,3 +15,5 @@ Rally it runs a 3.6-second animation from current player positions through a cen
 Facility-to-court transitions interpolate both canvas bounds and camera with smooth start/stop easing; the original stage space remains reserved to avoid layout jumps. Player cards appear only inside the selected court after the camera arrives. Reduced motion skips the transition.
 
 Player cards use screen-space bounds reconstructed at their player’s 3D depth. Court cards occupy separate rows and side lanes; spotlight cards scale to the viewport and stay between top navigation and bottom player controls.
+
+Player cards occupy two reserved side columns in court view, with the camera fitting the entire court between them. Camera-facing panels sit on a foreground plane rather than at player depth, preventing the court and plaza from clipping through them. Spotlight uses a fixed left card position. Geometry regression checks cover desktop, tablet, portrait mobile, and short landscape viewports.

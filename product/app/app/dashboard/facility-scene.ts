@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import type { Court, Profile } from "@rally/types";
+import { courtCameraOffset } from "./court-layout";
 export type FacilityController = {
   setCourts(courts: Court[], animate?: boolean): Promise<void>;
   dispose(): void;
@@ -1185,8 +1186,11 @@ export function mountFacility(
           desiredCamera.set(0, 35.5 * fit, 33.65 * fit);
           desiredLook.set(0, 0, 0);
         } else if (level === "court") {
-          desiredCamera.set(ox, 15, oz + 19);
           desiredLook.set(ox, 0, oz);
+          // Fit the whole court into the space between the card columns.
+          desiredCamera.copy(desiredLook).add(courtCameraOffset(
+            stage.clientWidth, stage.clientHeight, camera.fov,
+          ));
         } else {
           const [x, z] = playerPositions[playerIndex];
           desiredCamera.set(ox + x + (x < 0 ? -3.6 : 3.6), 4.2, oz + z + 7.2);
@@ -1206,6 +1210,8 @@ export function mountFacility(
           look.lerp(desiredLook, speed);
         }
         camera.lookAt(look);
+        // Projection/unprojection below must use this frame's camera transform.
+        camera.updateMatrixWorld();
         groups.forEach((g, i) => {
           const hover = level === "facility" && hoverCourt === i;
           g.lift +=
@@ -1282,61 +1288,32 @@ export function mountFacility(
               : Math.min(
                   250,
                   (availableHeight - gap) / 2,
-                  (availableWidth - gap) / 2 / 0.8,
+                  (width * 0.22) / 0.8,
                 );
             const cardWidth = cardHeight * 0.8;
-            const center = f.group.getWorldPosition(new THREE.Vector3());
-            const projected = center.clone().project(camera);
-            const anchorX = ((projected.x + 1) * width) / 2;
-            const anchorY = ((1 - projected.y) * height) / 2;
-            const depth = -center
-              .clone()
-              .applyMatrix4(camera.matrixWorldInverse).z;
+            const panelDepth = new THREE.Vector3(0, 0, -2)
+              .applyMatrix4(camera.matrixWorld).project(camera).z;
+            // Keep panels on a camera-facing plane in front of the scene,
+            // instead of embedding them at the balls' depth in the court.
+            const depth = 2;
             const worldHeight =
               2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * depth;
-            const radiusPixels = (0.85 / worldHeight) * height;
-            const side = inSpotlight || f.pIndex < 2 ? -1 : 1;
-            const preferredX =
-              anchorX + side * (radiusPixels + cardWidth / 2 + 16);
             let x: number, y: number;
             if (inSpotlight) {
-              x = THREE.MathUtils.clamp(
-                preferredX,
-                margin + cardWidth / 2,
-                width - margin - cardWidth / 2,
-              );
-              y = THREE.MathUtils.clamp(
-                anchorY,
-                top + cardHeight / 2,
-                bottom - cardHeight / 2,
-              );
+              x = margin + cardWidth / 2;
+              y = top + availableHeight / 2;
             } else {
-              // Two non-overlapping rows on each side of the court.
-              const middle = top + availableHeight / 2;
-              const backRow = f.pIndex % 2 === 0;
-              const minY = backRow
-                ? top + cardHeight / 2
-                : middle + gap / 2 + cardHeight / 2;
-              const maxY = backRow
-                ? middle - gap / 2 - cardHeight / 2
-                : bottom - cardHeight / 2;
-              y = THREE.MathUtils.clamp(anchorY - cardHeight * 0.2, minY, maxY);
-              const minX =
-                side < 0
-                  ? margin + cardWidth / 2
-                  : width / 2 + gap / 2 + cardWidth / 2;
-              const maxX =
-                side < 0
-                  ? width / 2 - gap / 2 - cardWidth / 2
-                  : width - margin - cardWidth / 2;
-              x = THREE.MathUtils.clamp(preferredX, minX, maxX);
+              x = f.pIndex < 2
+                ? margin + cardWidth / 2
+                : width - margin - cardWidth / 2;
+              y = top + (availableHeight - cardHeight * 2 - gap) / 2
+                + cardHeight / 2 + (f.pIndex % 2) * (cardHeight + gap);
             }
-            // Reconstruct at the player's depth: real 3D panels, sized to fit
-            // safe screen bounds without losing the player/card association.
+            // Reconstruct the reserved screen position on the panel plane.
             const position = new THREE.Vector3(
               (x / width) * 2 - 1,
               1 - (y / height) * 2,
-              projected.z,
+              panelDepth,
             ).unproject(camera);
             card.position.copy(f.group.worldToLocal(position));
             card.scale.setScalar(((cardHeight / height) * worldHeight) / 4.4);
