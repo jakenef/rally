@@ -19,7 +19,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 - [x] **0.2 Demo roster.** `fixtures/roster.json`: 16 to 18 players with names, skill and style chosen so random assignment looks bad and balanced assignment looks good.
 
 ### Step 1: The engine (demo) — Facility lane, Danny
-- [ ] **1.1 Matching** (`030`, MATCH-1 to MATCH-6).
+- [x] **1.1 Matching** (`030`, MATCH-1, MATCH-3 to MATCH-7). MATCH-2 benching deferred at Danny's request; full groups of four only.
 - [ ] **1.2 Sessions** (`040`, SESS-1 to SESS-3), payment simulated.
 - [ ] **1.3 Backfill** (`050`, FILL-1, FILL-2, FILL-4), offers on the on-screen fake phone.
 - [ ] **1.4 Dashboard** (scenes 1 and 3): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
@@ -55,3 +55,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
 - 2026-11-07 0.1, 0.2: npm workspace (app, packages, fixtures), shared types, Claude and Gemini fakes, crimsonhacks port in packages/ui, lane stubs, Next.js app with /, /dashboard, /phone, /player, Python vision stub, 18-player demo roster with the scene 4 group, sample clip stats.
 - 2026-11-06 docs: no real messaging (fake phone only), YouTube clips instead of filming, mirror rule and tempo preference in matching (030, 020), second-brain edits go straight to main.
+
+- 2026-11-06 1.1: matching, fairness reasons, seeded random and rating-only baselines; all 16 tests and TypeScript checks pass (MATCH-1, MATCH-3 to MATCH-7). MATCH-2 deferred by Danny. Demo seed 42: 79.97 optimized vs 23.16 random, about 31 ms in a local run.
