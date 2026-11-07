@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { ThemePreview, type Direction } from "../ThemePreview";
 
-const directions = ["courtline", "matchpoint", "baseline"] as const;
+const directions = ["courtline", "matchpoint", "baseline", "overtime"] as const;
 
 export function generateStaticParams() {
   return directions.map((direction) => ({ direction }));

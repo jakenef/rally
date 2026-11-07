@@ -4,6 +4,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 
 ## Product
 
+- 2026-11-06 design study follow-up: Jake supplied GraphicHunters as a typography reference. The fourth option, Overtime, uses its exact open-source headline font (Anton, 400 weight) with tight tracking and neutral UI text. Commercial reference fonts are not bundled; the existing three options remain available.
+
 - 2026-11-06 design study: Jake requested three black-by-default, red-accent frontend alternatives and a replacement for Italiana. `/player/themes/*` previews Courtline (Barlow Condensed), Matchpoint (Space Grotesk), and Baseline (IBM Plex Mono) using local sample state and scoped `@rally/ui` overrides. This is an explicit visual exception to the current crimsonhacks palette/type rules for selection, not a global theme rollout.
 
 - Rally is a hackathon proof of concept: anything the demo doesn't show is faked or left out (see `AGENTS.md`). Dropped SESS-4 (unpaid sign-up timeout) and FILL-3 (offer expiry) for that reason.

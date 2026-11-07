@@ -1,7 +1,7 @@
 # Rally design study
 
-Review `/player/themes/courtline`, `/player/themes/matchpoint`, and
-`/player/themes/baseline`. All three are responsive, interactive visual prototypes
+Review `/player/themes/courtline`, `/player/themes/matchpoint`,
+`/player/themes/baseline`, and `/player/themes/overtime`. All four are responsive, interactive visual prototypes
 with sample data. Switching screens, balancing, backfill, and joining only update
 local preview state; these pages do not call application services.
 
@@ -17,6 +17,15 @@ preserved in the files. SIL Open Font License texts are included alongside them.
 - Barlow Condensed: https://fonts.google.com/specimen/Barlow+Condensed
 - Space Grotesk: https://fonts.google.com/specimen/Space+Grotesk
 - IBM Plex Mono: https://fonts.google.com/specimen/IBM+Plex+Mono
+- Anton: https://fonts.google.com/specimen/Anton
+
+## Overtime reference
+
+The fourth direction takes its oversized Anton headings, tight tracking, and
+bracketed captions from https://www.graphichunters.com/. Browser inspection
+confirmed that site's large section headings use Anton at weight 400, line-height
+0.9, and letter-spacing -0.04em. Overtime uses the same open font, with Mona Sans
+for the app UI. Its other commercial fonts and artwork are not included.
 
 ## Photography credit
 

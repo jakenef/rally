@@ -2,6 +2,7 @@
 @font-face { font-family: "TP Courtline"; src: url("/theme-options/courtline.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "TP Matchpoint"; src: url("/theme-options/matchpoint.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
 @font-face { font-family: "TP Baseline"; src: url("/theme-options/baseline.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "TP Anton"; src: url("/theme-options/anton.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 
 /* The user requested new directions. These overrides are confined to the review
    routes; the existing crimsonhacks source and application theme stay intact. */
@@ -26,7 +27,7 @@ body:has(.tp-root) > .rl-nav { display: none; }
 .tp-review-bar { position: relative; z-index: 20; min-height: 64px; padding: 10px 28px; border-bottom: 1px solid #333; background: #111; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 11px; }
 .tp-review-label { font-weight: 800; letter-spacing: .07em; white-space: nowrap; }
 .tp-review-label span { color: #999; font-size: 10px; margin-left: 7px; font-weight: 500; }
-.tp-review-bar nav { display: flex; align-items: center; gap: 6px; }
+.tp-review-bar nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .tp-review-bar nav a { padding: 8px 14px; border: 1px solid transparent; color: #aaa; font-weight: 600; }
 .tp-review-bar nav a span { font-size: 10px; margin-right: 5px; color: #888; }
 .tp-review-bar nav a[aria-current] { color: #fff; border-color: #555; background: #202020; }
@@ -175,6 +176,55 @@ body:has(.tp-root) > .rl-nav { display: none; }
 .tp-baseline .tp-content-grid { gap: 20px; grid-template-columns: minmax(0, 1fr) 265px; }.tp-baseline .tp-courts { gap: 0; }.tp-baseline .tp-court + .tp-court { border-left: 0; }.tp-baseline .tp-court { background: #0b0b0b; border-color: #353535; padding: 18px 18px 0; }.tp-baseline .tp-court-map { background: #111; aspect-ratio: 1.6; }.tp-baseline .tp-kitchen { background: #181818; }.tp-baseline .tp-vs { background: #181818; }.tp-baseline .tp-score { font-size: 23px; }.tp-baseline .tp-score small { font-size: 6px; }.tp-baseline .tp-eyebrow { font-size: 8px; }
 .tp-baseline .tp-reel h2 { font-size: 28px; line-height: 1; letter-spacing: -.05em; }.tp-baseline .tp-backfill { border-color: #353535; border-top: 2px solid var(--crimson); background: #0b0b0b; }.tp-baseline .tp-section-title h2 { font: 500 12px var(--data); }.tp-baseline .tp-roster > button { background: #0b0b0b; }.tp-baseline .tp-profile { background: #0b0b0b; }.tp-baseline .tp-profile-identity h2 { font-size: 28px; letter-spacing: -.04em; }.tp-baseline .tp-rating strong { font-size: 40px; }
 
+/* 04: GraphicHunters' Anton headline treatment, adapted to Rally's black/red
+   palette. Neutral UI text and bracketed metadata support the oversized type. */
+.tp-overtime { --surface: #080808; --display: "TP Anton", Impact, sans-serif; --radius-btn: 0px; }
+.tp-overtime .tp-shell { grid-template-columns: minmax(0, 1fr); }
+.tp-overtime .tp-sidebar { min-height: 86px; padding: 20px 32px; display: flex; flex-direction: row; align-items: center; gap: 50px; border-right: 0; border-bottom: 1px solid #333; background: #080808; }
+.tp-overtime .tp-brand { font: 400 48px/.9 var(--display); letter-spacing: -.045em; }
+.tp-overtime .tp-brand-mark { display: none; }.tp-overtime .tp-brand-period { margin-left: 3px; }
+.tp-overtime .tp-facility { margin: 0 0 0 auto; padding: 0; border: 0; order: 2; font-size: 12px; }
+.tp-overtime .tp-nav-label, .tp-overtime .tp-sidebar-bottom, .tp-overtime .tp-topbar { display: none; }
+.tp-overtime .tp-app-nav { display: flex; gap: 30px; }
+.tp-overtime .tp-app-nav button { width: auto; white-space: nowrap; padding: 9px 0; border: 0; border-bottom: 1px solid transparent; gap: 8px; font-size: 14px; color: #999; }
+.tp-overtime .tp-app-nav button .ch-icon { display: none; }.tp-overtime .tp-app-nav button small { margin: 0; font: 400 9px "TP Baseline", monospace; color: #777; }
+.tp-overtime .tp-app-nav button[aria-pressed="true"] { background: none; border-bottom-color: var(--crimson); color: #fff; }.tp-overtime .tp-app-nav button:hover { background: none; color: #fff; }
+.tp-overtime .tp-main { max-width: 1800px; padding: 34px 32px 0; }
+.tp-overtime .tp-heading-row { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 40px; align-items: end; padding: 16px 0 43px; margin-bottom: 0; }
+.tp-overtime h1 { font: 400 clamp(88px, 11.4vw, 180px)/.92 var(--display); letter-spacing: -.045em; text-transform: uppercase; }
+.tp-overtime .tp-heading-row p { font-size: 18px; line-height: 1.35; letter-spacing: -.035em; max-width: 30ch; margin-top: 28px; color: #c0c0c0; }
+.tp-overtime .tp-eyebrow { font: 400 10px/1.35 "TP Baseline", monospace; letter-spacing: -.03em; }
+.tp-overtime .tp-kicker { margin-bottom: 32px; color: #bbb; }
+.tp-overtime .tp-kicker::before { content: "["; color: var(--crimson-text); }.tp-overtime .tp-kicker::after { content: "]"; color: var(--crimson-text); }.tp-overtime .tp-kicker > span { display: none; }
+.tp-overtime .tp-heading-action { justify-items: stretch; padding-bottom: 0; gap: 16px; }
+.tp-hero-emblem { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 0 0 28px; color: var(--crimson); }
+.tp-hero-emblem > .ch-icon { stroke-width: .55; width: 180px; height: 180px; }
+.tp-hero-emblem > span { font: 400 9px "TP Baseline", monospace; color: #aaa; }
+.tp-overtime .tp-heading-action > .tp-eyebrow { display: block; }.tp-overtime .ch-btn { height: 52px; font-size: 12px; letter-spacing: -.02em; text-transform: none; justify-content: space-between; }
+.tp-overtime .tp-metrics { background: none; border-inline: 0; border-block: 1px solid #3a3a3a; margin-bottom: 48px; }
+.tp-overtime .tp-metrics article { padding: 23px 25px; border-color: #333; gap: 12px; }.tp-overtime .tp-metrics article:first-child { padding-left: 0; }.tp-overtime .tp-metrics article:last-child { padding-right: 0; }
+.tp-overtime .tp-metrics strong { font: 400 76px/.95 var(--display); letter-spacing: -.04em; }.tp-overtime .tp-metrics strong small { font-size: 12px; color: #999; }
+.tp-overtime .tp-metric-note { font-size: 11px; color: #aaa; }
+.tp-overtime .tp-content-grid { grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; }
+.tp-overtime .tp-section-title { min-height: 58px; margin-bottom: 24px; align-items: end; }
+.tp-overtime .tp-section-title h2 { font: 400 clamp(35px, 4.3vw, 66px)/1 var(--display); letter-spacing: -.04em; text-transform: uppercase; }
+.tp-overtime .tp-section-title h2 span { display: inline-block; margin: 0 0 9px 16px; font: 400 9px "TP Baseline", monospace; letter-spacing: -.03em; }
+.tp-overtime .tp-live { font: 400 10px "TP Baseline", monospace; margin-bottom: 9px; }
+.tp-overtime .tp-courts { gap: 16px; }.tp-overtime .tp-court { padding: 20px 18px 0; background: #111; border-color: #363636; }
+.tp-overtime .tp-court > header { margin-bottom: 24px; }.tp-overtime .tp-score { font: 400 44px/.9 var(--display); letter-spacing: -.04em; color: #fff; }
+.tp-overtime .tp-score small { font-size: 7px; letter-spacing: 0; margin-top: 4px; color: #999; }
+.tp-overtime .tp-court-map { aspect-ratio: 1.45; background: #141414; }.tp-overtime .tp-kitchen { background: #1c1c1c; }.tp-overtime .tp-vs { background: #1c1c1c; }
+.tp-overtime .tp-player-dot b { width: 34px; height: 34px; font-size: 10px; }.tp-overtime .tp-player-dot { width: 34px; }.tp-overtime .tp-player-dot small { font-size: 10px; }
+.tp-overtime .tp-teams { font-size: 11px; padding: 19px 0; }.tp-overtime .tp-court > footer { font-size: 10px; padding: 15px 0; }
+.tp-overtime .tp-more-courts { padding: 20px 0; font-size: 12px; }.tp-overtime .tp-more-courts b { font-size: 11px; }
+.tp-overtime .tp-right-column { padding-top: 82px; }.tp-overtime .tp-reel { height: 255px; }.tp-overtime .tp-reel > img { opacity: .9; }.tp-overtime .tp-reel h2 { font: 400 47px/.95 var(--display); letter-spacing: -.035em; }.tp-overtime .tp-reel-label { font-size: 9px; }.tp-overtime .tp-reel button { font-size: 11px; }.tp-overtime .tp-photo-credit { font-size: 7px; }
+.tp-overtime .tp-backfill { padding: 23px; background: var(--crimson); border: 0; }.tp-overtime .tp-backfill :is(.tp-eyebrow, .ch-icon, p, button) { color: #fff; }.tp-overtime .tp-backfill .tp-eyebrow { font-size: 9px; }.tp-overtime .tp-backfill h3 { font: 400 31px/1 var(--display); letter-spacing: -.025em; text-transform: uppercase; }.tp-overtime .tp-backfill p { font-size: 12px; line-height: 1.5; }.tp-overtime .tp-backfill button { border-color: #ffffff60; font-size: 12px; }
+.tp-overtime .tp-player-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 35px; }.tp-overtime .tp-roster > button { padding: 23px 18px; }.tp-overtime .tp-roster b { font-size: 16px; }.tp-overtime .tp-roster small { font-size: 12px; }.tp-overtime .tp-roster .tp-avatar { width: 45px; height: 45px; font-size: 13px; }
+.tp-overtime .tp-profile { padding: 30px; }.tp-overtime .tp-profile-identity h2 { font: 400 51px/1.05 var(--display); letter-spacing: -.03em; text-transform: uppercase; }.tp-overtime .tp-style-tag { font: 400 10px "TP Baseline", monospace; display: inline-block; margin-top: 7px; }.tp-overtime .tp-rating strong { font: 400 76px/1.25 var(--display); letter-spacing: -.04em; }.tp-overtime .tp-athleticism b { font: 400 48px/1.2 var(--display); }.tp-overtime .tp-scout-note { font-size: 15px; }.tp-overtime .tp-style-bars > div > span { font-size: 12px; }.tp-overtime .tp-profile .ch-btn { width: 100%; }.tp-overtime .tp-profile-status { font-size: 12px; }
+.tp-overtime .tp-page-footer { padding: 30px 0; margin-top: 30px; font-family: "TP Baseline", monospace; font-size: 9px; }
+.tp-overtime-signoff { display: flex; align-items: end; justify-content: space-between; gap: 20px; padding: 40px 0 50px; }.tp-overtime-signoff > span { font: 400 clamp(65px, 10vw, 140px)/.9 var(--display); letter-spacing: -.04em; }.tp-overtime-signoff > .ch-icon { color: var(--crimson); stroke-width: .8; }
+.tp-overtime .tp-direction-note { padding-top: 30px; }.tp-overtime .tp-direction-note h2 { font: 400 38px/1.2 var(--display); text-transform: uppercase; }.tp-overtime .tp-direction-note a { text-decoration: underline; text-underline-offset: 3px; }
+
 @media (min-width: 1550px) { .tp-content-grid { grid-template-columns: minmax(0, 1fr) 320px; }.tp-court-map { aspect-ratio: 1.65; } }
 @media (max-width: 1150px) { .tp-preview-tag { display: none; }.tp-shell { grid-template-columns: 190px minmax(0, 1fr); }.tp-main { padding: 30px 24px 0; }.tp-content-grid, .tp-baseline .tp-content-grid { grid-template-columns: minmax(0, 1fr); }.tp-right-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-top: 0; }.tp-backfill { margin: 0; }.tp-reel { height: 210px; }.tp-matchpoint .tp-content-grid { grid-template-columns: minmax(0, 1fr); }.tp-matchpoint .tp-facility { display: none; }.tp-heading-action > .tp-eyebrow { display: none; }.tp-heading-row { gap: 15px; }.tp-metrics article { padding: 16px 12px; }.tp-metrics .tp-eyebrow { font-size: 8px; }.tp-player-layout { gap: 18px; }.tp-profile { padding: 20px; } }
 @media (max-width: 760px) {
@@ -190,3 +240,20 @@ body:has(.tp-root) > .rl-nav { display: none; }
   .tp-player-layout { grid-template-columns: minmax(0, 1fr); }.tp-roster { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }.tp-roster .tp-section-title { grid-column: 1/-1; }.tp-roster > button { gap: 8px; padding: 13px 8px; margin: 0; }.tp-roster button > .ch-icon { display: none; }.tp-roster b { font-size: 10px; }.tp-roster small { font-size: 8px; }.tp-roster .tp-avatar { width: 27px; height: 27px; font-size: 8px; }.tp-rating strong { font-size: 49px; }.tp-direction-note { display: grid; }.tp-page-footer { font-size: 7px; }
 }
 @media (prefers-reduced-motion: reduce) { .tp-root button, .tp-root .ch-btn { transition: none; } }
+@media (max-width: 1150px) {
+  .tp-overtime .tp-main { padding: 25px 24px 0; }.tp-overtime .tp-sidebar { padding-inline: 24px; gap: 30px; }.tp-overtime .tp-app-nav { gap: 20px; }.tp-overtime .tp-facility { display: none; }
+  .tp-overtime .tp-heading-row { grid-template-columns: minmax(0, 1fr) 210px; gap: 25px; }.tp-overtime h1 { font-size: clamp(77px, 11.3vw, 130px); }.tp-overtime .tp-heading-row p { font-size: 16px; }.tp-overtime .tp-hero-emblem > .ch-icon { width: 125px; height: 125px; }
+  .tp-overtime .tp-metrics strong { font-size: 60px; }.tp-overtime .tp-metric-note { font-size: 10px; }.tp-overtime .tp-content-grid { grid-template-columns: minmax(0, 1fr); }.tp-overtime .tp-right-column { padding-top: 0; }.tp-overtime .tp-reel { height: 250px; }.tp-overtime .tp-player-layout { gap: 20px; }
+}
+@media (max-width: 760px) {
+  .tp-review-bar nav { gap: 3px; }.tp-review-bar nav a { padding: 7px 8px; font-size: 9px; }.tp-review-bar nav a span { margin-right: 3px; font-size: 9px; }
+  .tp-overtime .tp-sidebar { padding: 20px 16px; min-height: 78px; gap: 15px; }.tp-overtime .tp-brand { font-size: 39px; }.tp-overtime .tp-app-nav { gap: 14px; }.tp-overtime .tp-app-nav button { font-size: 11px; }.tp-overtime .tp-app-nav button small { display: none; }
+  .tp-overtime .tp-main { padding: 26px 16px 0; }.tp-overtime .tp-heading-row { display: block; padding: 0 0 28px; }.tp-overtime .tp-kicker { font-size: 9px; margin-bottom: 25px; }.tp-overtime h1 { font-size: clamp(58px, 15.8vw, 112px); line-height: .96; }.tp-overtime .tp-heading-row p { font-size: 15px; max-width: 28ch; margin-top: 24px; }
+  .tp-overtime .tp-heading-action { display: flex; margin-top: 23px; align-items: center; justify-content: space-between; gap: 12px; }.tp-overtime .tp-heading-action > .tp-eyebrow { max-width: 12ch; font-size: 8px; }.tp-overtime .tp-hero-emblem { display: none; }.tp-overtime .tp-heading-action .ch-btn { min-width: 190px; }
+  .tp-overtime .tp-metrics { margin-bottom: 35px; }.tp-overtime .tp-metrics article { padding: 19px 10px; }.tp-overtime .tp-metrics article:nth-child(odd) { padding-left: 0; }.tp-overtime .tp-metrics article:nth-child(even) { padding-left: 20px; }.tp-overtime .tp-metrics strong { font-size: 60px; }.tp-overtime .tp-metrics .tp-eyebrow { font-size: 8px; }.tp-overtime .tp-metric-note { font-size: 9px; }
+  .tp-overtime .tp-section-title { min-height: auto; margin-bottom: 19px; align-items: center; }.tp-overtime .tp-section-title h2 { font-size: 35px; }.tp-overtime .tp-section-title h2 span { display: none; }.tp-overtime .tp-live { font-size: 8px; margin: 0; }.tp-overtime .tp-courts { gap: 10px; }.tp-overtime .tp-court { padding: 15px 10px 0; }.tp-overtime .tp-court > header { gap: 5px; margin-bottom: 20px; }.tp-overtime .tp-court .tp-eyebrow { font-size: 8px; }.tp-overtime .tp-score { font-size: 32px; }.tp-overtime .tp-score small { font-size: 5px; }
+  .tp-overtime .tp-court-map { aspect-ratio: .8; }.tp-overtime .tp-player-dot b { width: 28px; height: 28px; font-size: 8px; }.tp-overtime .tp-player-dot { width: 28px; }.tp-overtime .tp-player-dot small { font-size: 9px; }.tp-overtime .tp-teams { font-size: 10px; display: grid; gap: 4px; padding: 15px 0; }.tp-overtime .tp-court > footer { font-size: 8px; padding: 13px 0; }.tp-overtime .tp-more-courts { font-size: 10px; }.tp-overtime .tp-more-courts b { font-size: 9px; }
+  .tp-overtime .tp-reel { height: 270px; }.tp-overtime .tp-right-column { gap: 14px; }.tp-overtime .tp-backfill { margin: 0; }.tp-overtime .tp-reel h2 { font-size: 51px; }.tp-overtime .tp-page-footer { font-size: 7px; }
+  .tp-overtime .tp-player-layout { grid-template-columns: minmax(0, 1fr); }.tp-overtime .tp-roster > button { padding: 14px 8px; }.tp-overtime .tp-roster .tp-avatar { width: 28px; height: 28px; font-size: 9px; }.tp-overtime .tp-roster b { font-size: 10px; }.tp-overtime .tp-roster small { font-size: 9px; }.tp-overtime .tp-profile { padding: 20px; }.tp-overtime .tp-profile-identity h2 { font-size: 32px; }.tp-overtime .tp-profile-identity > .tp-avatar { width: 43px; height: 43px; font-size: 13px; }.tp-overtime .tp-rating strong { font-size: 59px; }.tp-overtime .tp-athleticism b { font-size: 38px; }.tp-overtime .tp-athleticism { padding-left: 16px; }.tp-overtime .tp-scout-note { font-size: 13px; }.tp-overtime .tp-style-tag { font-size: 8px; }
+  .tp-overtime-signoff { padding: 26px 0 40px; align-items: end; }.tp-overtime-signoff > span { font-size: 57px; }.tp-overtime-signoff > .ch-icon { width: 50px; height: 50px; }.tp-overtime .tp-direction-note { padding-top: 22px; }
+}

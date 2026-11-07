@@ -8,6 +8,7 @@ export const directions = {
   courtline: { number: "01", name: "Courtline", description: "Athletic. Condensed. Built for game night.", type: "Mona Sans + Barlow Condensed", headline: <>GOOD GAMES.<br /><em>GREAT NIGHTS.</em></> },
   matchpoint: { number: "02", name: "Matchpoint", description: "Clean. Geometric. Confidently understated.", type: "Mona Sans + Space Grotesk", headline: <>Make room for<br /><em>better games.</em></> },
   baseline: { number: "03", name: "Baseline", description: "Precise. Technical. All signal.", type: "Mona Sans + IBM Plex Mono", headline: <>THE RIGHT FOUR.<br /><em>EVERY COURT.</em></> },
+  overtime: { number: "04", name: "Overtime", description: "Oversized. Editorial. Exclusively pickleball.", type: "Anton + Mona Sans", headline: <>BUILT FOR<br /><em>THE RALLY.</em></> },
 };
 export type Direction = keyof typeof directions;
 type Screen = "session" | "players";
@@ -64,7 +65,7 @@ export function ThemePreview({ direction }: { direction: Direction }) {
       <div className="tp-workspace">
         <header className="tp-topbar"><span>WORKSPACE <span className="tp-slash">/</span> <b>{screen === "session" ? "OVERVIEW" : "PLAYERS"}</b></span><div><span className="tp-status-dot" /><span>FRIDAY, NOV 06</span><span className="tp-avatar tp-avatar-small">JD</span></div></header>
         <main className="tp-main">
-          <div className="tp-heading-row"><div><div className="tp-eyebrow tp-kicker"><span />PROVO, UTAH / GAME NIGHT</div><h1>{screen === "session" ? theme.headline : <>KNOW YOUR<br /><em>NEXT PARTNER.</em></>}</h1><p>{screen === "session" ? "Balanced courts. Better partners. A full house." : "Same rating. Different game. Find the player behind the number."}</p></div><div className="tp-heading-action"><span className="tp-eyebrow">{screen === "session" ? "TUESDAY OPEN PLAY" : "THE PLAYER LAB"}</span><Button onClick={() => screen === "session" ? setBalanced(!balanced) : setJoined(!joined)} iconAfter="arrow">{screen === "session" ? balanced ? "Reset assignments" : "Rally the courts" : joined ? "Leave session" : "Join the session"}</Button></div></div>
+          <div className="tp-heading-row"><div><div className="tp-eyebrow tp-kicker"><span />PROVO, UTAH / GAME NIGHT</div><h1>{screen === "session" ? theme.headline : <>KNOW YOUR<br /><em>NEXT PARTNER.</em></>}</h1><p>{screen === "session" ? "Balanced courts. Better partners. A full house." : "Same rating. Different game. Find the player behind the number."}</p></div><div className="tp-heading-action">{direction === "overtime" ? <div className="tp-hero-emblem" aria-hidden="true"><Icon name="ball" size={180} /><span>[ ALWAYS IN PLAY ]</span></div> : null}<span className="tp-eyebrow">{screen === "session" ? "TUESDAY OPEN PLAY" : "THE PLAYER LAB"}</span><Button onClick={() => screen === "session" ? setBalanced(!balanced) : setJoined(!joined)} iconAfter="arrow">{screen === "session" ? balanced ? "Reset assignments" : "Rally the courts" : joined ? "Leave session" : "Join the session"}</Button></div></div>
 
           {screen === "session" ? <>
             <section className="tp-metrics" aria-label="Session metrics">{[
@@ -84,7 +85,8 @@ export function ThemePreview({ direction }: { direction: Direction }) {
           </div>}
 
           <footer className="tp-page-footer"><span>BUILT FOR THE NEXT RALLY.</span><span>PROVO, 2026 <Icon name="ball" size={14} /></span></footer>
-          <section className="tp-direction-note" aria-label="Design details"><div><span className="tp-eyebrow">DIRECTION {theme.number}</span><h2>{theme.name}</h2><p>{theme.description}</p></div><div><span className="tp-eyebrow">TYPE PAIRING</span><p>{theme.type}</p><div className="tp-swatches"><i /><i /><i /><span>Black foundation. Crimson accents.</span></div></div></section>
+          {direction === "overtime" ? <div className="tp-overtime-signoff"><span>MORE PLAY.<br />LESS FRICTION.</span><Icon name="arrow" size={130} /></div> : null}
+          <section className="tp-direction-note" aria-label="Design details"><div><span className="tp-eyebrow">DIRECTION {theme.number}</span><h2>{theme.name}</h2><p>{theme.description}</p>{direction === "overtime" ? <p>Typography reference: <a href="https://www.graphichunters.com/" target="_blank" rel="noreferrer">GraphicHunters ↗</a></p> : null}</div><div><span className="tp-eyebrow">TYPE PAIRING</span><p>{theme.type}</p><div className="tp-swatches"><i /><i /><i /><span>Black foundation. Crimson accents.</span></div></div></section>
         </main>
       </div>
     </div>
