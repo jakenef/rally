@@ -31,6 +31,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 ### Step 3: Polish (stretch)
 - [ ] **3.1 Ratings** (`060`, RATE-1 to RATE-3). Facility.
 - [ ] **3.2 Holy War Night** (bonus scene). Facility.
+- [ ] **2.3 Get your rating** (`025`, ONB-1 to ONB-6; `010` VIS-7 to VIS-9). Upload, pick yourself, analyzing, your card with shot callouts, hidden demo controls. AI.
 - [x] **3.3 Accuracy chart** (scene 5): chart labeled level against estimated range for the calibration clips from 2.2. AI.
 
 ## Checkpoints
