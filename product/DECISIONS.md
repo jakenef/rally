@@ -4,6 +4,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 
 ## Product
 
+- 2026-11-06 white outline accent: Jake requested black-filled, #F5F5F5-outlined display accents across the design system and site, matching the supplied reference. Headline accents, the opposing Mona Sans marquee, and prominent rating text use this treatment; small text, focus rings, and hover boundaries use solid white for legibility. Saturated crimson actions, data marks, and the supplied logo stay as shown in the reference. Presentation only; no feature criteria changed.
+
 - 2026-11-06 logo: Jake supplied the white RALLY/red brush-script artwork as the canonical logo. Preserve the original PNG; `@rally/ui` Logo and its Wordmark compatibility alias render it everywhere. CSS handles display cropping/blending only; browser icons reuse the same asset.
 
 - 2026-11-06 Overtime color refinement: Jake found the opposing slogan row too pale. Its large text now uses the same saturated `crimson` as the hero and primary action; small text and focus rings retain their higher-contrast token.
@@ -23,6 +25,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 - Gemini is required: it's the only practical way to judge shot quality from video in hours. Local open-source vision (Pickleball-Vision, YOLO, ByteTrack, RTMPose) measures movement; Gemini judges play; 020 combines them into an estimated DUPR range and an athleticism score.
 
 ## Asks
+
+- 2026-11-06 shared design notice for Jake and Danny: the requested white-outline accent updates shared Overtime tokens/components and the homepage override. Both lanes receive outlined headings and white focus/hover accents through `@rally/ui`; module interfaces and functional state are unchanged.
 
 - 2026-11-06 shared design notice for Jake and Danny: the selected Overtime rollout updates `@rally/ui`, the root layout/homepage, and screen presentation only. Keep module interfaces and functional state unchanged. New UI follows `brand-assets/overtime/README.md`; existing `ch-*` classes and `serif` props remain compatible. The rebrand PR carries both lane labels.
 

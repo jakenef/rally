@@ -127,7 +127,7 @@ export function Button(props: ButtonProps) {
 
 export type HeadlinePart = string | { text: string; accent: true; serif?: never } | { text: string; serif: true; accent?: never };
 
-/** Anton headline with optional red accent words. `serif` is a legacy alias. */
+/** Anton headline with optional black-filled, white-outline words. `serif` is a legacy alias. */
 export function Headline({
   size = "h2",
   as,
