@@ -40,3 +40,7 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 - 0.1: the nav mark is the crimsonhacks `Wordmark` with Rally's own word ("Rally", serif, no sans line), because the system has no logo file and its Wordmark is crimsonhacks' own mark.
 - 0.1: workspace packages are TypeScript source with no build step, compiled by Next (`transpilePackages`) and vitest, to keep the hackathon setup to one `npm install`.
 - 0.2: the roster has 18 players: p01 to p16 signed up for 4 courts, p17 and p18 on the waitlist; p05 to p08 are the scene 4 group (equal skill, two hard hitters, two soft players).
+
+- 030 MATCH-2: Danny explicitly deferred benching on 2026-11-06. This increment accepts only full groups of four with enough courts, returns an empty benched list, and does not read games-played counts. MATCH-2 remains deferred.
+- 030 MATCH-3/MATCH-4: score is 100 minus weighted penalties (55 team balance, 20 court spread, 25 mirror), clamped to 0..100. Balance normalizes at a 0.8 summed-skill gap; spread at 1.5; mirror uses the sum of absolute team power and kitchen gaps, capped at 2. A double mirror penalty allows the required >=30-point equal-skill contrast, impossible with a mirror component capped at 25. Scores are demo heuristics, not validated outcomes.
+- 030 MATCH-7: construct separate fast/soft groups filled with any-tempo players when feasible, then run 2,000 seeded local-search swaps. Tempo conflicts take priority over score improvements. Skill-only baseline chooses the minimum team skill gap and retains stable ties.
