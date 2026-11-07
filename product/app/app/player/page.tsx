@@ -21,7 +21,7 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
 
   return (
     <main className="rl-page">
-      <Headline size="h1" parts={["Video to", { text: "court", accent: true }]} />
+      <Headline size="h1" className="ch-hl-outline" parts={["Video to", { text: "court", accent: true }]} />
       {usingSample ? (
         <p className="rl-note">Showing a sample player.</p>
       ) : null}

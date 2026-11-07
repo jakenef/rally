@@ -23,7 +23,8 @@ from `product/`. `styles/tokens.css` is generated. `ch-*` classes and older
 `serif` props remain compatibility aliases for screens being built in both lanes.
 Neither alias enables the archived palette or old font.
 
-Display accents use a black fill with a `#F5F5F5` outline, including headline
-parts and the opposing marquee row. Small accent text and focus rings are white;
-crimson stays on primary actions and data marks. Use `accent-fill`,
-`accent-outline`, and `size-accent-stroke` for prominent custom numbers.
+Crimson is the default accent for headlines, ratings, marquee text, primary
+actions, and data marks. Only the main video-rating heading opts into black fill
+with a `#F5F5F5` outline using `<Headline className="ch-hl-outline" ... />`.
+Small accent text and focus rings are white. Do not outline the marquee or
+rating numbers.

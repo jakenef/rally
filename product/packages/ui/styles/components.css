@@ -54,7 +54,8 @@ body { margin: 0; background: var(--surface); color: var(--ink); font: 400 16px/
 .ch-hl-h2 { font-size: clamp(40px, 5vw, 64px); line-height: 1; }
 .ch-hl-h1 { font-size: clamp(44px, 6.5vw, 80px); line-height: .98; }
 .ch-hl-h3 { font-size: 32px; line-height: 1.05; }
-.ch-hl-accent, .ch-hl-serif { color: var(--accent-outline); font-family: inherit; font-weight: inherit; }
+.ch-hl-accent, .ch-hl-serif { color: var(--crimson); font-family: inherit; font-weight: inherit; }
+.ch-hl-outline .ch-hl-accent, .ch-hl-outline .ch-hl-serif { color: var(--accent-outline); }
 .ch-hl-center { text-align: center; }
 
 /* Marquee */
@@ -63,10 +64,10 @@ body { margin: 0; background: var(--surface); color: var(--ink); font: 400 16px/
 .ch-mq-row.ch-mq-rev { animation-direction: reverse; }
 .ch-mq-row span { padding-right: .45em; font-size: clamp(48px, 8vw, 120px); line-height: 1.08; text-transform: uppercase; }
 .ch-mq-display span, .ch-mq-sans span { font-family: var(--font-display); font-weight: 400; color: var(--ink); letter-spacing: -.035em; }
-.ch-mq-accent span, .ch-mq-serif span { font-family: var(--font-accent); font-weight: 500; color: var(--accent-outline); letter-spacing: -.055em; }
-/* Solid white fallback; black-filled outlines where text strokes are supported. */
+.ch-mq-accent span, .ch-mq-serif span { font-family: var(--font-accent); font-weight: 500; color: var(--crimson); letter-spacing: -.055em; }
+/* Outlines are opt-in for a few display headings; crimson is the default. */
 @supports (-webkit-text-stroke: 1px black) {
-  .ch-hl-accent, .ch-hl-serif, .ch-mq-accent span, .ch-mq-serif span {
+  .ch-hl-outline .ch-hl-accent, .ch-hl-outline .ch-hl-serif {
     color: var(--accent-fill);
     -webkit-text-stroke: var(--size-accent-stroke) var(--accent-outline);
   }
