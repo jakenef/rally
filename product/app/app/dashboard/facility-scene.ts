@@ -716,7 +716,7 @@ export function mountFacility(
   if (THREE) {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(42, 1, 0.1, 250);
-    camera.position.set(0, 43, 37);
+    camera.position.set(0, 38.1, 33);
     try {
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     } catch (error) {
@@ -1061,7 +1061,7 @@ export function mountFacility(
         const speed = reduce.matches ? 1 : 1 - Math.exp(-dt * 4.5);
         const [ox, oz] = origins[courtIndex];
         if (level === "facility") {
-          const fit = 1.15 * Math.max(1, 1.85 / camera.aspect);
+          const fit = 1.03 * Math.max(1, 1.85 / camera.aspect);
           desiredCamera.set(0, 37 * fit, 32 * fit);
           desiredLook.set(0, 0, 0);
         } else if (level === "court") {
