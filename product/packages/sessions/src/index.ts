@@ -1,5 +1,6 @@
 // 040 sessions — Facility lane, demo scope (SESS-1, SESS-2).
 import type { Profile, Session, SignUpResult } from "@rally/types";
+import { tonight } from "@rally/fixtures";
 
 /** An isolated in-memory store, seeded with fixed demo sessions. */
 export function createSessions(options: { sessions?: Session[] } = {}) {
@@ -48,5 +49,5 @@ export function createSessions(options: { sessions?: Session[] } = {}) {
   return { registerSession, getSession, signUp };
 }
 
-// Default app store; seed once with registerSession before signing up players.
-export const { registerSession, getSession, signUp } = createSessions();
+// The app's default store starts with the same demo session shown on the player page.
+export const { registerSession, getSession, signUp } = createSessions({ sessions: [tonight] });
