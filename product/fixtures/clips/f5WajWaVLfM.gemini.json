@@ -1,0 +1,30 @@
+{
+  "clipId": "f5WajWaVLfM",
+  "source": "https://www.youtube.com/watch?v=f5WajWaVLfM",
+  "player": "near side, right: woman in white tank top and black leggings, ponytail",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "assessment": {
+    "shots": {
+      "dink": 1,
+      "drive": 0,
+      "drop": 0,
+      "lob": 0,
+      "volley": 0,
+      "serve": 0,
+      "return": 1
+    },
+    "thirdShotDropShare": null,
+    "unforcedErrors": 1,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.0,
+      "high": 3.5
+    },
+    "reasons": [
+      "Hits a solid, deep return of serve and transitions immediately up to the kitchen line.",
+      "Shows good ready positioning at the non-volley zone line while tracking play.",
+      "Commits an unforced error by netting a standard dink from the transition/kitchen area."
+    ]
+  }
+}

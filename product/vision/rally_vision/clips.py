@@ -32,7 +32,8 @@ def get_or_assess(client: GeminiClient, clip_id: str, source: str, player: str, 
     if path.exists() and not refresh:
         return json.loads(path.read_text())["assessment"]
     assessment = assess(client, source, player, **kw)
-    _write(path, {"clipId": clip_id, "source": source, "player": player, "assessment": assessment})
+    meta = {k: getattr(client, k) for k in ("used_model", "used_processing") if getattr(client, k, None) is not None}
+    _write(path, {"clipId": clip_id, "source": source, "player": player, **meta, "assessment": assessment})
     return assessment
 
 

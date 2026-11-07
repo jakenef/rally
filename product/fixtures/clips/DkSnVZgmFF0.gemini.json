@@ -1,0 +1,30 @@
+{
+  "clipId": "DkSnVZgmFF0",
+  "source": "https://www.youtube.com/watch?v=DkSnVZgmFF0",
+  "player": "camera side: brown t-shirt, black shorts, neon green shoes",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "assessment": {
+    "shots": {
+      "dink": 0,
+      "drive": 0,
+      "drop": 0,
+      "lob": 0,
+      "volley": 0,
+      "serve": 0,
+      "return": 3
+    },
+    "thirdShotDropShare": null,
+    "unforcedErrors": 0,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.0,
+      "high": 4.0
+    },
+    "reasons": [
+      "Consistently gets deep returns safely into play and immediately transitions up to the non-volley zone line.",
+      "Maintains a balanced athletic ready position with paddle up at the kitchen line.",
+      "Shows good court positioning and awareness moving as a unit with his partner."
+    ]
+  }
+}

@@ -63,6 +63,10 @@ def build_parser() -> argparse.ArgumentParser:
     m.add_argument("--start", type=parse_time, default=0)
     m.add_argument("--duration", type=float, default=60)
 
+    aa = sub.add_parser("assess-all", help="Gemini grades every clip in demo/clips.md not yet cached, with progress")
+    aa.add_argument("--refresh", action="store_true", help="Ask Gemini again even for cached clips")
+    aa.add_argument("--only", nargs="*", help="Only these clip IDs")
+
     b = sub.add_parser("build", help="Combine into the ClipStats the app reads")
     b.add_argument("clip_id")
     return p
@@ -80,6 +84,8 @@ def main(argv: list[str] | None = None) -> int:
                                      fps=args.fps, start_sec=args.start, end_sec=end)
         print(json.dumps(result, indent=2))
         return 0
+    if args.cmd == "assess-all":
+        return assess_all(args)
     if args.cmd == "measure":
         from .detect import detect
         from .measure import measure
@@ -94,6 +100,57 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{args.clip_id}: {len(stats['players'])} players, ok")
         return 0
     return 1
+
+
+def read_clips_table(path=None) -> list[dict]:
+    """Rows of the table in demo/clips.md: clip ID, link, level, player, start."""
+    import re
+    from pathlib import Path
+
+    path = path or Path(__file__).resolve().parents[3] / "demo" / "clips.md"
+    rows = []
+    for line in Path(path).read_text().splitlines():
+        m = re.match(r"\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|", line)
+        if not m:
+            continue
+        cid, url, channel, level, player, start = (s.strip() for s in m.groups())
+        num = re.match(r"\d+(\.\d+)?", level)
+        rows.append({"clipId": cid, "source": url, "channel": channel, "level": float(num.group()) if num else None,
+                     "player": player, "start": parse_time(start) if start else 0.0})
+    return rows
+
+
+def assess_all(args) -> int:
+    import time
+
+    from . import clips
+    from .gemini import RealGemini
+
+    rows = [r for r in read_clips_table() if not args.only or r["clipId"] in args.only]
+    gemini = RealGemini()
+    done = failed = 0
+    began = time.monotonic()
+    for i, r in enumerate(rows, 1):
+        tag = f"[{i}/{len(rows)}] {r['clipId']}"
+        cached = (clips.CLIPS_DIR / f"{r['clipId']}.gemini.json").exists()
+        if cached and not args.refresh:
+            print(f"{tag}: cached, skipped", flush=True)
+            done += 1
+            continue
+        print(f"{tag}: Gemini is watching ({r['player']})", flush=True)
+        t = time.monotonic()
+        try:
+            a = clips.get_or_assess(gemini, r["clipId"], r["source"], r["player"], refresh=args.refresh,
+                                    start_sec=r["start"], end_sec=r["start"] + 60)
+            lvl = a["levelEstimate"]
+            label = f", labeled {r['level']:g}" if r["level"] is not None else ""
+            print(f"{tag}: done in {time.monotonic() - t:.0f}s: level {lvl['low']:g} to {lvl['high']:g}{label}", flush=True)
+            done += 1
+        except Exception as e:  # keep going; report at the end
+            print(f"{tag}: FAILED after {time.monotonic() - t:.0f}s: {e}", flush=True)
+            failed += 1
+    print(f"Finished {done} of {len(rows)} in {time.monotonic() - began:.0f}s" + (f", {failed} failed" if failed else ""), flush=True)
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":
