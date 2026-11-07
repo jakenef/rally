@@ -73,3 +73,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 (partial): Tonight’s session now has the Overtime facility/court/player view, real Rally assignments, signature pickleballs, and hideable demo reset. 35 tests, TypeScript, and production build pass; facility rendering checked in the browser. Cancellation/backfill wiring remains pending.
 
 - 2026-11-06 1.4 requested visual simplification: removed player-specific ball stripes, dot patterns, initials, and their legend; retained team colors, perforations, hover interactions, and spotlight stats.
+
+- 2026-11-06 1.4 requested facility reference styling: continuous 3D plaza, benches, bleachers, planters, shelter, crimson practical lighting and court labels; screenshot comparison caught and corrected court-base occlusion and oversized labels. Existing court/player drilldown retained.

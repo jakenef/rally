@@ -137,7 +137,7 @@ export function mountFacility(
     pickleGeometry = { outer, inner, walls, texture };
     return pickleGeometry;
   }
-  container.innerHTML = `<div class="facility-view"><div class="facility-topline"><span class="eyebrow">Facility overview / 4 courts</span><span class="eyebrow">Hover a court. Select to enter.</span></div><div class="facility-stage"><div class="facility-labels"></div><div class="focus-chrome" hidden><button class="ch-btn ch-btn-outline view-back" type="button">Back to facility</button><div class="focus-court-title"></div></div><section class="signature-profile" aria-label="Player profile" hidden></section><div class="player-switch" hidden><button type="button" class="ch-btn ch-btn-outline previous">Previous</button><span class="selected-name"></span><button type="button" class="ch-btn ch-btn-outline next">Next</button></div><div class="facility-loading" role="status">Preparing the facility.</div></div></div>`;
+  container.innerHTML = `<div class="facility-view"><div class="facility-stage"><div class="facility-labels"></div><div class="focus-chrome" hidden><button class="ch-btn ch-btn-outline view-back" type="button">Back to facility</button><div class="focus-court-title"></div></div><section class="signature-profile" aria-label="Player profile" hidden></section><div class="player-switch" hidden><button type="button" class="ch-btn ch-btn-outline previous">Previous</button><span class="selected-name"></span><button type="button" class="ch-btn ch-btn-outline next">Next</button></div><div class="facility-loading" role="status">Preparing the facility.</div></div></div>`;
   const stage = container.querySelector<HTMLElement>(".facility-stage")!,
     labels = container.querySelector<HTMLElement>(".facility-labels")!,
     chrome = container.querySelector<HTMLElement>(".focus-chrome")!,
@@ -176,10 +176,10 @@ export function mountFacility(
     disposed = false;
   const observers: ResizeObserver[] = [];
   const origins = [
-    [-12.5, -7.4],
-    [12.5, -7.4],
-    [-12.5, 7.4],
-    [12.5, 7.4],
+    [-12.2, -7],
+    [12.2, -7],
+    [-12.2, 7],
+    [12.2, 7],
   ];
   const playerPositions = [
     [-5.5, -2.5],
@@ -248,9 +248,7 @@ export function mountFacility(
         ([name, v]) =>
           `<div class="signature-stat"><div><span>${name}</span><strong>${Math.round(v * 100)}</strong></div><div class="track"><div class="fill" style="width:${v * 100}%"></div></div></div>`,
       )
-      .join(
-        "",
-      )}</div>`;
+      .join("")}</div>`;
     switcher.querySelector<HTMLElement>(".selected-name")!.textContent =
       `${p.name} (${jersey})`;
   }
@@ -306,6 +304,7 @@ export function mountFacility(
               : [o.material];
             materials.forEach((m) => {
               if (
+                m instanceof THREE.MeshBasicMaterial ||
                 m instanceof THREE.MeshStandardMaterial ||
                 m instanceof THREE.SpriteMaterial
               )
@@ -358,7 +357,10 @@ export function mountFacility(
           ),
           emissiveIntensity: 0,
         });
-        group.add(new THREE.Mesh(geometry.outer, m));
+        const shell = new THREE.Mesh(geometry.outer, m);
+        shell.castShadow = false;
+        shell.receiveShadow = true;
+        group.add(shell);
         group.add(
           new THREE.Mesh(
             geometry.inner,
@@ -383,7 +385,11 @@ export function mountFacility(
         glowCanvas.height = 128;
         const ctx = glowCanvas.getContext("2d")!,
           g = ctx.createRadialGradient(64, 64, 5, 64, 64, 64),
-          hue = "#" + new THREE.Color(token(isA ? "--crimson" : "--paper")).getHexString();
+          hue =
+            "#" +
+            new THREE.Color(
+              token(isA ? "--crimson" : "--paper"),
+            ).getHexString();
         g.addColorStop(0, hue);
         g.addColorStop(0.45, hue + "66");
         g.addColorStop(1, hue + "00");
@@ -408,6 +414,33 @@ export function mountFacility(
         ring.position.set(x, 0.07, z);
         ring.visible = false;
         groups[c].root.add(ring);
+        const shadowCanvas = document.createElement("canvas");
+        shadowCanvas.width = shadowCanvas.height = 64;
+        const shadowContext = shadowCanvas.getContext("2d")!;
+        const shadowGradient = shadowContext.createRadialGradient(
+          32,
+          32,
+          2,
+          32,
+          32,
+          32,
+        );
+        shadowGradient.addColorStop(0, "rgba(0,0,0,0.65)");
+        shadowGradient.addColorStop(0.4, "rgba(0,0,0,0.3)");
+        shadowGradient.addColorStop(1, "rgba(0,0,0,0)");
+        shadowContext.fillStyle = shadowGradient;
+        shadowContext.fillRect(0, 0, 64, 64);
+        const contactShadow = new THREE.Mesh(
+          new THREE.PlaneGeometry(3.4, 2.6),
+          new THREE.MeshBasicMaterial({
+            map: new THREE.CanvasTexture(shadowCanvas),
+            transparent: true,
+            depthWrite: false,
+          }),
+        );
+        contactShadow.rotation.x = -Math.PI / 2;
+        contactShadow.position.set(0, -1.28, 0);
+        group.add(contactShadow);
         figures.push({ group, ring, glow, material: m, c, pIndex, lift: 0 });
         const label = document.createElement("button");
         label.type = "button";
@@ -489,7 +522,7 @@ export function mountFacility(
   if (THREE) {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(42, 1, 0.1, 250);
-    camera.position.set(0, 40, 34);
+    camera.position.set(0, 43, 37);
     try {
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     } catch (error) {
@@ -499,13 +532,30 @@ export function mountFacility(
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.setClearColor(0, 0);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
       renderer.domElement.setAttribute("aria-hidden", "true");
       stage.prepend(renderer.domElement);
       scene.add(
-        new THREE.HemisphereLight(token("--paper"), token("--night"), 2.2),
+        new THREE.HemisphereLight(token("--paper"), token("--night"), 0.5),
       );
-      const sun = new THREE.DirectionalLight(token("--paper"), 3);
-      sun.position.set(-15, 30, 12);
+      const sun = new THREE.DirectionalLight(token("--paper"), 2.1);
+      sun.position.set(-18, 35, -12);
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(2048, 2048);
+      Object.assign(sun.shadow.camera, {
+        left: -40,
+        right: 40,
+        top: 32,
+        bottom: -32,
+        near: 1,
+        far: 100,
+      });
+      sun.shadow.normalBias = 0.035;
+      sun.shadow.bias = -0.0003;
+      sun.shadow.radius = 3;
       scene.add(sun);
       const mat = (
         name: string,
@@ -516,6 +566,203 @@ export function mountFacility(
           roughness: 0.48,
           ...extra,
         });
+      // The facility is one continuous plaza, not four disconnected cards.
+      const architecture = new THREE.Group();
+      scene.add(architecture);
+      const dark = mat("--surface-raised", {
+        color: new THREE.Color(token("--surface-raised")).multiplyScalar(0.4),
+        roughness: 0.95,
+      });
+      const trim = mat("--line", {
+        color: new THREE.Color(token("--line")).multiplyScalar(0.45),
+        roughness: 0.8,
+        metalness: 0.15,
+      });
+      const sunk = mat("--surface-sunk", { roughness: 0.95 });
+      const redLight = mat("--crimson", {
+        emissive: token("--crimson"),
+        emissiveIntensity: 1,
+      });
+      function rounded(w: number, d: number, h: number, r: number) {
+        const path = new THREE.Shape();
+        path.moveTo(-w / 2 + r, -d / 2);
+        path.lineTo(w / 2 - r, -d / 2);
+        path.quadraticCurveTo(w / 2, -d / 2, w / 2, -d / 2 + r);
+        path.lineTo(w / 2, d / 2 - r);
+        path.quadraticCurveTo(w / 2, d / 2, w / 2 - r, d / 2);
+        path.lineTo(-w / 2 + r, d / 2);
+        path.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - r);
+        path.lineTo(-w / 2, -d / 2 + r);
+        path.quadraticCurveTo(-w / 2, -d / 2, -w / 2 + r, -d / 2);
+        const geo = new THREE.ExtrudeGeometry(path, {
+          depth: h,
+          bevelEnabled: true,
+          bevelSize: 0.06,
+          bevelThickness: 0.05,
+          bevelSegments: 2,
+          steps: 1,
+          curveSegments: 12,
+        });
+        geo.rotateX(-Math.PI / 2);
+        return geo;
+      }
+      function prop(
+        geo: THREE.BufferGeometry,
+        material: THREE.Material,
+        x: number,
+        y: number,
+        z: number,
+        parent: THREE.Group = architecture,
+      ) {
+        const mesh = new THREE.Mesh(geo, material);
+        mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+      prop(rounded(67, 43, 0.45, 9), dark, 0, -1.05, 0);
+      const perimeter = new THREE.EdgesGeometry(
+        rounded(66.8, 42.8, 0.05, 9),
+        35,
+      );
+      const rim = new THREE.LineSegments(
+        perimeter,
+        new THREE.LineBasicMaterial({
+          color: token("--crimson"),
+          transparent: true,
+          opacity: 0.28,
+        }),
+      );
+      rim.position.y = -0.57;
+      architecture.add(rim);
+      function lightStrip(
+        x: number,
+        y: number,
+        z: number,
+        width: number,
+        turn = false,
+      ) {
+        const bar = prop(
+          new THREE.BoxGeometry(width, 0.075, 0.09),
+          redLight,
+          x,
+          y,
+          z,
+        );
+        if (turn) bar.rotation.y = Math.PI / 2;
+        const light = new THREE.PointLight(token("--crimson"), 12, 7, 2);
+        light.position.set(x, y + 0.15, z);
+        architecture.add(light);
+      }
+      function bench(x: number, z: number, turn = false) {
+        const g = new THREE.Group();
+        g.position.set(x, -0.5, z);
+        if (turn) g.rotation.y = Math.PI / 2;
+        architecture.add(g);
+        for (let k = 0; k < 5; k++)
+          prop(
+            new THREE.BoxGeometry(12, 0.17, 0.28),
+            trim,
+            0,
+            1.15,
+            (k - 2) * 0.34,
+            g,
+          );
+        for (const px of [-4.7, 4.7])
+          prop(new THREE.BoxGeometry(0.25, 1.1, 1.5), dark, px, 0.5, 0, g);
+        lightStrip(x, -0.05, z + (turn ? 0 : 0.7), 10, turn);
+      }
+      bench(-9, 18);
+      bench(9, 18);
+      bench(-27, 0, true);
+      bench(27, 0, true);
+      // Low bleachers at the two outside edges.
+      for (const sign of [-1, 1])
+        for (let row = 0; row < 3; row++) {
+          prop(
+            new THREE.BoxGeometry(1.5, 0.7 + row * 0.65, 22),
+            dark,
+            sign * (29.7 + row * 1.35),
+            -0.4 + (0.7 + row * 0.65) / 2,
+            0,
+          );
+          lightStrip(sign * (29 + row * 1.35), -0.1 + row * 0.65, 0, 21, true);
+        }
+      function planter(x: number, z: number, seed: number) {
+        const g = new THREE.Group();
+        g.position.set(x, -0.5, z);
+        architecture.add(g);
+        prop(rounded(10, 4.6, 0.65, 2.2), trim, 0, 0, 0, g);
+        prop(rounded(9.5, 4.1, 0.12, 1.9), sunk, 0, 0.65, 0, g);
+        for (let k = 0; k < 3; k++) {
+          const rock = prop(
+            new THREE.SphereGeometry(1, 14, 10),
+            dark,
+            -2 + k * 1.6,
+            0.8,
+            0.1 + (k % 2) * 0.35,
+            g,
+          );
+          rock.scale.set(1.3, 0.8 + k * 0.28, 1.1);
+        }
+        const foliage = mat("--crimson-deep", { roughness: 0.9 });
+        for (let k = 0; k < 28; k++) {
+          const angle = k * 2.399 + seed;
+          const height = 1.5 + ((k * 7) % 11) * 0.13;
+          const blade = prop(
+            new THREE.ConeGeometry(0.075, height, 3),
+            foliage,
+            1.4 + Math.cos(angle) * 0.35,
+            1.3 + height / 2,
+            Math.sin(angle) * 0.35,
+            g,
+          );
+          blade.rotation.z = Math.sin(angle) * 0.55;
+          blade.rotation.x = Math.cos(angle) * 0.55;
+        }
+      }
+      planter(-26, -18, 1);
+      planter(26, -18, 2);
+      planter(-26, 18, 3);
+      planter(26, 18, 4);
+      // Slatted shelter and picnic table at the head of the plaza.
+      for (const x of [-7.5, 7.5])
+        for (const z of [-20, -16])
+          prop(new THREE.BoxGeometry(0.45, 5, 0.45), dark, x, 1.9, z);
+      for (let k = 0; k < 8; k++)
+        prop(
+          new THREE.BoxGeometry(16, 0.22, 0.28),
+          trim,
+          0,
+          4.5,
+          -20.5 + k * 0.7,
+        );
+      for (const x of [-7.7, 7.7])
+        prop(new THREE.BoxGeometry(0.3, 0.5, 5.5), trim, x, 4.35, -18);
+      prop(new THREE.BoxGeometry(7, 0.25, 1.7), trim, 0, 1.2, -17.6);
+      for (const z of [-19, -16.2])
+        prop(new THREE.BoxGeometry(7.5, 0.2, 0.7), dark, 0, 0.65, z);
+      for (const x of [-2.5, 2.5])
+        prop(new THREE.BoxGeometry(0.25, 1.6, 3.3), dark, x, 0.25, -17.6);
+      lightStrip(-4, 3.75, -19.8, 2.5);
+      lightStrip(4, 3.75, -19.8, 2.5);
+      for (const x of [-10, 10]) {
+        prop(
+          new THREE.CylinderGeometry(0.65, 0.7, 1.9, 24),
+          dark,
+          x,
+          0.4,
+          -17.5,
+        );
+        prop(
+          new THREE.TorusGeometry(0.65, 0.06, 6, 24),
+          trim,
+          x,
+          1.35,
+          -17.5,
+        ).rotation.x = Math.PI / 2;
+      }
       origins.forEach(([ox, oz], i) => {
         const root = new THREE.Group();
         root.position.set(ox, 0, oz);
@@ -529,26 +776,28 @@ export function mountFacility(
         ) => {
           const object = new THREE.Mesh(geo, m);
           object.position.set(x, y, z);
+          object.castShadow = true;
+          object.receiveShadow = true;
           root.add(object);
           return object;
         };
-        const base = add(
-          new THREE.BoxGeometry(22, 0.55, 11),
-          mat("--night-raised"),
-          0,
-          -0.4,
-          0,
-        );
+        const base = add(rounded(22, 11, 0.55, 0.65), dark, 0, -0.75, 0);
         add(
           new THREE.BoxGeometry(20, 0.07, 9.09),
-          mat("--crimson-deep"),
+          mat("--crimson-deep", {
+            color: new THREE.Color(token("--crimson-deep")).multiplyScalar(0.5),
+            roughness: 1,
+          }),
           0,
           -0.08,
           0,
         );
         add(
           new THREE.BoxGeometry(6.36, 0.08, 9.09),
-          mat("--crimson"),
+          mat("--crimson", {
+            color: new THREE.Color(token("--crimson")).multiplyScalar(0.65),
+            roughness: 1,
+          }),
           0,
           -0.03,
           0,
@@ -631,7 +880,8 @@ export function mountFacility(
         const speed = reduce.matches ? 1 : 1 - Math.exp(-dt * 4.5);
         const [ox, oz] = origins[courtIndex];
         if (level === "facility") {
-          desiredCamera.set(0, 40, 34);
+          const fit = 1.15 * Math.max(1, 1.85 / camera.aspect);
+          desiredCamera.set(0, 37 * fit, 32 * fit);
           desiredLook.set(0, 0, 0);
         } else if (level === "court") {
           desiredCamera.set(ox, 15, oz + 19);
@@ -709,9 +959,16 @@ export function mountFacility(
             ? object.material
             : [object.material]) {
             materials.add(material);
-            if (material instanceof THREE.MeshStandardMaterial) {
+            if (
+              material instanceof THREE.MeshStandardMaterial ||
+              material instanceof THREE.MeshBasicMaterial
+            ) {
               if (material.map) textures.add(material.map);
-              if (material.bumpMap) textures.add(material.bumpMap);
+              if (
+                material instanceof THREE.MeshStandardMaterial &&
+                material.bumpMap
+              )
+                textures.add(material.bumpMap);
             }
             if (material instanceof THREE.SpriteMaterial && material.map)
               textures.add(material.map);

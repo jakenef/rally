@@ -475,3 +475,68 @@
 .facility-focus-open .rl-nav {
   z-index: 200;
 }
+
+/* Reference plaza: uninterrupted grounds, inset crimson court labels. */
+.rl-dashboard {
+  max-width: 1800px;
+  padding: 24px 24px 18px;
+  gap: 8px;
+}
+.dashboard-heading {
+  padding: 0 16px;
+}
+.dashboard-heading .ch-hl {
+  font-size: clamp(30px, 3vw, 46px);
+}
+.facility-stage {
+  height: calc(100svh - 200px);
+  min-height: 540px;
+  max-height: 1100px;
+}
+.facility-court-tag {
+  bottom: -8px;
+  padding: 8px 15px;
+  gap: 14px;
+  border-color: var(--crimson-deep);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  font-size: 11px;
+}
+.facility-court-tag span:last-child {
+  padding-left: 14px;
+  border-left: 1px solid var(--line-strong);
+}
+.dashboard-note {
+  padding: 0 16px;
+  font-size: 11px;
+}
+.facility-focused {
+  height: calc(100dvh - var(--facility-nav-height, 88px));
+  min-height: 0;
+  max-height: none;
+}
+@media (max-width: 650px) {
+  .rl-dashboard {
+    padding: 20px 0 16px;
+  }
+  .dashboard-heading {
+    padding: 0 16px;
+  }
+  .facility-stage {
+    min-height: 440px;
+    height: calc(100svh - 210px);
+  }
+  .facility-focused {
+    height: calc(100dvh - var(--facility-nav-height, 72px));
+    min-height: 0;
+  }
+  .facility-court-tag {
+    font-size: 9px;
+    gap: 7px;
+    padding: 7px 9px;
+    border-radius: 10px;
+  }
+  .facility-court-tag span:last-child {
+    padding-left: 7px;
+  }
+}
