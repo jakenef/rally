@@ -8,7 +8,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 2. **Tests carry criterion IDs.** Every criterion in scope gets at least one test whose name starts with its ID. A criterion that needs real video, a real phone or a real model gets a skipped test (`it.todo`) and a line in `DECISIONS.md` saying why.
 3. **Ambiguity:** don't stop and don't edit the spec. Pick the simplest reading, write it in `DECISIONS.md` (`- 030 MATCH-2: ...`), and continue.
 4. **Modules only use each other's exported interface.**
-5. **Everything external sits behind an interface with a fake** in `packages/fakes`: Claude and Gemini. Messages and payments are never real: the on-screen fake phone and a simulated Pay button are the product for the hackathon.
+5. **Everything external sits behind an interface with a fake** in `packages/fakes`: Claude and Gemini. Offers appear on the on-screen fake phone. There is no payment flow, including simulated payments, in the demo.
 6. **The demo is the deadline.** Steps marked (demo) must work before anything marked (stretch).
 7. **Finish a step:** checks pass (see `product/README.md`), tick the box, add one line to the log, commit with the step and criteria in the message, open a small PR and merge it once green (PRs are only there to catch merge conflicts; see `AGENTS.md`, What needs a PR).
 
@@ -20,8 +20,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 ### Step 1: The engine (demo) — Facility lane, Danny
 - [x] **1.1 Matching** (`030`, MATCH-1, MATCH-3 to MATCH-7). MATCH-2 benching deferred at Danny's request; full groups of four only.
-- [ ] **1.2 Sessions** (`040`, SESS-1 to SESS-3), payment simulated.
-- [ ] **1.3 Backfill** (`050`, FILL-1, FILL-2, FILL-4), offers on the on-screen fake phone.
+- [x] **1.2 Sessions** (`040`, SESS-1, SESS-2): sign-ups, skill limits and waitlist only. Payments and pricing rules cut from demo scope by Danny.
+- [x] **1.3 Backfill** (`050`, FILL-1, FILL-2, FILL-4), offers on the on-screen fake phone at `/phone`; full dashboard wiring remains 1.4.
 - [ ] **1.4 Dashboard** (scenes 1 and 3): tonight's courts, **Rally it** button, fairness scores, cancel button, fake phone, recovered revenue.
 
 ### Step 2: The player (demo) — AI lane, Jake
@@ -57,7 +57,14 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
+- 2026-11-06 integration: combined Sessions and Backfill, default-session QA, current facility dashboard, video-upload onboarding, offline-cache QA, and selective crimson/outline styling under Danny's explicit merge-everything request. Preserved live onboarding over the older player page and kept both cache/job tests. 51 Vitest tests, 31 Python tests, TypeScript and production build pass.
+
+- 2026-11-06 1.3: best-fit waitlist scoring through matching, cancellation/promotion in the same Sessions store, sequential fake-phone offers, Accept/Decline and recovered-revenue metric; /phone scene 3 verified in browser, acceptance tests and TypeScript pass (FILL-1, FILL-2, FILL-4). No payment flow.
+
+- 2026-11-06 1.2: demo-only in-memory sessions, capacity/waitlist and inclusive skill restrictions; acceptance tests and TypeScript checks pass (SESS-1, SESS-2). Payments and pricing/rule parsing cut, per Danny. UI wiring remains step 1.4.
+
 - 2026-11-06 accent correction (approved): restored solid crimson default headlines, marquee, homepage accent, and rating numbers; only the video-rating heading opts into white outlines. 37 tests, type checks, and production build pass. Inspected ten production screenshots across homepage, upload, rating result, comparison, and dashboard at 1440px and 390px; no page overflow or browser errors. Added spacing after the tip label found during visual review. Jake approved the preview and requested merge.
+
 
 - 2026-11-06 requested white-outline accents: Overtime tokens, shared headline/marquee, homepage, and prominent rating text updated; 37 tests, type checks, and production build pass. Browser preview unavailable. Presentation only; no feature criteria changed.
 

@@ -21,7 +21,7 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 - No ball tracking at the hackathon, because it's the riskiest vision piece; stats come from player position and pose (see `research/risks.md`).
 - DUPR lookup is mocked, because we found no public API.
 - No real messaging at all (no SMS, calls or email); backfill offers show on an on-screen fake phone, because a real integration takes too long for little demo value.
-- No real payments: no Stripe; a Pay button marks a sign-up paid, because it looks the same on stage.
+- No payment flow, including simulated payments or a Pay button, per Danny on 2026-11-06. Only build what appears in the demo. Price stays as a displayed session rule and recovered revenue as a demo metric.
 - Demo footage is public YouTube rec play, not our own filming; see `demo/clips.md`.
 - 030: matching uses the mirror rule (both teams get the same style mix) and a player-chosen tempo, not "complementary partners", because coaching advice disagrees on partner style but agrees mismatches across the net ruin rec games (`research/play-styles.md`).
 
@@ -39,6 +39,9 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 
 ## Build
 
+- 050 FILL-1: rank replacements in the exact vacated team/seat using matching.fairness; do not reshuffle the other three players or other courts. Pass the displayed courts as an optional fourth argument to rankWaitlist; its original three-argument interface derives matching's default pre-cancellation assignment. Exclude candidates outside session skill limits; tied scores keep waitlist order.
+- 050 FILL-2/FILL-4: backfill shares the Sessions store through cancelSignUp/promoteWaitlisted, supports one vacancy chain per session, and records replies so repeated clicks cannot advance twice or double-count revenue. Declines stay on the waitlist but are skipped for this vacancy. An exhausted/empty waitlist leaves the spot open. No expiry, messaging or payment flow. Recovered revenue is only the displayed-price demo metric.
+- 050 demo: /phone runs a resettable browser-local copy of the real demo roster and matching assignment, with cancellation, ranked offers, Accept/Decline, court updates and recovered revenue. Sharing this state with the full dashboard/player screen remains step 1.4. The stored departing ID is a seat marker while vacancy is open; the UI renders it as Open spot and hides that court's fairness until filled.
 - 025: uploads are processed on the laptop running the app: the browser posts the file to `/player/api/jobs`, and the app runs `rally_vision players` and `rally_vision analyze` as subprocesses from `product/vision/.venv`. Job folders live in `product/.uploads/` (gitignored). Never deployed.
 - 025: picking yourself happens in your own paused video: each time you pause or scrub, YOLO finds the people on that frame (about 4 seconds). Rally crops your box itself and sends it to Gemini with the video (Files API), so you never upload a photo.
 - 025: tracking (first 60 s) and Gemini (first 3 min) run side by side; status.json is rewritten atomically after each step so the page can poll it every second. Once tracking finishes, the analyzing screen plays your clip with the YOU box while Gemini keeps watching.
@@ -54,6 +57,9 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 - 010: Gemini calls time out after 180s and retry overloads (429, 5xx) up to 5 times with backoff, switching to `gemini-3.6-flash` after two; every step prints a progress line. A 400 drops the custom fps (and names the time window in the prompt instead). On the 9 real clips, fps 5 on YouTube links was accepted every time.
 - 010 VIS-5: `--select` takes the player's position in court metres, not pixels, because the selection happens after mapping onto the court.
 - 010: the rubric (`vision/rubric.md`) is built from secondary sites repeating USA Pickleball's level descriptions; we couldn't reach the official text.
+- 040 SESS-1/SESS-2: sessions use an explicitly seeded in-memory store with snapshot reads; the shared signUp(sessionId, Profile) contract stays unchanged. Capacity is courts * 4, skill bounds include their endpoints and use mu, and repeated sign-ups are idempotent. The shared paid field is preserved but unused to avoid changing the other lane's interface.
+- 040 SESS-3: Danny cut pricing/rule parsing from the demo on 2026-11-06. Use fixed fixture settings; no Claude adapter, approval flow or API key is needed for Sessions.
+
 - 020: the card is written by `claude-opus-5-5` (structured output, effort low) with server-side refusal fallback (`fallbacks: "default"`), only when `ANTHROPIC_API_KEY` is set; otherwise, or on any error, the template card (PRO-4). Cards are cached in memory per clip so a page reload doesn't call Claude again.
 - 010: Gemini watches 3 minutes from each clip's start (`--window`, default 180s), not 60s: in 60s it saw only 1 to 10 rally shots per player, too little to grade, and it pulled every grade toward 3.0 to 3.5.
 - 010: clips whose camera angle defeats court mapping are built from Gemini alone (`measured: false`, one player). Their style uses Gemini's shot mix for kitchen and 0.5 for mobility and readiness, and they get no athleticism score.

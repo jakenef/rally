@@ -1,0 +1,13 @@
+.bf-heading, .bf-controls { display: grid; gap: var(--space-mini); }
+.bf-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--space-large); align-items: start; }
+.bf-controls h2 { margin: 0; }
+.bf-controls select { width: 100%; max-width: 400px; min-height: var(--size-control); padding: 0 var(--space-mini); border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
+.bf-controls select:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.bf-controls button:disabled { opacity: .45; cursor: default; }
+.bf-number { font-size: 32px; font-variant-numeric: tabular-nums; }
+.bf-candidate { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: var(--space-mini); }
+.bf-candidate span:last-child { color: var(--ink-muted); font-size: 14px; }
+.bf-phone { width: 320px; }
+.bf-phone .rl-phone-screen { gap: var(--space-mini); }
+.bf-phone-title { font-size: 32px; line-height: 1.05; margin: var(--space-mini) 0; text-transform: uppercase; }
+@media (max-width: 700px) { .bf-layout { grid-template-columns: 1fr; gap: var(--space-small); } .bf-phone { justify-self: center; } }

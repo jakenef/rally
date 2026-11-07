@@ -26,7 +26,7 @@ function reply(offerId: string, answer: "yes" | "no"): "accepted" | "declined";
 
 1. On cancellation, rank each waitlisted player by the fairness of the leaving player's court with them swapped in.
 2. Offer to the top player on the fake phone. The offer names the court, time and price, with Accept and Decline buttons.
-3. Accept marks the spot paid (simulated) and updates the court. Decline moves to the next player.
+3. Accept fills the spot and updates the court. Decline moves to the next player. No payment flow is needed for the demo.
 4. The dashboard shows recovered revenue.
 
 ## Acceptance criteria
