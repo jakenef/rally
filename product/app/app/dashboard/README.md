@@ -16,4 +16,6 @@ Facility-to-court transitions interpolate both canvas bounds and camera with smo
 
 Player cards use screen-space bounds reconstructed at their player’s 3D depth. Court cards occupy separate rows and side lanes; spotlight cards scale to the viewport and stay between top navigation and bottom player controls.
 
-Player cards occupy two reserved side columns in court view, with the camera fitting the entire court between them. Camera-facing panels sit on a foreground plane rather than at player depth, preventing the court and plaza from clipping through them. Spotlight uses a fixed left card position. Geometry regression checks cover desktop, tablet, portrait mobile, and short landscape viewports.
+The court camera reserves room for the cards. Camera-facing panels sit on a foreground plane rather than at player depth, preventing court and plaza geometry from clipping through them. Geometry regression checks cover desktop, tablet, portrait mobile, and short landscape viewports.
+
+Cards follow projected ball positions in separated team/row regions, clearing both teammates. They fade and slide into place, and the selected card stays visible while its position and size interpolate into the spotlight. Balls bob only above a fixed clearance; contact shadows remain flat on the court rather than inheriting ball rotation.

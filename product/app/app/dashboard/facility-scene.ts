@@ -175,6 +175,7 @@ export function mountFacility(
     group: THREE.Group;
     ring: THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
     glow: THREE.Sprite;
+    shadow: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
     material: THREE.MeshStandardMaterial;
     c: number;
     pIndex: number;
@@ -585,6 +586,10 @@ export function mountFacility(
           }
         }
       });
+      f.shadow.removeFromParent();
+      f.shadow.geometry.dispose();
+      f.shadow.material.map?.dispose();
+      f.shadow.material.dispose();
       f.ring.geometry.dispose();
       f.ring.material.dispose();
     });
@@ -613,7 +618,7 @@ export function mountFacility(
           isA = pIndex < 2,
           [x, z] = playerPositions[pIndex];
         const group = new THREE.Group();
-        group.position.set(x, 1.35, z);
+        group.position.set(x, 1.1, z);
         group.rotation.set(0.3, pIndex * 0.6, 0.2);
         groups[c].root.add(group);
         const geometry = buildPickleGeometry();
@@ -630,7 +635,7 @@ export function mountFacility(
         });
         addPlayerCard(group, p);
         const shell = new THREE.Mesh(geometry.outer, m);
-        shell.castShadow = false;
+        shell.castShadow = true;
         shell.receiveShadow = true;
         group.add(shell);
         group.add(
@@ -711,13 +716,14 @@ export function mountFacility(
           }),
         );
         contactShadow.rotation.x = -Math.PI / 2;
-        contactShadow.position.set(0, -1.28, 0);
-        group.add(contactShadow);
+        contactShadow.position.set(x, 0.055, z);
+        groups[c].root.add(contactShadow);
         figures.push({
           id,
           group,
           ring,
           glow,
+          shadow: contactShadow,
           material: m,
           c,
           pIndex,
@@ -1229,18 +1235,28 @@ export function mountFacility(
         };
         figures.forEach((f, index) => {
           const card = f.group.getObjectByName("player-card");
-          if (card)
-            card.visible =
-              level !== "facility" &&
-              f.c === courtIndex &&
-              !cameraMove &&
-              !shuffle &&
-              (level === "court" || f.pIndex === playerIndex);
+          if (card) {
+            const active = level !== "facility" && f.c === courtIndex && !shuffle
+              && (level === "court" || f.pIndex === playerIndex);
+            const opacity = THREE.MathUtils.lerp(
+              Number(card.userData.opacity ?? 0), Number(active),
+              reduce.matches ? 1 : 1 - Math.exp(-dt * 6),
+            );
+            card.userData.opacity = opacity;
+            card.visible = opacity > 0.005;
+            card.traverse((node) => {
+              if (node instanceof THREE.Mesh) {
+                node.material.transparent = true;
+                node.material.opacity = opacity;
+              }
+            });
+          }
+          f.shadow.visible = !shuffle;
           if (shuffle) {
             const start = shuffle.starts.get(f.id)!;
             const [cx, cz] = origins[f.c];
             const [px, pz] = playerPositions[f.pIndex];
-            const destination = new THREE.Vector3(cx + px, 1.35, cz + pz);
+            const destination = new THREE.Vector3(cx + px, 1.1, cz + pz);
             const angle =
               (index / figures.length) * Math.PI * 2 +
               ease(progress / 0.6) * Math.PI * 1.5;
@@ -1267,11 +1283,11 @@ export function mountFacility(
             (Number(hovered) * 0.4 - f.lift) *
             (reduce.matches ? 1 : 1 - Math.exp(-dt * 7));
           f.group.position.y =
-            1.35 +
+            1.1 +
             f.lift +
             (reduce.matches
               ? 0
-              : Math.sin(time * 0.00085 + f.pIndex * 0.8) * 0.13);
+              : (1 + Math.sin(time * 0.00085 + f.pIndex * 0.8)) * 0.06);
           if (card?.visible) {
             const width = stage.clientWidth,
               height = stage.clientHeight;
@@ -1299,24 +1315,54 @@ export function mountFacility(
             const worldHeight =
               2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * depth;
             let x: number, y: number;
+            const center = f.group.getWorldPosition(new THREE.Vector3());
+            const anchor = project(center);
+            const ballDepth = -center.clone().applyMatrix4(camera.matrixWorldInverse).z;
+            const ballRadius = 0.85 * height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * ballDepth);
             if (inSpotlight) {
-              x = margin + cardWidth / 2;
-              y = top + availableHeight / 2;
+              x = THREE.MathUtils.clamp(anchor.x - ballRadius - 16 - cardWidth / 2,
+                margin + cardWidth / 2, width - margin - cardWidth / 2);
+              y = THREE.MathUtils.clamp(anchor.y, top + cardHeight / 2, bottom - cardHeight / 2);
             } else {
-              x = f.pIndex < 2
-                ? margin + cardWidth / 2
-                : width - margin - cardWidth / 2;
-              y = top + (availableHeight - cardHeight * 2 - gap) / 2
-                + cardHeight / 2 + (f.pIndex % 2) * (cardHeight + gap);
+              const side = f.pIndex < 2 ? -1 : 1;
+              // Clear both teammates, including the nearer/larger front ball.
+              const neighbors = figures.filter(other => other.c === f.c && (other.pIndex < 2) === (f.pIndex < 2));
+              const edges = neighbors.map(other => {
+                const world = other.group.getWorldPosition(new THREE.Vector3());
+                const projected = project(world);
+                const distance = -world.clone().applyMatrix4(camera.matrixWorldInverse).z;
+                const radius = 0.85 * height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * distance);
+                return projected.x + side * (radius + 16 + cardWidth / 2);
+              });
+              const preferred = side < 0 ? Math.min(...edges) : Math.max(...edges);
+              x = THREE.MathUtils.clamp(preferred,
+                side < 0 ? margin + cardWidth / 2 : width / 2 + gap / 2 + cardWidth / 2,
+                side < 0 ? width / 2 - gap / 2 - cardWidth / 2 : width - margin - cardWidth / 2);
+              const middle = top + availableHeight / 2;
+              const backRow = f.pIndex % 2 === 0;
+              y = THREE.MathUtils.clamp(anchor.y,
+                backRow ? top + cardHeight / 2 : middle + gap / 2 + cardHeight / 2,
+                backRow ? middle - gap / 2 - cardHeight / 2 : bottom - cardHeight / 2);
             }
+            // Keep the same panel alive through camera and player transitions.
+            const previous = card.userData.layout ?? { x, y: y + 20, height: cardHeight * 0.92 };
+            // Retiring cards fade in place while the selected card follows the camera.
+            const retiring = level === "facility" || (level === "player" && f.pIndex !== playerIndex);
+            const blend = reduce.matches ? 1 : 1 - Math.exp(-dt * 7);
+            const layout = {
+              x: THREE.MathUtils.lerp(previous.x, retiring ? previous.x : x, blend),
+              y: THREE.MathUtils.lerp(previous.y, retiring ? previous.y : y, blend),
+              height: THREE.MathUtils.lerp(previous.height, retiring ? previous.height : cardHeight, blend),
+            };
+            card.userData.layout = layout;
             // Reconstruct the reserved screen position on the panel plane.
             const position = new THREE.Vector3(
-              (x / width) * 2 - 1,
-              1 - (y / height) * 2,
+              (layout.x / width) * 2 - 1,
+              1 - (layout.y / height) * 2,
               panelDepth,
             ).unproject(camera);
             card.position.copy(f.group.worldToLocal(position));
-            card.scale.setScalar(((cardHeight / height) * worldHeight) / 4.4);
+            card.scale.setScalar(((layout.height / height) * worldHeight) / 4.4);
             const parentRotation = f.group.getWorldQuaternion(
               new THREE.Quaternion(),
             );
@@ -1347,7 +1393,7 @@ export function mountFacility(
             figures.forEach((f) => {
               groups[f.c].root.attach(f.group);
               const [x, z] = playerPositions[f.pIndex];
-              f.group.position.set(x, 1.35, z);
+              f.group.position.set(x, 1.1, z);
               f.group.rotation.set(0.3, f.pIndex * 0.6, 0.2);
             });
             const complete = shuffle.complete;
