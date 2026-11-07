@@ -85,3 +85,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 requested planter cleanup: removed the red spike foliage from all four facility planters.
 
 - 2026-11-06 1.4 requested character demo: strongest-style 3D accessories, rating/star badges, identity-preserving Rally shuffle into actual assignments, staggered fairness reveal, and immediate reduced-motion fallback.
+
+- 2026-11-06 1.4 requested closer facility framing: moved the overview camera about 10% closer while preserving responsive fitting and court/player zoom positions.
