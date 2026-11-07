@@ -72,6 +72,11 @@ def build_parser() -> argparse.ArgumentParser:
     aa.add_argument("--window", type=float, default=DEFAULT_WINDOW_SEC,
                     help="Seconds of video Gemini watches from the start time (default %(default)s)")
 
+    o = sub.add_parser("overlay-all", help="Track player boxes in each local clip for the on-screen overlay")
+    o.add_argument("--only", nargs="*", help="Only these clip IDs")
+    o.add_argument("--refresh", action="store_true", help="Redo clips that already have an overlay")
+    o.add_argument("--refollow", action="store_true", help="Only redo following the graded player on saved boxes (fast)")
+
     b = sub.add_parser("build", help="Combine into the ClipStats the app reads")
     b.add_argument("clip_id")
     sub.add_parser("build-all", help="Build every clip in demo/clips.md that Gemini has graded")
@@ -90,6 +95,8 @@ def main(argv: list[str] | None = None) -> int:
                                      fps=args.fps, start_sec=args.start, end_sec=end)
         print(json.dumps(result, indent=2))
         return 0
+    if args.cmd == "overlay-all":
+        return overlay_all(args)
     if args.cmd == "assess-all":
         return assess_all(args)
     if args.cmd == "measure":
@@ -134,6 +141,47 @@ def read_clips_table(path=None) -> list[dict]:
         rows.append({"clipId": cid, "source": url, "channel": channel, "level": float(num.group()) if num else None,
                      "player": player, "start": parse_time(start) if start else 0.0, "usedIn": used_in})
     return rows
+
+
+def overlay_all(args) -> int:
+    import time
+
+    from . import clips
+    from .overlay import find_video, selection, track_boxes
+
+    rows = [r for r in read_clips_table() if not args.only or r["clipId"] in args.only]
+    began, failed = time.monotonic(), 0
+    for i, r in enumerate(rows, 1):
+        tag, cid = f"[{i}/{len(rows)}] {r['clipId']}", r["clipId"]
+        out = clips.CLIPS_DIR / f"{cid}.overlay.json"
+        if out.exists() and args.refollow:
+            from .overlay import add_following
+
+            data = json.loads(out.read_text())
+            data["frames"] = [f[:2] for f in data["frames"]]
+            sel = selection(cid)
+            data = add_following(data, sel[1] if sel else 10.0, find_video(cid))
+            out.write_text(json.dumps(data, separators=(",", ":")))
+            seen = sum(1 for f in data["frames"] if f[2] is not None) / len(data["frames"])
+            print(f"{tag}: graded player followed in {seen:.0%} of frames", flush=True)
+            continue
+        if out.exists() and not args.refresh:
+            print(f"{tag}: cached, skipped", flush=True)
+            continue
+        video, sel = find_video(cid), selection(cid)
+        if not video or not sel:
+            print(f"{tag}: skipped ({'no local video in demo/clips' if not video else 'no entry in fixtures/clips/selection.json'})", flush=True)
+            continue
+        print(f"{tag}: tracking players in {video.name}", flush=True)
+        try:
+            data = track_boxes(video, sel[0], sel[1])
+            out.write_text(json.dumps(data, separators=(",", ":")))
+            print(f"{tag}: done, {len(data['frames'])} frames, graded player is track {data['selected']} ({out.stat().st_size // 1024} KB)", flush=True)
+        except Exception as e:  # keep going
+            print(f"{tag}: FAILED: {e}", flush=True)
+            failed += 1
+    print(f"Finished in {time.monotonic() - began:.0f}s" + (f", {failed} failed" if failed else ""), flush=True)
+    return 1 if failed else 0
 
 
 def assess_all(args) -> int:

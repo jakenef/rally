@@ -30,6 +30,17 @@ Then build the clip files the app reads (works from Gemini alone when there's no
 .venv/bin/python -m rally_vision build-all
 ```
 
+## Tracking overlay (the boxes on the video, scene 2)
+
+Needs the local clips in `demo/clips/` and the `detect` extra (`pip install -e ".[gemini,detect,dev]"`).
+
+```sh
+.venv/bin/python -m rally_vision overlay-all             # about 30 s per clip on a Mac GPU, cached in fixtures/clips/<id>.overlay.json
+.venv/bin/python -m rally_vision overlay-all --refollow  # redo only the following of the graded player (fast)
+```
+
+YOLO and ByteTrack box every person; the graded player is picked by the point in `fixtures/clips/selection.json` (video pixels, 10 s in) and then followed by position and clothing colors, so tracker ID switches don't lose them. When two look-alike players cross, or the player leaves the frame, the highlight stops rather than guess.
+
 ## Per clip (from `demo/clips.md`)
 
 ```sh

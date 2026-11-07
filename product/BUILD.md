@@ -53,6 +53,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
+- 2026-11-07 2.1 overlay: YOLO + ByteTrack player boxes on the local clips, graded player followed by position and clothing; /player plays the local clip with the boxes (scene 2), YouTube embed otherwise.
 - 2026-11-07 2.2: shift calibration scored leave-one-out (PRO-6), Gemini-only clips, 3-minute windows, evidence rule; /player/accuracy (scene 5). Corrected error 0.62 vs 0.81 raw; see research/gemini-accuracy.md.
 - 2026-11-07 2.1: Gemini graded all 9 clips (about 25s each at 5 fps). Raw midpoint error 0.89, consistently low (mean -0.83); correlation with labels 0.44. assess-all command with progress; retries, timeouts and model fallback.
 - 2026-11-07 2.2 (partial): profiles (PRO-1 to PRO-5, PRO-7, PRO-8; PRO-6 todo until the answer-key clips): style, athleticism, estimated DUPR with calibration fit, Claude card with template fallback; /player (scene 2) with Join calling sessions.signUp, /player/compare (scene 4).
