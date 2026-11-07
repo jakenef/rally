@@ -12,7 +12,7 @@ The code. Built step by step from `BUILD.md`, following the specs in `../specs/`
 | `packages/backfill/` | 050, TypeScript |
 | `packages/profiles/` | 020, TypeScript |
 | `packages/ratings/` | 060, TypeScript |
-| `packages/fakes/` | In-memory fakes for Claude, Gemini and Stripe |
+| `packages/fakes/` | In-memory fakes for Claude and Gemini, used by tests |
 | `vision/` | 010, Python, our fork of Pickleball-Vision |
 | `fixtures/` | The demo roster, cached clip stats |
 

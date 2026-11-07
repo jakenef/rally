@@ -24,7 +24,7 @@ Researched 2026-11-06. Licenses and maintenance not verified unless noted: check
 
 ## Models and APIs
 
-- **Gemini video API**: samples 1 frame per second by default, which misses fast motion. Set a custom fps (e.g. 5) for shot labeling. [Docs](https://ai.google.dev/gemini-api/docs/interactions/video-understanding)
+- **Gemini video API** (required): watches the clip for shot types, rally quality and a rubric-based level estimate. Samples 1 frame per second by default, which misses fast motion; set fps to 5. Takes YouTube URLs directly. [Docs](https://ai.google.dev/gemini-api/docs/interactions/video-understanding)
 - **Claude**: takes still frames, not video. Use it for player cards, coaching tips and parsing facility rules from plain English.
 - **OpenSkill** (`pip install openskill`, also on npm as `openskill`): team ratings, works for 2v2, updates after every game. [Paper](https://joss.theoj.org/papers/10.21105/joss.05901.pdf)
 - **Realtime voice** (xAI Grok Voice Agent API, ElevenLabs Realtime): not planned. We don't do real messaging or calls.

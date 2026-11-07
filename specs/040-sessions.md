@@ -11,6 +11,7 @@ A facility's sessions: time, courts, price, skill rule, sign-ups and payment. Ru
 ## Non-goals
 
 - A real booking-software integration (CourtReserve is mocked).
+- Real payments. No Stripe or any payment provider.
 - Refunds, memberships, recurring bookings.
 
 ## Interface
@@ -29,7 +30,7 @@ function signUp(sessionId: string, playerId: string): { status: "joined" | "wait
 
 1. Capacity is `courts * 4`. Past capacity, sign-ups go on the waitlist.
 2. A player outside the skill rule is rejected with a reason.
-3. Payment is a Stripe test-mode Checkout; a sign-up counts once paid.
+3. Payment is simulated: a Pay button marks the sign-up paid. A sign-up counts once paid.
 4. `parseRule` shows the parsed rule back for the owner to approve before it's saved.
 
 ## Acceptance criteria

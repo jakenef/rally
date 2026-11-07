@@ -6,7 +6,12 @@ Step: 2.1
 
 ## Purpose
 
-Turns a clip of doubles or drilling into per-player stats that don't depend on tracking the ball. Wraps our fork of Pickleball-Vision.
+Turns a clip into two kinds of per-player information:
+
+- **Measured** (local, open source): our fork of Pickleball-Vision (YOLO + ByteTrack, court homography, RTMPose). Where players are and how they move. Precise, but blind to shot quality.
+- **Watched** (Gemini): what a coach would see. Shot types, how rallies go, and a level estimate against a written rubric. Sees quality, but less precise.
+
+020 combines them into an estimated DUPR range.
 
 ## Non-goals
 
@@ -33,7 +38,17 @@ type PlayerStats = {
   distanceM: number;           // total distance covered, court coordinates
   avgPartnerSpacingM: number | null;
   readyPositionShare: number;  // 0..1, paddle up and knees bent, from pose
-  shotLabels?: Record<"dink" | "drive" | "drop" | "lob" | "volley" | "serve", number>; // counts, from Gemini, optional
+  avgSpeedMps: number;         // court coordinates
+  peakSpeedMps: number;
+  watched?: GeminiAssessment;  // only for the selected player
+};
+type GeminiAssessment = {
+  shots: Record<"dink" | "drive" | "drop" | "lob" | "volley" | "serve" | "return", number>;
+  thirdShotDropShare: number | null;  // third shots that were drops
+  unforcedErrors: number;
+  resetsUnderPressure: number;        // soft blocks of hard balls
+  levelEstimate: { low: number; high: number };  // 2.0..6.0, from the rubric
+  reasons: string[];                  // what it saw, quoted on the player card
 };
 ```
 
@@ -43,14 +58,16 @@ type PlayerStats = {
 2. Detect and track players (YOLO + ByteTrack). Drop tracks seen in fewer than 10% of frames.
 3. Compute kitchen-line share, distance and partner spacing in court coordinates.
 4. Run pose and compute ready-position share.
-5. Optionally sample the clip at 5 fps through Gemini and count shot labels per player. Gemini takes the YouTube URL directly, so this step needs no local copy.
+5. Send the clip to Gemini at 5 fps (the default 1 fps misses fast play), with the selected player described by position and clothing, and the rubric in `rubric.md` (USA Pickleball's skill level descriptions, 2.0 to 5.0+, rewritten as observable behaviors). Ask for structured output matching `GeminiAssessment`. Gemini takes the YouTube URL directly, so this step needs no local copy.
+6. Cache the whole result per clip, so the demo never waits on Gemini.
 
 ## Acceptance criteria
 
 - **VIS-1** Given a clip and four corners, when the pipeline runs, then it writes JSON that matches `ClipStats`.
 - **VIS-2** Given a player standing within 1 m of the non-volley line in 80% of frames, then `kitchenLineShare` is between 0.7 and 0.9 (tested on synthetic tracks, not video).
 - **VIS-3** Tracks seen in fewer than 10% of frames are dropped.
-- **VIS-4** Without Gemini credentials, the pipeline still runs and leaves `shotLabels` out.
+- **VIS-4** Gemini's reply is checked against `GeminiAssessment`; a reply that doesn't match is retried once, then the clip is marked failed (tested with the fake).
+- **VIS-6** A clip that was processed before is served from the cache without calling Gemini.
 - **VIS-5** Given a click on a player in the first frame, the output marks the track nearest that point as `selected`.
 
 ## Open questions

@@ -18,6 +18,8 @@ A tool for pickleball facilities that sells balanced games instead of court time
 | **Tempo** | The kind of game a player wants: `soft`, `fast` or `any` (see 020). |
 | **Mirror rule** | Both teams on a court have the same style mix (see 030). |
 | **Skill** | A rating on the DUPR-like 2.0 to 6.0 scale, with an uncertainty. |
+| **Estimated DUPR** | Rally's guess at a player's DUPR range from a clip (020). Not an official rating. |
+| **Athleticism** | 0 to 100, from tracking: speed, distance per minute, ready position (020). |
 | **Session** | A time block at a facility (e.g. Tuesday 7pm) with a price, a skill rule and a capacity. |
 | **Court assignment** | Which four players are on which court, in which two teams. |
 | **Fairness score** | 0 to 100: how even and how fun a court's game should be (see 030). |
@@ -27,6 +29,6 @@ A tool for pickleball facilities that sells balanced games instead of court time
 
 - **Vision:** Python, forked from Pickleball-Vision, run offline on clips. Output is JSON (010).
 - **App:** Next.js and TypeScript. Matching, sessions, backfill and ratings are plain TypeScript modules with unit tests (vitest).
-- **AI:** Gemini (video shot labels), Claude (player cards, rules in plain English). Both behind interfaces with fakes in tests.
-- **Payments:** Stripe test mode. **Messages:** none. Offers appear on an on-screen fake phone; Rally sends no real texts, calls or emails.
+- **AI:** Gemini (watches the clip: shot types, rally quality, a rubric-based level estimate; required), Claude (player cards, rules in plain English). Both behind interfaces with fakes in tests. These are the only outside services.
+- **Payments:** none. A Pay button marks a sign-up paid. **Messages:** none. Offers appear on an on-screen fake phone; Rally sends no real texts, calls or emails.
 - **Storage:** SQLite or in-memory for the hackathon. No cloud database.
