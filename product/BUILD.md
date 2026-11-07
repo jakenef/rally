@@ -92,3 +92,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 requested closer facility framing: moved the overview camera about 10% closer while preserving responsive fitting and court/player zoom positions.
 
 - 2026-11-06 1.4 requested facility framing: another 10% closer and a slightly lower viewing angle; court/player cameras unchanged.
+
+- 2026-11-06 1.4 requested court transition polish: animate canvas bounds and camera together with eased starts/stops, retain overview layout during focus, and reveal skill badges only inside the selected court after arrival.
