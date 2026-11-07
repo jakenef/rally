@@ -1,8 +1,26 @@
 // Rally's Overtime design system. Existing ch-* classes and legacy serif props
 // remain compatible with both lanes; typography and colors come from shared tokens.
-import type { AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactNode } from "react";
+import { Children, cloneElement, isValidElement } from "react";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactElement, ReactNode } from "react";
 
 const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
+
+/** Anton's tight tracking lets a trailing period or comma touch the letter before it
+ *  (e.g. "LEVEL."). Wrap punctuation that follows a letter so CSS can give it a gap. */
+export function spacePunctuation(node: ReactNode): ReactNode {
+  if (typeof node === "string") {
+    const pieces = node.split(/(?<=[A-Za-z0-9])([.,!?:;])(?![A-Za-z0-9])/);
+    if (pieces.length === 1) return node;
+    return pieces.map((p, i) => (i % 2 === 1 ? <span key={i} className="ch-punct">{p}</span> : p));
+  }
+  if (Array.isArray(node)) return Children.map(node, spacePunctuation);
+  if (isValidElement(node)) {
+    const el = node as ReactElement<{ children?: ReactNode }>;
+    if (el.props.children === undefined) return el;
+    return cloneElement(el, undefined, spacePunctuation(el.props.children));
+  }
+  return node;
+}
 
 // ---------- Icon ----------
 
@@ -148,14 +166,14 @@ export function Headline({
     ? parts.flatMap((part, i) => [
         i ? " " : null,
         typeof part === "string" ? (
-          part
+          spacePunctuation(part)
         ) : (
           <span key={i} className="ch-hl-accent">
-            {part.text}
+            {spacePunctuation(part.text)}
           </span>
         ),
       ])
-    : children;
+    : spacePunctuation(children);
   return <Tag className={cx("ch-hl", `ch-hl-${size}`, align === "center" && "ch-hl-center", className)}>{body}</Tag>;
 }
 
@@ -185,7 +203,7 @@ export function Marquee({ rows, speed = 40, className }: { rows: { text: string;
       {rows.map((r, i) => (
         <div key={i} aria-hidden="true" className={cx("ch-mq-row", r.accent || r.serif ? "ch-mq-accent" : "ch-mq-display", i % 2 === 1 && "ch-mq-rev")}>
           {[0, 1, 2, 3].map((k) => (
-            <span key={k}>{r.text}</span>
+            <span key={k}>{spacePunctuation(r.text)}</span>
           ))}
         </div>
       ))}
