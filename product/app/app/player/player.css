@@ -53,7 +53,7 @@
 .pl-toggle input { accent-color: var(--crimson); width: 16px; height: 16px; }
 
 /* 025 get your rating */
-.pl-tip-label { font-weight: 700; color: var(--ink); }
+.pl-tip-label { font-weight: 700; color: var(--ink); margin-inline-end: .25em; }
 .gr-panel { display: grid; gap: var(--space-mini); max-width: 960px; }
 .gr-drop { display: grid; place-items: center; gap: 10px; min-height: 260px; padding: var(--space-small); text-align: center; cursor: pointer;
   border: 2px dashed var(--line-strong); border-radius: var(--radius-small); background: var(--surface-raised); transition: border-color .2s, background-color .2s; }

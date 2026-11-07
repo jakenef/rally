@@ -35,7 +35,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 - [x] **3.3 Accuracy chart** (scene 5): chart labeled level against estimated range for the calibration clips from 2.2. AI.
 
 ### Requested presentation changes
-- [x] **Crimson default with selective outlines.** Restored red headings, ratings, homepage accent, and marquee; only the main video-rating heading is outlined. Eight desktop/mobile production screenshots captured and inspected. PR held for Jake's preview approval before merging.
+- [x] **Crimson default with selective outlines.** Restored red headings, ratings, homepage accent, and marquee; only the main video-rating heading is outlined. Ten desktop/mobile production screenshots captured and inspected. PR held for Jake's preview approval before merging.
 - [x] **White-outline accents.** Replace pale-red display accents with black fill and #F5F5F5 outlines across shared UI and the site; white small-text/focus accents, crimson actions/data retained. Presentation only.
 
 ## Checkpoints
@@ -57,7 +57,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
-- 2026-11-06 accent correction (awaiting approval): restored solid crimson default headlines, marquee, homepage accent, and rating numbers; only the video-rating heading opts into white outlines. 35 tests, type checks, and production build pass. Inspected eight production screenshots across homepage, player, comparison, and dashboard at 1440px and 390px; no page overflow or browser errors. Hold PR for Jake's preview approval; do not merge.
+- 2026-11-06 accent correction (awaiting approval): restored solid crimson default headlines, marquee, homepage accent, and rating numbers; only the video-rating heading opts into white outlines. 37 tests, type checks, and production build pass. Inspected ten production screenshots across homepage, upload, rating result, comparison, and dashboard at 1440px and 390px; no page overflow or browser errors. Added spacing after the tip label found during visual review. Hold PR for Jake's preview approval; do not merge.
 
 - 2026-11-06 requested white-outline accents: Overtime tokens, shared headline/marquee, homepage, and prominent rating text updated; 37 tests, type checks, and production build pass. Browser preview unavailable. Presentation only; no feature criteria changed.
 
