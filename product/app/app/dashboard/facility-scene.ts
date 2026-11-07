@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import type { Court, Profile } from "@rally/types";
+import { primaryStyle } from "@rally/matching";
 import { courtCameraOffset } from "./court-layout";
 export type FacilityController = {
   setCourts(courts: Court[], animate?: boolean): Promise<void>;
@@ -208,9 +209,7 @@ export function mountFacility(
       ["mobility", "High mobility"],
       ["readiness", "High readiness"],
     ] as const;
-    return styles.reduce((best, candidate) =>
-      p.style[candidate[0]] > p.style[best[0]] ? candidate : best,
-    );
+    return styles.find(([kind]) => kind === primaryStyle(p))!;
   }
   const origins = [
     [-12.2, -7],
@@ -457,18 +456,39 @@ export function mountFacility(
     }
     ctx.restore();
   }
+  function drawRatingStars(
+    ctx: CanvasRenderingContext2D, rating: number,
+    x: number, y: number, radius: number, gap: number,
+  ) {
+    const stars = Math.max(1, Math.min(5, Math.round(rating - 1)));
+    for (let i = 0; i < 5; i++) {
+      ctx.fillStyle = token(i < stars ? "--paper" : "--line");
+      ctx.beginPath();
+      for (let j = 0; j < 10; j++) {
+        const angle = -Math.PI / 2 + (j * Math.PI) / 5;
+        const r = j % 2 ? radius * 0.47 : radius;
+        const px = x + i * gap + Math.cos(angle) * r;
+        const py = y + Math.sin(angle) * r;
+        if (j === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
   function addStyleMarker(group: THREE.Group, p: Profile) {
     const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 160;
+    canvas.width = 192;
+    canvas.height = 232;
     const ctx = canvas.getContext("2d")!;
     ctx.fillStyle = token("--surface");
     ctx.beginPath();
-    ctx.arc(80, 80, 76, 0, Math.PI * 2);
+    ctx.roundRect(4, 4, 184, 224, 22);
     ctx.fill();
     ctx.strokeStyle = token("--line-strong");
     ctx.lineWidth = 3;
     ctx.stroke();
-    drawPlaystyleIcon(ctx, playstyle(p)[0], 80, 80, token("--paper"), 1.05);
+    drawPlaystyleIcon(ctx, playstyle(p)[0], 96, 85, token("--paper"), 1.15);
+    drawRatingStars(ctx, p.skill.mu, 24, 190, 15, 36);
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     const marker = new THREE.Sprite(new THREE.SpriteMaterial({
@@ -518,21 +538,7 @@ export function mountFacility(
     ctx.fillStyle = muted;
     ctx.font = `500 19px ${font}`;
     ctx.fillText("SKILL", 177, 279);
-    const stars = Math.max(1, Math.min(5, Math.round(p.skill.mu - 1)));
-    for (let i = 0; i < 5; i++) {
-      ctx.fillStyle = i < stars ? paper : token("--line");
-      ctx.beginPath();
-      for (let j = 0; j < 10; j++) {
-        const angle = -Math.PI / 2 + (j * Math.PI) / 5;
-        const radius = j % 2 ? 8 : 17;
-        const x = 193 + i * 43 + Math.cos(angle) * radius,
-          y = 311 + Math.sin(angle) * radius;
-        if (j === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.closePath();
-      ctx.fill();
-    }
+    drawRatingStars(ctx, p.skill.mu, 193, 311, 17, 43);
     const stats: [string, number][] = [
       ["Power", p.style.power],
       ["Kitchen", p.style.kitchen],
@@ -1441,7 +1447,7 @@ export function mountFacility(
           const depth = -world.clone().applyMatrix4(camera.matrixWorldInverse).z;
           const tangent = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
           const radius = 0.85 * stage.clientHeight / (2 * tangent * depth);
-          const size = THREE.MathUtils.clamp(stage.clientWidth / 40, 20, 30);
+          const size = THREE.MathUtils.clamp(stage.clientWidth / 32, 28, 44);
           const x = anchor.x + radius + size / 2 + 6;
           const panelDepth = new THREE.Vector3(0, 0, -2)
             .applyMatrix4(camera.matrixWorld).project(camera).z;
@@ -1452,7 +1458,7 @@ export function mountFacility(
           ).unproject(camera);
           marker.position.copy(f.group.worldToLocal(position));
           const worldSize = size / stage.clientHeight * 4 * tangent;
-          marker.scale.set(worldSize, worldSize, 1);
+          marker.scale.set(worldSize, worldSize * 232 / 192, 1);
         });
         renderer!.render(scene, camera);
         updateLabels();

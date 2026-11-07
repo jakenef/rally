@@ -52,12 +52,28 @@ function score(g: Group): number {
 function conflicts(g: Group): number {
   return Number(g.some(p => p.tempo === "soft") && g.some(p => p.tempo === "fast"));
 }
+/** Same strongest-attribute rule used by the visible player icons. */
+export function primaryStyle(p: Profile): keyof Profile["style"] {
+  const kinds = ["power", "kitchen", "mobility", "readiness"] as const;
+  return kinds.reduce((best, kind) => p.style[kind] > p.style[best] ? kind : best);
+}
+function iconMismatch(g: Group): number {
+  return Number(primaryStyle(g[0]) !== primaryStyle(g[2]))
+    + Number(primaryStyle(g[1]) !== primaryStyle(g[3]));
+}
+function alignOpponents(g: Group): Group {
+  const flipped: Group = [g[0], g[1], g[3], g[2]];
+  const rowGap = (v: Group) => Math.abs(v[0].skill.mu - v[2].skill.mu) + Math.abs(v[1].skill.mu - v[3].skill.mu);
+  return iconMismatch(flipped) < iconMismatch(g)
+    || (iconMismatch(flipped) === iconMismatch(g) && rowGap(flipped) < rowGap(g)) ? flipped : g;
+}
 function bestPartners(g: Group, ratingOnly = false): Group {
   let best = g;
   let bestValue = -Infinity;
   for (const order of PAIRS) {
-    const candidate = order.map(i => g[i]) as Group;
-    const value = ratingOnly ? -metrics(candidate).balance : score(candidate);
+    const ordered = order.map(i => g[i]) as Group;
+    const candidate = ratingOnly ? ordered : alignOpponents(ordered);
+    const value = ratingOnly ? -metrics(candidate).balance : score(candidate) - iconMismatch(candidate) * 1000;
     if (value > bestValue) { best = candidate; bestValue = value; }
   }
   return best;
@@ -89,6 +105,7 @@ function court(g: Group, index: number): Court {
   const why = [
     `Team skill gap: ${m.balance.toFixed(2)}.`,
     `Court skill spread: ${m.spread.toFixed(2)}.`,
+    `Visible style pairs: ${2 - iconMismatch(g)} / 2.`,
     `Power/kitchen style gap: ${m.mirror.toFixed(2)} (lower is more mirrored).`,
   ];
   why.push(conflicts(g)
@@ -109,8 +126,47 @@ export function fairness(teams: Court["teams"], profiles: Map<string, Profile>):
   }) as Group;
   return Math.round(score(g) * 100) / 100;
 }
+// Exhaustive partitioning for demo-sized rosters avoids local-search traps.
+// Tempo compatibility comes first, exact icon pairs next, then skill/style fairness.
+function optimalGroups(players: Profile[]): Group[] {
+  const n = players.length;
+  const candidates: { mask: number; group: Group; cost: number }[][] = Array.from({ length: n }, () => []);
+  for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++)
+    for (let c = b + 1; c < n; c++) for (let d = c + 1; d < n; d++) {
+      const group = bestPartners([players[a], players[b], players[c], players[d]]);
+      candidates[a].push({
+        mask: (1 << a) | (1 << b) | (1 << c) | (1 << d), group,
+        cost: conflicts(group) * 100000 + iconMismatch(group) * 1000 + 100 - score(group),
+      });
+    }
+  const costs = new Float64Array(1 << n).fill(NaN);
+  const choices = new Int32Array(1 << n).fill(-1);
+  costs[0] = 0;
+  function solve(mask: number): number {
+    if (!Number.isNaN(costs[mask])) return costs[mask];
+    const first = 31 - Math.clz32(mask & -mask);
+    let best = Infinity;
+    candidates[first].forEach((candidate, index) => {
+      if ((candidate.mask & mask) !== candidate.mask) return;
+      const cost = candidate.cost + solve(mask ^ candidate.mask);
+      if (cost < best) { best = cost; choices[mask] = index; }
+    });
+    return costs[mask] = best;
+  }
+  let remaining = (1 << n) - 1;
+  solve(remaining);
+  const result: Group[] = [];
+  while (remaining) {
+    const first = 31 - Math.clz32(remaining & -remaining);
+    const candidate = candidates[first][choices[remaining]];
+    result.push(candidate.group);
+    remaining ^= candidate.mask;
+  }
+  return result;
+}
 export function assign(players: Profile[], courts: number, opts?: { seed?: number }): Assignment {
   validate(players, courts);
+  if (players.length <= 16) return { courts: optimalGroups(sorted(players)).map(court), benched: [] };
   const next = random(opts?.seed ?? 0);
   const result = initialGroups(players).map(g => bestPartners(g));
   if (result.length > 1) {
