@@ -1267,14 +1267,79 @@ export function mountFacility(
               ? 0
               : Math.sin(time * 0.00085 + f.pIndex * 0.8) * 0.13);
           if (card?.visible) {
-            const side = level === "player" ? -1 : f.pIndex < 2 ? -1 : 1;
-            const position = f.group.getWorldPosition(new THREE.Vector3());
-            const right = new THREE.Vector3(1, 0, 0).applyQuaternion(
-              camera.quaternion,
-            );
-            position.addScaledVector(right, side * 2.9);
-            position.y += 1.05;
+            const width = stage.clientWidth,
+              height = stage.clientHeight;
+            const margin = 18,
+              gap = 18;
+            // Reserve the Back/title controls and bottom player switcher.
+            const top = 100,
+              bottom = height - (level === "player" ? 96 : 24);
+            const availableHeight = Math.max(80, bottom - top);
+            const availableWidth = Math.max(80, width - margin * 2);
+            const inSpotlight = level === "player";
+            const cardHeight = inSpotlight
+              ? Math.min(420, availableHeight, (availableWidth * 0.42) / 0.8)
+              : Math.min(
+                  250,
+                  (availableHeight - gap) / 2,
+                  (availableWidth - gap) / 2 / 0.8,
+                );
+            const cardWidth = cardHeight * 0.8;
+            const center = f.group.getWorldPosition(new THREE.Vector3());
+            const projected = center.clone().project(camera);
+            const anchorX = ((projected.x + 1) * width) / 2;
+            const anchorY = ((1 - projected.y) * height) / 2;
+            const depth = -center
+              .clone()
+              .applyMatrix4(camera.matrixWorldInverse).z;
+            const worldHeight =
+              2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * depth;
+            const radiusPixels = (0.85 / worldHeight) * height;
+            const side = inSpotlight || f.pIndex < 2 ? -1 : 1;
+            const preferredX =
+              anchorX + side * (radiusPixels + cardWidth / 2 + 16);
+            let x: number, y: number;
+            if (inSpotlight) {
+              x = THREE.MathUtils.clamp(
+                preferredX,
+                margin + cardWidth / 2,
+                width - margin - cardWidth / 2,
+              );
+              y = THREE.MathUtils.clamp(
+                anchorY,
+                top + cardHeight / 2,
+                bottom - cardHeight / 2,
+              );
+            } else {
+              // Two non-overlapping rows on each side of the court.
+              const middle = top + availableHeight / 2;
+              const backRow = f.pIndex % 2 === 0;
+              const minY = backRow
+                ? top + cardHeight / 2
+                : middle + gap / 2 + cardHeight / 2;
+              const maxY = backRow
+                ? middle - gap / 2 - cardHeight / 2
+                : bottom - cardHeight / 2;
+              y = THREE.MathUtils.clamp(anchorY - cardHeight * 0.2, minY, maxY);
+              const minX =
+                side < 0
+                  ? margin + cardWidth / 2
+                  : width / 2 + gap / 2 + cardWidth / 2;
+              const maxX =
+                side < 0
+                  ? width / 2 - gap / 2 - cardWidth / 2
+                  : width - margin - cardWidth / 2;
+              x = THREE.MathUtils.clamp(preferredX, minX, maxX);
+            }
+            // Reconstruct at the player's depth: real 3D panels, sized to fit
+            // safe screen bounds without losing the player/card association.
+            const position = new THREE.Vector3(
+              (x / width) * 2 - 1,
+              1 - (y / height) * 2,
+              projected.z,
+            ).unproject(camera);
             card.position.copy(f.group.worldToLocal(position));
+            card.scale.setScalar(((cardHeight / height) * worldHeight) / 4.4);
             const parentRotation = f.group.getWorldQuaternion(
               new THREE.Quaternion(),
             );

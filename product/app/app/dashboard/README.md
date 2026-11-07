@@ -13,3 +13,5 @@ The facility overview uses a continuous charcoal plaza with four crimson courts,
 Rally it runs a 3.6-second animation from current player positions through a central orbit into the matching engine’s actual assignments. Courts settle in sequence and fairness scores count toward the real results. Court selection and repeated runs are disabled during the transition. Reduced motion applies assignments immediately. Reset restores the seeded demo layout.
 
 Facility-to-court transitions interpolate both canvas bounds and camera with smooth start/stop easing; the original stage space remains reserved to avoid layout jumps. Player cards appear only inside the selected court after the camera arrives. Reduced motion skips the transition.
+
+Player cards use screen-space bounds reconstructed at their player’s 3D depth. Court cards occupy separate rows and side lanes; spotlight cards scale to the viewport and stay between top navigation and bottom player controls.
