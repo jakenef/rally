@@ -137,7 +137,7 @@ export function mountFacility(
     pickleGeometry = { outer, inner, walls, texture };
     return pickleGeometry;
   }
-  container.innerHTML = `<div class="facility-view"><div class="facility-stage"><div class="facility-labels"></div><div class="focus-chrome" hidden><button class="ch-btn ch-btn-outline view-back" type="button">Back to facility</button><div class="focus-court-title"></div></div><section class="signature-profile" aria-label="Player profile" hidden></section><div class="player-switch" hidden><button type="button" class="ch-btn ch-btn-outline previous">Previous</button><span class="selected-name"></span><button type="button" class="ch-btn ch-btn-outline next">Next</button></div><div class="facility-loading" role="status">Preparing the facility.</div></div></div>`;
+  container.innerHTML = `<div class="facility-view"><div class="facility-placeholder" hidden></div><div class="facility-stage"><div class="facility-labels"></div><div class="focus-chrome" hidden><button class="ch-btn ch-btn-outline view-back" type="button">Back to facility</button><div class="focus-court-title"></div></div><section class="signature-profile" aria-label="Player profile" hidden></section><div class="player-switch" hidden><button type="button" class="ch-btn ch-btn-outline previous">Previous</button><span class="selected-name"></span><button type="button" class="ch-btn ch-btn-outline next">Next</button></div><div class="facility-loading" role="status">Preparing the facility.</div></div></div>`;
   const stage = container.querySelector<HTMLElement>(".facility-stage")!,
     labels = container.querySelector<HTMLElement>(".facility-labels")!,
     chrome = container.querySelector<HTMLElement>(".focus-chrome")!,
@@ -148,6 +148,21 @@ export function mountFacility(
   let scene: THREE.Scene,
     camera: THREE.PerspectiveCamera,
     renderer: THREE.WebGLRenderer | undefined;
+  const placeholder = container.querySelector<HTMLElement>(
+    ".facility-placeholder",
+  )!;
+  const look = new THREE.Vector3();
+  let cameraMove:
+    | { started: number; from: THREE.Vector3; lookFrom: THREE.Vector3 }
+    | undefined;
+  let viewportMove:
+    | {
+        started: number;
+        from: DOMRect;
+        to: { left: number; top: number; width: number; height: number };
+        focused: boolean;
+      }
+    | undefined;
   let groups: {
     root: THREE.Group;
     outline: THREE.LineLoop<THREE.BufferGeometry, THREE.LineBasicMaterial>;
@@ -214,6 +229,16 @@ export function mountFacility(
         document.activeElement instanceof HTMLElement
           ? document.activeElement
           : undefined;
+    const wasFocused = level !== "facility";
+    const previousRect = stage.getBoundingClientRect();
+    cameraMove =
+      renderer && !reduce.matches
+        ? {
+            started: performance.now(),
+            from: camera.position.clone(),
+            lookFrom: look.clone(),
+          }
+        : undefined;
     level = next;
     courtIndex = c;
     playerIndex = p;
@@ -225,8 +250,50 @@ export function mountFacility(
       document.querySelector<HTMLElement>(".rl-nav")!.getBoundingClientRect()
         .height + "px",
     );
-    stage.classList.toggle("facility-focused", focused);
-    document.body.classList.toggle("facility-focus-open", focused);
+    if (focused !== wasFocused && !reduce.matches && renderer) {
+      if (focused && placeholder.hidden) {
+        placeholder.style.height = previousRect.height + "px";
+        placeholder.hidden = false;
+      }
+      const navHeight = document
+        .querySelector<HTMLElement>(".rl-nav")!
+        .getBoundingClientRect().height;
+      const targetRect = placeholder.getBoundingClientRect();
+      viewportMove = {
+        started: performance.now(),
+        from: previousRect,
+        to: focused
+          ? {
+              left: 0,
+              top: navHeight,
+              width: document.documentElement.clientWidth,
+              height: innerHeight - navHeight,
+            }
+          : {
+              left: targetRect.left,
+              top: targetRect.top,
+              width: targetRect.width,
+              height: targetRect.height,
+            },
+        focused,
+      };
+      stage.classList.add("facility-focused");
+      document.body.classList.add("facility-focus-open");
+      Object.assign(stage.style, {
+        left: previousRect.left + "px",
+        top: previousRect.top + "px",
+        width: previousRect.width + "px",
+        height: previousRect.height + "px",
+        right: "auto",
+        bottom: "auto",
+      });
+    } else if (!viewportMove) {
+      stage.classList.toggle("facility-focused", focused);
+      document.body.classList.toggle("facility-focus-open", focused);
+      placeholder.hidden = !focused;
+      if (focused && !wasFocused) placeholder.style.height = previousRect.height + "px";
+    }
+    stage.classList.toggle("facility-camera-moving", !!cameraMove);
     chrome.hidden = !focused;
     profile.hidden = level !== "player";
     switcher.hidden = level !== "player";
@@ -455,6 +522,8 @@ export function mountFacility(
         depthWrite: false,
       }),
     );
+    badge.name = "rating-badge";
+    badge.visible = false;
     badge.material.map!.colorSpace = THREE.SRGBColorSpace;
     badge.position.set(0, kind === "kitchen" ? 2.15 : 1.65, 0);
     badge.scale.set(2.7, 0.675, 1);
@@ -663,7 +732,16 @@ export function mountFacility(
       "--facility-nav-height",
       nav + "px",
     );
-    renderer.setSize(stage.clientWidth, stage.clientHeight, false);
+    // Keep a stable drawing buffer while the canvas bounds animate.
+    renderer.setSize(
+      viewportMove
+        ? Math.max(viewportMove.from.width, viewportMove.to.width)
+        : stage.clientWidth,
+      viewportMove
+        ? Math.max(viewportMove.from.height, viewportMove.to.height)
+        : stage.clientHeight,
+      false,
+    );
     camera.aspect = stage.clientWidth / stage.clientHeight;
     camera.updateProjectionMatrix();
   }
@@ -1050,8 +1128,7 @@ export function mountFacility(
         observers.push(observer);
       }
       rebuildPlayers();
-      const look = new THREE.Vector3(),
-        desiredLook = new THREE.Vector3(),
+      const desiredLook = new THREE.Vector3(),
         desiredCamera = new THREE.Vector3();
       camera.lookAt(look);
       function frame(time: number) {
@@ -1059,6 +1136,28 @@ export function mountFacility(
         const dt = Math.min(0.05, (time - lastTime) / 1000 || 0.016);
         lastTime = time;
         const speed = reduce.matches ? 1 : 1 - Math.exp(-dt * 4.5);
+        if (viewportMove) {
+          const t = Math.min(1, (time - viewportMove.started) / 1000);
+          const eased = t * t * t * (t * (t * 6 - 15) + 10);
+          for (const key of ["left", "top", "width", "height"] as const)
+            stage.style[key] =
+              THREE.MathUtils.lerp(
+                viewportMove.from[key],
+                viewportMove.to[key],
+                eased,
+              ) + "px";
+          camera.aspect = stage.clientWidth / stage.clientHeight;
+          camera.updateProjectionMatrix();
+          if (t === 1) {
+            const focused = viewportMove.focused;
+            viewportMove = undefined;
+            stage.removeAttribute("style");
+            stage.classList.toggle("facility-focused", focused);
+            document.body.classList.toggle("facility-focus-open", focused);
+            placeholder.hidden = !focused;
+            resize();
+          }
+        }
         const [ox, oz] = origins[courtIndex];
         if (level === "facility") {
           const fit = 0.927 * Math.max(1, 1.85 / camera.aspect);
@@ -1072,8 +1171,19 @@ export function mountFacility(
           desiredCamera.set(ox + x + (x < 0 ? -3.6 : 3.6), 4.2, oz + z + 7.2);
           desiredLook.set(ox + x - 1.7, 1, oz + z);
         }
-        camera.position.lerp(desiredCamera, speed);
-        look.lerp(desiredLook, speed);
+        if (cameraMove) {
+          const t = Math.min(1, (time - cameraMove.started) / 1100);
+          const eased = t * t * t * (t * (t * 6 - 15) + 10);
+          camera.position.lerpVectors(cameraMove.from, desiredCamera, eased);
+          look.lerpVectors(cameraMove.lookFrom, desiredLook, eased);
+          if (t === 1) {
+            cameraMove = undefined;
+            stage.classList.remove("facility-camera-moving");
+          }
+        } else {
+          camera.position.lerp(desiredCamera, speed);
+          look.lerp(desiredLook, speed);
+        }
         camera.lookAt(look);
         groups.forEach((g, i) => {
           const hover = level === "facility" && hoverCourt === i;
@@ -1091,6 +1201,10 @@ export function mountFacility(
           return t * t * (3 - 2 * t);
         };
         figures.forEach((f, index) => {
+          const badge = f.group.getObjectByName("rating-badge");
+          if (badge)
+            badge.visible =
+              level !== "facility" && f.c === courtIndex && !cameraMove;
           if (shuffle) {
             const start = shuffle.starts.get(f.id)!;
             const [cx, cz] = origins[f.c];

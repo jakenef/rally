@@ -548,3 +548,30 @@
   max-width: 100%;
   line-height: 1.7;
 }
+
+/* Keep the navigation in flow while the canvas expands into court view. */
+.facility-focus-open .rl-nav {
+  position: sticky;
+  inset: auto;
+  top: 0;
+}
+.facility-placeholder[hidden] {
+  display: none;
+}
+.facility-camera-moving .facility-player-hit,
+.facility-camera-moving .signature-profile,
+.facility-camera-moving .player-switch,
+.facility-camera-moving .focus-court-title {
+  opacity: 0;
+  pointer-events: none;
+}
+.facility-player-hit,
+.focus-court-title {
+  transition: opacity 180ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .facility-player-hit,
+  .focus-court-title {
+    transition: none;
+  }
+}
