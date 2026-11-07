@@ -53,6 +53,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
+- 2026-11-07 2.2 (partial): profiles (PRO-1 to PRO-5, PRO-7, PRO-8; PRO-6 todo until the answer-key clips): style, athleticism, estimated DUPR with calibration fit, Claude card with template fallback; /player (scene 2) with Join calling sessions.signUp, /player/compare (scene 4).
 - 2026-11-07 2.1 (partial): Gemini assessment with rubric, schema check and one retry (VIS-4), cache (VIS-6), measured stats from tracks (VIS-2, VIS-3, VIS-5), combine to ClipStats (VIS-1), detection adapter on Ultralytics (untested). Waiting on clips and the Gemini key.
 - 2026-11-07 0.1, 0.2: npm workspace (app, packages, fixtures), shared types, Claude and Gemini fakes, crimsonhacks port in packages/ui, lane stubs, Next.js app with /, /dashboard, /phone, /player, Python vision stub, 18-player demo roster with the scene 4 group, sample clip stats.
 - 2026-11-06 docs: no real messaging (fake phone only), YouTube clips instead of filming, mirror rule and tempo preference in matching (030, 020), second-brain edits go straight to main.
