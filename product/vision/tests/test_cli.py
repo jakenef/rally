@@ -46,3 +46,10 @@ def test_VIS_6_assess_all_uses_cached_clips_without_creating_a_paid_client(tmp_p
 
     assert cli.main(["assess-all", "--only", "abc"]) == 0
     assert "[1/1] abc: cached, skipped" in capsys.readouterr().out
+
+
+def test_job_commands_parse():
+    a = build_parser().parse_args(["analyze", "/tmp/job", "--t", "12.5", "--box", "0.1,0.2,0.3,0.9"])
+    assert (a.cmd, a.t, a.box) == ("analyze", 12.5, "0.1,0.2,0.3,0.9")
+    p = build_parser().parse_args(["players", "clip.mp4", "--t", "4"])
+    assert (p.cmd, p.t) == ("players", 4.0)

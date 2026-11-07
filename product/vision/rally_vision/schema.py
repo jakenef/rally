@@ -28,6 +28,19 @@ GEMINI_SCHEMA: dict = {
             "properties": {"low": {"type": "number"}, "high": {"type": "number"}},
             "required": ["low", "high"],
         },
+        "events": {
+            "type": "array",
+            "description": "Every shot this player hit, in order.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "t": {"type": "number", "description": "Seconds on the video's own timeline."},
+                    "shot": {"type": "string", "enum": ["dink", "drive", "drop", "lob", "volley", "serve", "return", "reset", "speedup", "putaway", "error"]},
+                    "label": {"type": "string", "description": "One to three words, like a broadcaster: 'Third-shot drop'."},
+                },
+                "required": ["t", "shot", "label"],
+            },
+        },
         "reasons": {
             "type": "array",
             "description": "Two to four short sentences on what you saw this player do, each naming a behavior from the rubric.",
@@ -36,7 +49,7 @@ GEMINI_SCHEMA: dict = {
             "maxItems": 5,
         },
     },
-    "required": ["shots", "thirdShotDropShare", "unforcedErrors", "resetsUnderPressure", "levelEstimate", "reasons"],
+    "required": ["shots", "thirdShotDropShare", "unforcedErrors", "resetsUnderPressure", "levelEstimate", "reasons", "events"],
 }
 
 
