@@ -44,3 +44,9 @@
   .ac-name { grid-column: 1 / -1; }
   .ac-axis { margin: 0 60px 0 0; }
 }
+
+/* Scene 2 tracking overlay */
+.pl-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.pl-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.pl-toggle { display: inline-flex; gap: 8px; align-items: center; font: 600 12px/14px var(--font-sans); text-transform: uppercase; color: var(--ink-muted); }
+.pl-toggle input { accent-color: var(--crimson); width: 16px; height: 16px; }

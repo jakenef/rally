@@ -24,7 +24,8 @@ export function loadClips(): { clips: ClipStats[]; usingSample: boolean } {
   const clips = dir
     ? readdirSync(dir)
         .filter((f) => /^[^.]+\.json$/.test(f))
-        .map((f) => JSON.parse(readFileSync(path.join(dir, f), "utf8")) as ClipStats)
+        .map((f) => JSON.parse(readFileSync(path.join(dir, f), "utf8")))
+        .filter((c): c is ClipStats => typeof c?.clipId === "string" && Array.isArray(c?.players)) // skips selection.json
         .sort((a, b) => (a.labeledLevel ?? 0) - (b.labeledLevel ?? 0) || a.clipId.localeCompare(b.clipId))
     : [];
   return clips.length ? { clips, usingSample: false } : { clips: [sampleStats], usingSample: true };

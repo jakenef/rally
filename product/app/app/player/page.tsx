@@ -3,7 +3,9 @@ import { tonight } from "@rally/fixtures";
 import { Button, Caption, Headline } from "@rally/ui";
 import { joinSession } from "./actions";
 import { embedUrl, loadClips, profileForClip, selectedPlayer } from "./data";
+import { localVideoPath } from "./local";
 import { PlayerCard } from "./PlayerCard";
+import { TrackedVideo } from "./TrackedVideo";
 import "./player.css";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +17,7 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
   const profile = await profileForClip(clip, clips);
   const embed = embedUrl(clip);
   const graded = selectedPlayer(clip);
+  const local = !usingSample && localVideoPath(clip.clipId) !== null;
 
   return (
     <main className="rl-page">
@@ -35,13 +38,17 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
       {joined ? <p className="pl-flash">{joined}</p> : null}
       <div className="pl-layout">
         <div style={{ display: "grid", gap: "8px" }}>
-          <div className="pl-video">
-            {embed ? (
-              <iframe src={embed} title={`Clip ${clip.clipId}`} allow="encrypted-media; picture-in-picture" allowFullScreen />
-            ) : (
-              <div className="pl-video-empty">The clip plays here once it has a YouTube link.</div>
-            )}
-          </div>
+          {local ? (
+            <TrackedVideo key={clip.clipId} clipId={clip.clipId} title={`Clip ${clip.clipId}`} />
+          ) : (
+            <div className="pl-video">
+              {embed ? (
+                <iframe src={embed} title={`Clip ${clip.clipId}`} allow="encrypted-media; picture-in-picture" allowFullScreen />
+              ) : (
+                <div className="pl-video-empty">The clip plays here once it has a YouTube link.</div>
+              )}
+            </div>
+          )}
           <span className="rl-label">
             {clip.channel ? `Video: ${clip.channel} on YouTube` : "Video"}
             {clip.labeledLevel !== undefined ? ` · uploader's label ${clip.labeledLevel.toFixed(1)}` : ""}
