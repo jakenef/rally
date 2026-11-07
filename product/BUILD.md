@@ -35,6 +35,7 @@ Work through this list one step at a time, top to bottom (or take the step you w
 - [x] **3.3 Accuracy chart** (scene 5): chart labeled level against estimated range for the calibration clips from 2.2. AI.
 
 ### Requested presentation changes
+- [ ] **Crimson default with selective outlines.** Restore red headings, ratings, homepage accent, and marquee; keep the main video-rating heading outlined. Capture and inspect screenshots, then wait for Jake's preview approval before merging.
 - [x] **White-outline accents.** Replace pale-red display accents with black fill and #F5F5F5 outlines across shared UI and the site; white small-text/focus accents, crimson actions/data retained. Presentation only.
 
 ## Checkpoints
@@ -59,6 +60,8 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.3: best-fit waitlist scoring through matching, cancellation/promotion in the same Sessions store, sequential fake-phone offers, Accept/Decline and recovered-revenue metric; /phone scene 3 verified in browser, acceptance tests and TypeScript pass (FILL-1, FILL-2, FILL-4). No payment flow.
 
 - 2026-11-06 1.2: demo-only in-memory sessions, capacity/waitlist and inclusive skill restrictions; acceptance tests and TypeScript checks pass (SESS-1, SESS-2). Payments and pricing/rule parsing cut, per Danny. UI wiring remains step 1.4.
+- 2026-11-06 accent correction (awaiting preview): restored solid crimson default headlines, marquee, homepage accent, and rating numbers; only the video-rating heading opts into white outlines. 35 tests, type checks, and production build pass. Screenshot verification and Jake's approval remain pending; do not merge.
+
 - 2026-11-06 requested white-outline accents: Overtime tokens, shared headline/marquee, homepage, and prominent rating text updated; 37 tests, type checks, and production build pass. Browser preview unavailable. Presentation only; no feature criteria changed.
 
 - 2026-11-06 requested logo update: canonical supplied artwork in shared Logo/Wordmark, site navigation, phone, and browser/touch icons; original image preserved, responsive presentation checked. Presentation only.

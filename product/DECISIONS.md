@@ -4,6 +4,9 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 
 ## Product
 
+- 2026-11-06 accent correction: Jake clarified that red should remain the dominant accent. Restore solid crimson for default headline accents, the homepage's "court time.", marquee, and prominent ratings. Reserve black fill/white outlines for the main video-rating heading via explicit `ch-hl-outline` opt-in. This supersedes the broad white-outline rollout.
+- 2026-11-06 preview before merge: Jake requires screenshots to be captured and inspected for visual changes, then a preview for his approval before merging. Passing automated checks alone is insufficient; unavailable browser access must not be treated as visual verification.
+
 - 2026-11-06 white outline accent: Jake requested black-filled, #F5F5F5-outlined display accents across the design system and site, matching the supplied reference. Headline accents, the opposing Mona Sans marquee, and prominent rating text use this treatment; small text, focus rings, and hover boundaries use solid white for legibility. Saturated crimson actions, data marks, and the supplied logo stay as shown in the reference. Presentation only; no feature criteria changed.
 
 - 2026-11-06 logo: Jake supplied the white RALLY/red brush-script artwork as the canonical logo. Preserve the original PNG; `@rally/ui` Logo and its Wordmark compatibility alias render it everywhere. CSS handles display cropping/blending only; browser icons reuse the same asset.
@@ -25,6 +28,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 - Gemini is required: it's the only practical way to judge shot quality from video in hours. Local open-source vision (Pickleball-Vision, YOLO, ByteTrack, RTMPose) measures movement; Gemini judges play; 020 combines them into an estimated DUPR range and an athleticism score.
 
 ## Asks
+
+- 2026-11-06 shared design notice for Jake and Danny: shared headline accents default to solid crimson again, as do the marquee and rating numbers. Outline styling is opt-in only on the main video-rating heading. Hold the correction PR for Jake's screenshot preview before merge.
 
 - 2026-11-06 shared design notice for Jake and Danny: the requested white-outline accent updates shared Overtime tokens/components and the homepage override. Both lanes receive outlined headings and white focus/hover accents through `@rally/ui`; module interfaces and functional state are unchanged.
 
