@@ -52,6 +52,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
+- 2026-11-06 requested Overtime color refinement: opposing marquee row matches the hero/button crimson; brighter small-text/focus token retained. Presentation only.
+
 - 2026-11-06 requested Overtime rebrand: active tokens, shared components and local fonts, minimal homepage with original pickleball texture and opposing two-font marquee, concise app screens, updated brand/agent guidance; alternative previews retired. Presentation change only; no feature criteria changed.
 
 - 2026-11-06 setup: repo laid out as the team's second brain; specs 000 to 060 drafted.
