@@ -17,6 +17,9 @@ import json
 import sys
 
 
+DEFAULT_WINDOW_SEC = 180  # 60 s showed Gemini only 1 to 10 shots per player: too little to grade
+
+
 def parse_corners(text: str) -> list[tuple[float, float]]:
     nums = [float(n) for n in text.split(",")]
     if len(nums) != 8:
@@ -66,9 +69,12 @@ def build_parser() -> argparse.ArgumentParser:
     aa = sub.add_parser("assess-all", help="Gemini grades every clip in demo/clips.md not yet cached, with progress")
     aa.add_argument("--refresh", action="store_true", help="Ask Gemini again even for cached clips")
     aa.add_argument("--only", nargs="*", help="Only these clip IDs")
+    aa.add_argument("--window", type=float, default=DEFAULT_WINDOW_SEC,
+                    help="Seconds of video Gemini watches from the start time (default %(default)s)")
 
     b = sub.add_parser("build", help="Combine into the ClipStats the app reads")
     b.add_argument("clip_id")
+    sub.add_parser("build-all", help="Build every clip in demo/clips.md that Gemini has graded")
     return p
 
 
@@ -79,7 +85,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "assess":
         from .gemini import RealGemini
 
-        end = args.end if args.end is not None else (args.start + 60 if args.start is not None else None)
+        end = args.end if args.end is not None else (args.start + DEFAULT_WINDOW_SEC if args.start is not None else None)
         result = clips.get_or_assess(RealGemini(), args.clip_id, args.source, args.player, refresh=args.refresh,
                                      fps=args.fps, start_sec=args.start, end_sec=end)
         print(json.dumps(result, indent=2))
@@ -95,9 +101,19 @@ def main(argv: list[str] | None = None) -> int:
         path = clips.save_measured(args.clip_id, args.source, frames / fps, players)
         print(f"{len(players)} players -> {path}")
         return 0
-    if args.cmd == "build":
-        stats = clips.build_clip(args.clip_id)
-        print(f"{args.clip_id}: {len(stats['players'])} players, ok")
+    if args.cmd in ("build", "build-all"):
+        rows = {r["clipId"]: r for r in read_clips_table()}
+        ids = list(rows) if args.cmd == "build-all" else [args.clip_id]
+        for cid in ids:
+            r = rows.get(cid, {})
+            meta = {"channel": r.get("channel"), "labeledLevel": r.get("level"), "startSec": r.get("start"),
+                    "scene4": True if "scene 4" in r.get("usedIn", "") else None}
+            try:
+                stats = clips.build_clip(cid, meta=meta)
+                kind = "measured + Gemini" if stats["players"][0].get("measured") is not False else "Gemini only"
+                print(f"{cid}: {len(stats['players'])} player(s), {kind}, ok")
+            except FileNotFoundError as e:
+                print(f"{cid}: skipped ({e})")
         return 0
     return 1
 
@@ -110,13 +126,13 @@ def read_clips_table(path=None) -> list[dict]:
     path = path or Path(__file__).resolve().parents[3] / "demo" / "clips.md"
     rows = []
     for line in Path(path).read_text().splitlines():
-        m = re.match(r"\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|", line)
+        m = re.match(r"\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|", line)
         if not m:
             continue
-        cid, url, channel, level, player, start = (s.strip() for s in m.groups())
+        cid, url, channel, level, player, start, used_in = (s.strip() for s in m.groups())
         num = re.match(r"\d+(\.\d+)?", level)
         rows.append({"clipId": cid, "source": url, "channel": channel, "level": float(num.group()) if num else None,
-                     "player": player, "start": parse_time(start) if start else 0.0})
+                     "player": player, "start": parse_time(start) if start else 0.0, "usedIn": used_in})
     return rows
 
 
@@ -141,7 +157,7 @@ def assess_all(args) -> int:
         t = time.monotonic()
         try:
             a = clips.get_or_assess(gemini, r["clipId"], r["source"], r["player"], refresh=args.refresh,
-                                    start_sec=r["start"], end_sec=r["start"] + 60)
+                                    start_sec=r["start"], end_sec=r["start"] + args.window)
             lvl = a["levelEstimate"]
             label = f", labeled {r['level']:g}" if r["level"] is not None else ""
             print(f"{tag}: done in {time.monotonic() - t:.0f}s: level {lvl['low']:g} to {lvl['high']:g}{label}", flush=True)

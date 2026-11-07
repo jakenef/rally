@@ -29,7 +29,14 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 - 010 VIS-5: `--select` takes the player's position in court metres, not pixels, because the selection happens after mapping onto the court.
 - 010: the rubric (`vision/rubric.md`) is built from secondary sites repeating USA Pickleball's level descriptions; we couldn't reach the official text.
 - 020: the card is written by `claude-opus-5-5` (structured output, effort low) with server-side refusal fallback (`fallbacks: "default"`), only when `ANTHROPIC_API_KEY` is set; otherwise, or on any error, the template card (PRO-4). Cards are cached in memory per clip so a page reload doesn't call Claude again.
-- 020: calibration is a small ridge regression on the gap between the labeled level and Gemini's midpoint, over five measured features (kitchen share, ready share, athleticism, third-shot drop share, unforced errors per minute). Under 8 labeled clips it's skipped and confidence caps at medium.
+- 010: Gemini watches 3 minutes from each clip's start (`--window`, default 180s), not 60s: in 60s it saw only 1 to 10 rally shots per player, too little to grade, and it pulled every grade toward 3.0 to 3.5.
+- 010: clips whose camera angle defeats court mapping are built from Gemini alone (`measured: false`, one player). Their style uses Gemini's shot mix for kitchen and 0.5 for mobility and readiness, and they get no athleticism score.
+- 020: with any clip lacking measured stats, calibration is a "shift": add the average gap between label and Gemini's midpoint. On the 9 clips (60s windows) that halved the error, scored leave-one-out.
+- App env: `next.config.ts` finds the product folder (the one holding `vision/`) from either start location and loads its env files with `forceReload`, because Next has already loaded its own folder's files and would otherwise skip them.
+- 020: Claude is told to mention only what it's given (no athleticism without a number, no observations without Gemini's), after it invented both in testing.
+- 020: every reported accuracy number is leave-one-out: each clip is estimated with a calibration fitted without its own label, in the app too, so the demo can't flatter itself.
+- 020 PRO-7 (revised): only the measured-feature part of the correction counts as "disagreement"; a constant shift doesn't lower confidence. Confidence is also low when Gemini saw fewer than 8 rally shots, and high only when the calibration's leave-one-out error is 0.3 or less.
+- 020 (old) calibration is a small ridge regression on the gap between the labeled level and Gemini's midpoint, over five measured features (kitchen share, ready share, athleticism, third-shot drop share, unforced errors per minute). Under 8 labeled clips it's skipped and confidence caps at medium.
 - 020 PRO-7: "the two signals differ by more than 0.75" is read as the calibration moving Gemini's range by more than 0.75.
 - 020: a player with no clip, DUPR or self-rating gets skill 3.0 with sigma 1.0 (source `self`), so matching still has a number.
 - 020: `/player` shows the one player Gemini graded per clip; the other tracked players have no assessment, so they aren't profiled.

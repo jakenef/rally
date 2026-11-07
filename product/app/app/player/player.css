@@ -18,3 +18,29 @@
 .pl-pair { display: grid; gap: var(--space-med); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 760px) { .pl-pair { grid-template-columns: 1fr; } }
 .pl-flash { padding: var(--space-mini); border: 1px solid var(--line-strong); color: var(--ink); }
+
+/* Scene 5 accuracy chart */
+.ac-stats { display: grid; gap: var(--space-gap); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.ac-stat { display: grid; gap: 4px; padding: var(--space-mini); background: var(--surface-raised); border-radius: var(--radius-small); }
+.ac-num { font: 700 48px/1 var(--font-sans); font-stretch: 93%; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ac-chart { display: grid; gap: 10px; }
+.ac-axis { position: relative; height: 16px; margin: 0 64px 0 200px; font: 600 12px/14px var(--font-sans); color: var(--ink-faint); }
+.ac-axis span { position: absolute; transform: translateX(-50%); }
+.ac-row { display: grid; grid-template-columns: 188px 1fr 52px; gap: 12px; align-items: center; }
+.ac-name { font: 600 14.4px/18px var(--font-sans); color: var(--ink-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-track { position: relative; height: 22px; background: var(--surface-raised); }
+.ac-gemini, .ac-rally { position: absolute; height: 8px; min-width: 4px; }
+.ac-gemini { top: 2px; background: var(--line-strong); }
+.ac-rally { bottom: 2px; background: var(--crimson); }
+.ac-label { position: absolute; top: -3px; bottom: -3px; width: 3px; margin-left: -1.5px; background: var(--ink); }
+.ac-err { font: 700 14.4px/18px var(--font-sans); color: var(--ink); text-align: right; }
+.ac-key { display: flex; flex-wrap: wrap; gap: 16px; padding-top: 6px; }
+.ac-key i { display: inline-block; width: 18px; height: 8px; margin-right: 6px; vertical-align: middle; }
+.ac-key-gemini { background: var(--line-strong); }
+.ac-key-rally { background: var(--crimson); }
+.ac-key-label { width: 3px !important; height: 14px !important; background: var(--ink); }
+@media (max-width: 640px) {
+  .ac-row { grid-template-columns: 1fr 48px; }
+  .ac-name { grid-column: 1 / -1; }
+  .ac-axis { margin: 0 60px 0 0; }
+}

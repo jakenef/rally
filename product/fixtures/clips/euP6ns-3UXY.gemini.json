@@ -4,27 +4,28 @@
   "player": "near side: red t-shirt, navy shorts",
   "used_model": "gemini-3.8-flash",
   "used_processing": true,
+  "windowSec": 180,
   "assessment": {
     "shots": {
-      "dink": 3,
-      "drive": 0,
-      "drop": 1,
+      "dink": 6,
+      "drive": 2,
+      "drop": 0,
       "lob": 0,
-      "volley": 1,
-      "serve": 1,
-      "return": 1
+      "volley": 3,
+      "serve": 2,
+      "return": 2
     },
-    "thirdShotDropShare": 1.0,
-    "unforcedErrors": 0,
+    "thirdShotDropShare": 0.0,
+    "unforcedErrors": 1,
     "resetsUnderPressure": 0,
     "levelEstimate": {
-      "low": 4.0,
-      "high": 4.5
+      "low": 3.5,
+      "high": 4.0
     },
     "reasons": [
-      "Demonstrated consistent, controlled dinking with compact mechanics during kitchen exchanges.",
-      "Successfully executed an unhurried third-shot drop from deep and cleanly transitioned up to the kitchen line.",
-      "Showed strong court awareness, moving in tandem with partner and maintaining ready position at the line."
+      "Sustains patient dinking rallies at the NVZ with controlled touch and solid footwork.",
+      "Routinely advances to established kitchen positioning after hitting deep returns.",
+      "Prefers third-shot drives from the baseline instead of drops, resulting in one net error and one pressured winner."
     ]
   }
 }
