@@ -88,3 +88,5 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 - 1.4 Scope: this increment is the requested matching frontend only. Cancellations, backfill, and phone wiring remain pending; do not mark the whole Dashboard build step complete. Renderer cleanup releases GPU resources and animation on navigation.
 
 - 2026-11-06 Danny approved one strongest-style accessory per player (power paddle, kitchen chef hat, mobility sneakers, readiness headband) plus skill badge. Strongest-stat ties use that order; stars are illustrative tiers 1–5 derived from round(skill - 1), with numerical skill alongside. Rally animation follows real matching assignments; it does not alter matching logic.
+
+- 2026-11-06 Danny replaced wearable accessories and separate badges with one floating physical 3D card per player: flat playstyle icon, numerical rating and stars, four attribute bars, name and tempo. Cards face the camera, appear only after entering a court, and replace the visible spotlight sidebar. Equivalent player data remains accessible in text.
