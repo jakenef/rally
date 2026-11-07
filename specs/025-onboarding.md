@@ -18,7 +18,7 @@ What a player sees when someone sends them the Rally link: they upload a clip of
 ## Flow
 
 1. **Upload.** "Get your Rally rating." Drag a video onto the page, or pick one. The page shows upload progress.
-2. **Which one is you?** Rally finds the players in a frame near the start and shows the frame with a box on each. The player clicks their box.
+2. **Which one is you?** Their video appears paused with a box on every player. They can scrub to any moment where they're easy to see; Rally finds the players on that frame. They click their own box. Rally crops that box itself and sends it to Gemini with the video, so Gemini knows who to grade; the player never uploads a photo.
 3. **Analyzing.** The clip plays while Rally tracks the players and Gemini watches. The page shows each step with its progress, and the time so far.
 4. **Your rating.** The clip plays with the tracking overlay: a crimson box labeled "YOU", and a callout near it each time Gemini saw them hit a shot ("THIRD-SHOT DROP", "DINK", "PUT-AWAY"), with a running count of their shots under the video. Next to it, the card in the second person: "Your estimated DUPR", "Your play style", "Your tip".
 5. **Join.** They enter a first name and pick their tempo (soft, fast, either), then join tonight's session (040 `signUp`).
@@ -32,8 +32,8 @@ A hidden panel for the presenter, opened with the `D` key or a small unlabeled c
 ```ts
 // POST /player/api/jobs            multipart file -> { jobId }
 // GET  /player/api/jobs/:id        -> JobStatus
-// POST /player/api/jobs/:id/select { box: number } -> JobStatus
-// GET  /player/api/jobs/:id/frame  -> image/jpeg (the frame the player picks themselves on)
+// GET  /player/api/jobs/:id/players?t=12.4 -> { t, boxes } (people on the frame at t)
+// POST /player/api/jobs/:id/select { t: number, box: [x1, y1, x2, y2] } -> JobStatus
 // GET  /player/api/jobs/:id/video  -> video (range requests)
 // GET  /player/api/clips/:clipId   -> Result for a prepared clip
 type JobStatus = {
@@ -55,7 +55,7 @@ type Result = {
 
 ## Acceptance criteria
 
-- **ONB-1** Dropping a video file starts a job and shows the players found on the pick frame, each clickable.
+- **ONB-1** Dropping a video file starts a job and shows the video paused with the players found on that frame, each clickable; scrubbing to another moment finds the players there.
 - **ONB-2** Picking a player starts tracking and Gemini; the status lists both steps with live progress until done.
 - **ONB-3** The result's card is in the second person ("Your estimated DUPR", "Your tip") and the graded player's box is labeled "YOU".
 - **ONB-4** During playback, each shot event shows a callout near the player for about 1.5 seconds, and the shot counts under the video only include shots already played.

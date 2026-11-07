@@ -77,7 +77,7 @@ type ShotEvent = {
 - **VIS-6** A clip that was processed before is served from the cache without calling Gemini.
 - **VIS-7** Gemini's reply lists the graded player's shots with times; times outside the watched window, or labels over 3 words, are dropped.
 - **VIS-8** A local video file (an upload) is sent to Gemini through the Files API, with a cropped image of the picked player so Gemini knows who to grade.
-- **VIS-9** Finding players on the pick frame returns every person box on one frame near the start, in under 10 seconds.
+- **VIS-9** Finding players on a chosen frame returns every person box on that frame, in under 10 seconds.
 - **VIS-5** Given a click on a player in the first frame, the output marks the track nearest that point as `selected`.
 
 ## Open questions
