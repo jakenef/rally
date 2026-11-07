@@ -30,6 +30,12 @@ Things one lane needs from the other, or from a shared file: `- <date> <who> ask
 - 040 SESS-1/SESS-2: sessions use an explicitly seeded in-memory store with snapshot reads; the shared signUp(sessionId, Profile) contract stays unchanged. Capacity is courts * 4, skill bounds include their endpoints and use mu, and repeated sign-ups are idempotent. The shared paid field is preserved but unused to avoid changing the other lane's interface.
 - 040 SESS-3: Danny cut pricing/rule parsing from the demo on 2026-11-06. Use fixed fixture settings; no Claude adapter, approval flow or API key is needed for Sessions.
 
+- 020: the card is written by `claude-opus-5-5` (structured output, effort low) with server-side refusal fallback (`fallbacks: "default"`), only when `ANTHROPIC_API_KEY` is set; otherwise, or on any error, the template card (PRO-4). Cards are cached in memory per clip so a page reload doesn't call Claude again.
+- 020: calibration is a small ridge regression on the gap between the labeled level and Gemini's midpoint, over five measured features (kitchen share, ready share, athleticism, third-shot drop share, unforced errors per minute). Under 8 labeled clips it's skipped and confidence caps at medium.
+- 020 PRO-7: "the two signals differ by more than 0.75" is read as the calibration moving Gemini's range by more than 0.75.
+- 020: a player with no clip, DUPR or self-rating gets skill 3.0 with sigma 1.0 (source `self`), so matching still has a number.
+- 020: `/player` shows the one player Gemini graded per clip; the other tracked players have no assessment, so they aren't profiled.
+- 020: `/player/compare` uses two processed clips when there are two, else the scene 4 pair from the roster.
 - 0.1: the app loads Mona Sans and Italiana with a `<link>` in `app/layout.tsx` instead of the design system's CSS `@import`, because Next.js bundles CSS files together and an `@import` in the middle is dropped.
 - 0.1: the nav mark is the crimsonhacks `Wordmark` with Rally's own word ("Rally", serif, no sans line), because the system has no logo file and its Wordmark is crimsonhacks' own mark.
 - 0.1: workspace packages are TypeScript source with no build step, compiled by Next (`transpilePackages`) and vitest, to keep the hackathon setup to one `npm install`.
