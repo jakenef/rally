@@ -71,3 +71,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.1: matching, fairness reasons, seeded random and rating-only baselines; all 16 tests and TypeScript checks pass (MATCH-1, MATCH-3 to MATCH-7). MATCH-2 deferred by Danny. Demo seed 42: 79.97 optimized vs 23.16 random, about 31 ms in a local run.
 
 - 2026-11-06 1.4 (partial): Tonight’s session now has the Overtime facility/court/player view, real Rally assignments, signature pickleballs, and hideable demo reset. 35 tests, TypeScript, and production build pass; facility rendering checked in the browser. Cancellation/backfill wiring remains pending.
+
+- 2026-11-06 1.4 requested visual simplification: removed player-specific ball stripes, dot patterns, initials, and their legend; retained team colors, perforations, hover interactions, and spotlight stats.

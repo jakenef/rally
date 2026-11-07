@@ -250,7 +250,7 @@ export function mountFacility(
       )
       .join(
         "",
-      )}</div><div class="signature-key"><span>Power → stripe width</span><span>Kitchen → shoulder pattern density</span></div>`;
+      )}</div>`;
     switcher.querySelector<HTMLElement>(".selected-name")!.textContent =
       `${p.name} (${jersey})`;
   }
@@ -293,47 +293,6 @@ export function mountFacility(
       }
     }
   });
-  function signatureTexture(p: Profile, isA: boolean) {
-    const style = getComputedStyle(document.body),
-      get = (n: string) => style.getPropertyValue(n).trim();
-    const cv = document.createElement("canvas");
-    cv.width = 1024;
-    cv.height = 512;
-    const ctx = cv.getContext("2d")!;
-    ctx.fillStyle = get(isA ? "--crimson" : "--paper");
-    ctx.fillRect(0, 0, 1024, 512);
-    const accent = get(isA ? "--paper" : "--crimson-deep");
-    // A real surface print: geometry and hole count stay identical for everyone.
-    ctx.fillStyle = accent;
-    const stripe = 10 + p.style.power * 70;
-    ctx.fillRect(0, 256 - stripe / 2, 1024, stripe);
-    const rows = 2 + Math.round(p.style.kitchen * 5),
-      columns = 16;
-    ctx.globalAlpha = 0.22 + p.style.kitchen * 0.45;
-    for (let row = 0; row < rows; row++)
-      for (let col = 0; col < columns; col++) {
-        ctx.beginPath();
-        ctx.arc(
-          ((col + (row % 2) * 0.5) * 1024) / columns,
-          65 + row * 19,
-          4 + p.style.kitchen * 4,
-          0,
-          Math.PI * 2,
-        );
-        ctx.fill();
-      }
-    ctx.globalAlpha = 1;
-    const initials = p.name
-      .split(" ")
-      .map((v) => v[0])
-      .join("");
-    ctx.font = "700 45px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(initials, 512, 375);
-    const tex = new THREE.CanvasTexture(cv);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    return tex;
-  }
   function rebuildPlayers() {
     if (!renderer) return;
     figures.forEach((f) => {
@@ -389,7 +348,7 @@ export function mountFacility(
         groups[c].root.add(group);
         const geometry = buildPickleGeometry();
         const m = new THREE.MeshStandardMaterial({
-          map: signatureTexture(p, isA),
+          color: token(isA ? "--crimson" : "--paper"),
           roughness: 0.48,
           metalness: 0,
           bumpMap: geometry.texture,
