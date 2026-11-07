@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Profile, Session } from "@rally/types";
 import { roster, tonight } from "../../../fixtures";
-import { createSessions } from "./index";
+import { createSessions, getSession, signUp } from "./index";
 
 const session = (changes: Partial<Session> = {}): Session => ({
   id: "tuesday", facilityId: "rally", startsAt: "2026-11-10T19:00:00-07:00",
@@ -10,6 +10,11 @@ const session = (changes: Partial<Session> = {}): Session => ({
 const player = (id: string, mu = 3.5): Profile => ({ ...roster[0], playerId: id, skill: { mu, sigma: 0.5 } });
 
 describe("sessions", () => {
+  it("SESS-1 lets the player page join the displayed demo session through the default store", () => {
+    const newcomer = player("clip-qa-demo");
+    expect(signUp(tonight.id, newcomer)).toEqual({ status: "waitlisted" });
+    expect(getSession(tonight.id).waitlist).toContain(newcomer.playerId);
+  });
   it("SESS-1 fills courts * 4 spots, then waitlists in arrival order without duplicates", () => {
     const store = createSessions({ sessions: [session({ courts: 2 })] });
     for (let i = 0; i < 8; i++) expect(store.signUp("tuesday", player(`p${i}`)).status).toBe("joined");
