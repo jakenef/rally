@@ -1,0 +1,13 @@
+<!-- @dsCard group="Content" height=240 subtitle="Paddles hall of fame" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>PaddleTile — preview</title>
+<style>body{padding:24px}#root{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:16px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.CrimsonHacks, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment,null,h(C.PaddleTile,{name:'Season',year:2026,tone:'crimson'}),h(C.PaddleTile,{name:'Whiteout',year:2026,tone:'paper'}),h(C.PaddleTile,{name:'Night court',year:2025,tone:'night'}),h(C.PaddleTile,{name:'Split',year:2025,tone:'split'})));
+</script>
+</body>
+</html>

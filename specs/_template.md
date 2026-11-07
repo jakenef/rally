@@ -3,6 +3,7 @@
 Status: Draft | Accepted | Built
 Prefix: `XX`
 Step: n.n
+Lane: AI | Facility
 
 ## Purpose
 

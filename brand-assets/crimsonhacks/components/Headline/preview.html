@@ -1,0 +1,13 @@
+<!-- @dsCard group="Type" height=420 subtitle="Sans caps with serif accent words" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Headline — preview</title>
+<style>body{padding:24px}#root{display:grid;gap:32px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.CrimsonHacks, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment,null,h(C.Headline,{size:'h2',parts:[{text:'Dinking',serif:true},'past the kitchen,',{text:'driving',serif:true},'the third shot.']}),h('div',{className:'ch-night',style:{padding:'32px',margin:'0 -24px'}},h(C.Headline,{size:'impact',align:'center',parts:['Always bringing the',{text:'rally.',serif:true}]}))));
+</script>
+</body>
+</html>

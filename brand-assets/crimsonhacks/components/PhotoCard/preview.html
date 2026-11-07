@@ -1,0 +1,16 @@
+<!-- @dsCard group="Content" height=380 subtitle="colour and mono" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>PhotoCard — preview</title>
+<style>body{padding:24px}#root{display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.CrimsonHacks, h = React.createElement;
+var court = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500"><rect width="400" height="500" fill="#5b1a22"/><rect x="60" y="40" width="280" height="420" fill="#c8102e"/><g fill="none" stroke="#fff" stroke-width="5"><rect x="60" y="40" width="280" height="420"/><path d="M60 250H340M60 190H340M60 310H340M200 40V190M200 310V460"/></g><circle cx="262" cy="150" r="12" fill="#fff"/></svg>');
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+  h(C.PhotoCard, { src: court, alt: 'Court 4 from above', caption: 'Provo, 2026', width: 220 }),
+  h(C.PhotoCard, { src: court, alt: 'Court 4 from above', caption: 'Nationals, 2025', tone: 'mono', width: 160, ratio: '1 / 1' })));
+</script>
+</body>
+</html>

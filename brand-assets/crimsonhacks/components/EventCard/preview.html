@@ -1,0 +1,13 @@
+<!-- @dsCard group="Content" height=260 subtitle="The notched next-match card" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>EventCard — preview</title>
+<style>body{padding:24px}#root{display:flex;gap:32px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.CrimsonHacks, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment,null,h(C.EventCard,{title:'Provo Open',meta:['Rally club','since 2024']}),h(C.EventCard,{label:'Next clinic',icon:'court',title:'Kitchen drills',meta:'Thu 7 pm'})));
+</script>
+</body>
+</html>

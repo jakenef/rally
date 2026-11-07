@@ -1,0 +1,13 @@
+<!-- @dsCard group="Actions" height=88 subtitle="closed and open" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>MenuButton — preview</title>
+<style>body{padding:24px}#root{display:flex;gap:12px}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.CrimsonHacks, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment,null,h(C.MenuButton,null),h(C.MenuButton,{open:true,label:'Close menu'})));
+</script>
+</body>
+</html>

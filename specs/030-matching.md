@@ -3,6 +3,7 @@
 Status: Draft
 Prefix: `MATCH`
 Step: 1.1
+Lane: Facility (Danny). Only that lane changes this module's code (see `specs/README.md`, Lanes).
 
 ## Purpose
 

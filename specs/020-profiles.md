@@ -3,6 +3,7 @@
 Status: Draft
 Prefix: `PRO`
 Step: 2.2
+Lane: AI (Jake). Only that lane changes this module's code (see `specs/README.md`, Lanes).
 
 ## Purpose
 

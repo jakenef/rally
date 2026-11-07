@@ -16,4 +16,8 @@ Judgment calls made while building, one line each: `- <spec> <criterion>: what w
 
 - Gemini is required: it's the only practical way to judge shot quality from video in hours. Local open-source vision (Pickleball-Vision, YOLO, ByteTrack, RTMPose) measures movement; Gemini judges play; 020 combines them into an estimated DUPR range and an athleticism score.
 
+## Asks
+
+Things one lane needs from the other, or from a shared file: `- <date> <who> asks <whom>: ...`.
+
 ## Build

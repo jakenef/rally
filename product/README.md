@@ -2,7 +2,9 @@
 
 The code. Built step by step from `BUILD.md`, following the specs in `../specs/`.
 
-## Planned layout
+## Layout
+
+Each path belongs to a lane (`specs/README.md`, Lanes).
 
 | Path | What |
 | --- | --- |
@@ -12,7 +14,9 @@ The code. Built step by step from `BUILD.md`, following the specs in `../specs/`
 | `packages/backfill/` | 050, TypeScript |
 | `packages/profiles/` | 020, TypeScript |
 | `packages/ratings/` | 060, TypeScript |
+| `packages/types/` | Shared types from the specs: the contract between lanes |
 | `packages/fakes/` | In-memory fakes for Claude and Gemini, used by tests |
+| `packages/ui/` | The crimsonhacks design system: tokens as CSS variables and React components |
 | `vision/` | 010, Python, our fork of Pickleball-Vision |
 | `fixtures/` | The demo roster, cached clip stats |
 

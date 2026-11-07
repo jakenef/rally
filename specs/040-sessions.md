@@ -3,6 +3,7 @@
 Status: Draft
 Prefix: `SESS`
 Step: 1.2
+Lane: Facility (Danny). Only that lane changes this module's code (see `specs/README.md`, Lanes).
 
 ## Purpose
 

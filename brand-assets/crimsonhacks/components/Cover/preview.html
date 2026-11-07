@@ -1,0 +1,42 @@
+<!-- @dsCard height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Cover</title>
+<style>
+  html, body { margin: 0; }
+  .cv { position: relative; width: 960px; height: 300px; overflow: hidden; background: var(--surface); }
+  .cv svg { position: absolute; left: 480px; top: 0; width: 480px; height: 300px; }
+  .b-crimson { fill: var(--crimson); } .b-deep { fill: var(--crimson-deep); } .b-ink { fill: var(--ink); }
+  .b-paper { fill: var(--paper); } .hole { fill: var(--crimson); }
+  .cv-text { position: absolute; left: 48px; bottom: 48px; max-width: 400px; display: flex; flex-direction: column; gap: 14px; }
+  .cv-name { margin: 0; font-family: var(--font-serif); font-weight: 400; font-size: 64px; line-height: .92; letter-spacing: -.02em; color: var(--ink); }
+  .cv-tag { margin: 0; font: 600 13px/18px var(--font-sans); color: var(--ink-muted); }
+</style></head>
+<body>
+<div class="cv">
+  <svg viewBox="0 0 480 300" aria-hidden="true">
+    <!-- blocks: crimson 288×300 slab, crimson-deep 192×128, ink 192×172 (space-xlarge × steps); flush modular grid bleeding top, right and bottom.
+         arrangement: two stacked blocks left, one tall slab right carrying the ball.
+         pattern: literal motif, the pickleball itself: a paper disc (radius 104) pierced by 19 crimson holes, because the system's only texture is the ball's perforation.
+         scales: hole radius 9, ring pitch 40px (space-small + 8), blocks on 16px multiples, square corners (photos and cards stay square). -->
+    <rect class="b-deep" x="0" y="0" width="192" height="128"/>
+    <rect class="b-ink" x="0" y="128" width="192" height="172"/>
+    <rect class="b-crimson" x="192" y="0" width="288" height="300"/>
+    <circle class="b-paper" cx="336" cy="150" r="104"/>
+    <g class="hole">
+      <circle cx="336" cy="150" r="9"/>
+      <circle cx="336" cy="110" r="9"/><circle cx="370.6" cy="130" r="9"/><circle cx="370.6" cy="170" r="9"/>
+      <circle cx="336" cy="190" r="9"/><circle cx="301.4" cy="170" r="9"/><circle cx="301.4" cy="130" r="9"/>
+      <circle cx="356.7" cy="72.7" r="9"/><circle cx="392.6" cy="93.4" r="9"/><circle cx="413.3" cy="129.3" r="9"/>
+      <circle cx="413.3" cy="170.7" r="9"/><circle cx="392.6" cy="206.6" r="9"/><circle cx="356.7" cy="227.3" r="9"/>
+      <circle cx="315.3" cy="227.3" r="9"/><circle cx="279.4" cy="206.6" r="9"/><circle cx="258.7" cy="170.7" r="9"/>
+      <circle cx="258.7" cy="129.3" r="9"/><circle cx="279.4" cy="93.4" r="9"/><circle cx="315.3" cy="72.7" r="9"/>
+    </g>
+  </svg>
+  <div class="cv-text">
+    <h1 class="cv-name">crimsonhacks</h1>
+    <p class="cv-tag">Red, white and loud. Pickleball, said big.</p>
+  </div>
+</div>
+</body>
+</html>

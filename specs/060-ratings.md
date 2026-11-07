@@ -3,6 +3,7 @@
 Status: Draft
 Prefix: `RATE`
 Step: 3.1
+Lane: Facility (Danny). Only that lane changes this module's code (see `specs/README.md`, Lanes).
 
 ## Purpose
 
