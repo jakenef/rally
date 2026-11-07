@@ -50,6 +50,12 @@ type GeminiAssessment = {
   resetsUnderPressure: number;        // soft blocks of hard balls
   levelEstimate: { low: number; high: number };  // 2.0..6.0, from the rubric
   reasons: string[];                  // what it saw, quoted on the player card
+  events?: ShotEvent[];              // each shot the player hit, with its time (VIS-7)
+};
+type ShotEvent = {
+  t: number;                          // seconds on the video's own timeline
+  shot: "dink" | "drive" | "drop" | "lob" | "volley" | "serve" | "return" | "reset" | "speedup" | "putaway" | "error";
+  label: string;                      // a short callout, 1 to 3 words: "Third-shot drop", "Soft reset"
 };
 ```
 
@@ -69,9 +75,12 @@ type GeminiAssessment = {
 - **VIS-3** Tracks seen in fewer than 10% of frames are dropped.
 - **VIS-4** Gemini's reply is checked against `GeminiAssessment`; a reply that doesn't match is retried once, then the clip is marked failed (tested with the fake).
 - **VIS-6** A clip that was processed before is served from the cache without calling Gemini.
+- **VIS-7** Gemini's reply lists the graded player's shots with times; times outside the watched window, or labels over 3 words, are dropped.
+- **VIS-8** A local video file (an upload) is sent to Gemini through the Files API, with a cropped image of the picked player so Gemini knows who to grade.
+- **VIS-9** Finding players on a chosen frame returns every person box on that frame, in under 10 seconds.
 - **VIS-5** Given a click on a player in the first frame, the output marks the track nearest that point as `selected`.
 
 ## Open questions
 
-- How to tell which player we're profiling? **Default:** click them on the first frame (VIS-5).
+- How to tell which player we're profiling? **Default:** they click their own box on a frame near the start (025 step 2); prepared clips use `fixtures/clips/selection.json`.
 - Local copies of YouTube clips: downloading is against YouTube's terms. **Default:** keep any copy on one laptop for the pipeline, never in git, and credit the channel on screen.

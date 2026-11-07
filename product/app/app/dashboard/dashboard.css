@@ -1,0 +1,542 @@
+.facility-topline {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+}
+.facility-stage {
+  position: relative;
+  width: 100%;
+  height: 70svh;
+  min-height: 470px;
+  max-height: 850px;
+  background: transparent;
+  overflow: hidden;
+}
+.facility-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.facility-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.facility-court-hit {
+  position: absolute;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.facility-court-hit[hidden],
+.facility-player-hit[hidden] {
+  display: none;
+}
+.facility-court-tag {
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  white-space: nowrap;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-btn);
+  padding: 9px 13px;
+  font: 700 13px/1.2 var(--font-sans);
+  text-transform: uppercase;
+}
+.facility-court-tag span:last-child {
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+.facility-court-hit:hover .facility-court-tag,
+.facility-court-hit:focus-visible .facility-court-tag {
+  border-color: var(--crimson-text);
+  color: var(--crimson-text);
+}
+.facility-court-hit:focus-visible {
+  outline: none;
+}
+.facility-focused {
+  position: fixed;
+  inset: var(--facility-nav-height, 72px) 0 0;
+  width: 100vw;
+  height: calc(100dvh - var(--facility-nav-height, 72px));
+  min-height: 0;
+  max-height: none;
+  z-index: 100;
+  background: var(--surface);
+}
+.facility-focus-open {
+  overflow: hidden;
+}
+.facility-focus-open .rl-nav {
+  position: fixed;
+  inset: 0 0 auto;
+  visibility: visible;
+  z-index: 200;
+}
+.facility-focus-open .demo-edge {
+  display: none;
+}
+.focus-chrome {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  pointer-events: none;
+}
+.focus-chrome[hidden],
+.signature-profile[hidden],
+.player-switch[hidden] {
+  display: none;
+}
+.focus-chrome button {
+  pointer-events: auto;
+  background: var(--surface-raised);
+}
+.focus-court-title {
+  text-align: right;
+}
+.focus-court-title .eyebrow {
+  display: block;
+  margin-bottom: 6px;
+}
+.court-focus-score {
+  display: block;
+  margin-top: 6px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+.facility-player-hit {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.player-target {
+  display: block;
+  width: 85px;
+  height: 85px;
+}
+.facility-player-name {
+  padding: 5px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  color: var(--ink);
+  font: 600 13px/1.2 var(--font-sans);
+  white-space: nowrap;
+}
+.facility-player-hit:hover .facility-player-name,
+.facility-player-hit:focus-visible .facility-player-name {
+  border-color: var(--crimson-text);
+}
+.facility-player-hit:focus-visible {
+  outline: none;
+}
+.signature-profile {
+  position: absolute;
+  top: 110px;
+  left: 32px;
+  width: min(310px, 32vw);
+  pointer-events: none;
+  animation: profile-appear 0.45s ease both;
+}
+.signature-profile h2 {
+  font-size: clamp(28px, 4vw, 52px);
+  margin: 10px 0;
+}
+.signature-meta {
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.signature-stats {
+  margin-top: 20px;
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-small);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+.signature-stat > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 7px;
+}
+.signature-stat .track {
+  height: 6px;
+  background: var(--surface-raised);
+}
+.signature-stat .fill {
+  background: var(--crimson);
+}
+.signature-key {
+  margin-top: 14px;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.player-switch {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 32px);
+  white-space: nowrap;
+}
+.selected-name {
+  padding: 12px 16px;
+  background: var(--surface-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+}
+.facility-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-faint);
+}
+.footer {
+  visibility: visible;
+  font-size: 11px;
+}
+@keyframes profile-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 650px) {
+  .main-actions {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .facility-stage {
+    height: 65svh;
+    min-height: 430px;
+  }
+  .facility-focused {
+    height: calc(100dvh - var(--facility-nav-height, 72px));
+    min-height: 0;
+  }
+  .facility-court-tag {
+    gap: 6px;
+    font-size: 10px;
+    padding: 6px;
+  }
+  .facility-topline .eyebrow {
+    font-size: 10px;
+  }
+  .focus-chrome {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+  .focus-chrome .ch-btn {
+    font-size: 12px;
+    padding: 0 10px;
+  }
+  .signature-profile {
+    left: 16px;
+    top: 100px;
+    width: 210px;
+  }
+  .signature-profile h2 {
+    font-size: 28px;
+  }
+  .signature-stats {
+    padding: 12px;
+    gap: 12px;
+  }
+  .signature-stat > div:first-child {
+    font-size: 12px;
+  }
+  .player-switch {
+    gap: 6px;
+    bottom: 16px;
+  }
+  .player-switch .ch-btn {
+    font-size: 11px;
+    padding: 0 9px;
+  }
+  .selected-name {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .player-target {
+    width: 60px;
+    height: 60px;
+  }
+  .facility-player-name {
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signature-profile {
+    animation: none;
+  }
+}
+
+.rl-dashboard {
+  max-width: 1400px;
+  gap: var(--space-mini);
+  padding-top: var(--space-small);
+  padding-right: 60px;
+}
+.dashboard-intro {
+  display: grid;
+  gap: 12px;
+}
+.dashboard-intro .ch-hl {
+  font-size: clamp(36px, 4vw, 54px);
+}
+.dashboard-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.dashboard-host {
+  min-height: 470px;
+}
+.dashboard-note {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin: 0;
+}
+.dashboard-demo-edge {
+  position: fixed;
+  right: 0;
+  top: 86px;
+  bottom: 0;
+  width: 44px;
+  z-index: 35;
+}
+.dashboard-demo-launch {
+  position: fixed;
+  right: 0;
+  top: 45%;
+  writing-mode: vertical-rl;
+  height: auto;
+  min-height: 150px;
+  width: 42px;
+  padding: 16px 10px;
+  border-radius: var(--radius-btn) 0 0 var(--radius-btn);
+  font-size: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(100%);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.dashboard-demo-edge:hover .dashboard-demo-launch,
+.dashboard-demo-edge:focus-within .dashboard-demo-launch {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+.dashboard-demo-panel {
+  position: fixed;
+  right: 16px;
+  top: 100px;
+  z-index: 40;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  padding: var(--space-container);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-small);
+  display: grid;
+  gap: var(--space-small);
+}
+.dashboard-demo-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dashboard-demo-state {
+  display: grid;
+  gap: 8px;
+  color: var(--ink-muted);
+}
+.dashboard-demo-state strong {
+  font-size: 22px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.facility-focus-open .dashboard-demo-edge,
+.facility-focus-open .dashboard-demo-panel {
+  display: none;
+}
+.rl-dashboard .track {
+  height: 4px;
+  background: var(--surface-sunk);
+  overflow: hidden;
+}
+.rl-dashboard .fill {
+  height: 100%;
+  background: var(--crimson);
+}
+.rl-dashboard .value {
+  font-variant-numeric: tabular-nums;
+}
+.rl-dashboard .eyebrow {
+  font: 600 12px/16px var(--font-sans);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+@media (hover: none) {
+  .dashboard-demo-launch {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+@media (max-width: 650px) {
+  .rl-dashboard {
+    padding-right: 48px;
+  }
+  .dashboard-demo-launch {
+    width: 34px;
+    font-size: 11px;
+    padding: 12px 8px;
+    min-height: 140px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-demo-launch {
+    transition: none;
+  }
+}
+/* Overtime: shared tokens, Anton display type, minimal metadata. */
+.dashboard-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-mini);
+  flex-wrap: wrap;
+}
+.rl-dashboard .eyebrow {
+  font-weight: 500;
+}
+.signature-profile h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+}
+.dashboard-demo-state strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+}
+.facility-court-tag {
+  font-weight: 600;
+}
+.facility-focused .signature-key {
+  font-size: 12px;
+}
+.rl-dashboard .facility-topline {
+  padding-top: 0;
+}
+.facility-focus-open .rl-nav {
+  z-index: 200;
+}
+
+/* Reference plaza: uninterrupted grounds, inset crimson court labels. */
+.rl-dashboard {
+  max-width: 1800px;
+  padding: 24px 24px 18px;
+  gap: 8px;
+}
+.dashboard-heading {
+  padding: 0 16px;
+}
+.dashboard-heading .ch-hl {
+  font-size: clamp(30px, 3vw, 46px);
+}
+.facility-stage {
+  height: calc(100svh - 200px);
+  min-height: 540px;
+  max-height: 1100px;
+}
+.facility-court-tag {
+  bottom: -8px;
+  padding: 8px 15px;
+  gap: 14px;
+  border-color: var(--crimson-deep);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  font-size: 11px;
+}
+.facility-court-tag span:last-child {
+  padding-left: 14px;
+  border-left: 1px solid var(--line-strong);
+}
+.dashboard-note {
+  padding: 0 16px;
+  font-size: 11px;
+}
+.facility-focused {
+  height: calc(100dvh - var(--facility-nav-height, 88px));
+  min-height: 0;
+  max-height: none;
+}
+@media (max-width: 650px) {
+  .rl-dashboard {
+    padding: 20px 0 16px;
+  }
+  .dashboard-heading {
+    padding: 0 16px;
+  }
+  .facility-stage {
+    min-height: 440px;
+    height: calc(100svh - 210px);
+  }
+  .facility-focused {
+    height: calc(100dvh - var(--facility-nav-height, 72px));
+    min-height: 0;
+  }
+  .facility-court-tag {
+    font-size: 9px;
+    gap: 7px;
+    padding: 7px 9px;
+    border-radius: 10px;
+  }
+  .facility-court-tag span:last-child {
+    padding-left: 7px;
+  }
+}

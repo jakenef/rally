@@ -18,10 +18,8 @@ export type GeminiAssessment = {
   reasons: string[];
 };
 
-/** Per-player numbers from one clip (010). Measured locally; `watched` comes from Gemini. */
-export type PlayerStats = {
-  trackId: number;
-  selected?: boolean;
+/** The numbers measured locally from tracking (010). */
+export type MeasuredStats = {
   framesSeen: number;
   kitchenLineShare: number;
   distanceM: number;
@@ -29,8 +27,19 @@ export type PlayerStats = {
   readyPositionShare: number;
   avgSpeedMps: number;
   peakSpeedMps: number;
-  watched?: GeminiAssessment;
 };
+
+/**
+ * Per-player numbers from one clip (010). The measured fields are present only when local
+ * tracking ran (`measured` is not false); `watched` comes from Gemini, for the selected player.
+ */
+export type PlayerStats = {
+  trackId: number;
+  selected?: boolean;
+  /** false when only Gemini watched the clip (court mapping wasn't possible). */
+  measured?: boolean;
+  watched?: GeminiAssessment;
+} & (MeasuredStats | ({ measured: false } & Partial<MeasuredStats>));
 
 export type ClipStats = {
   clipId: string;
@@ -38,7 +47,18 @@ export type ClipStats = {
   source: string;
   durationSec: number;
   players: PlayerStats[];
+  /** Credited on screen. */
+  channel?: string;
+  /** The uploader's stated level, for calibration (020). Not a verified rating. */
+  labeledLevel?: number;
+  /** Where play starts in the YouTube video, seconds. */
+  startSec?: number;
+  /** Used in scene 4 (same rating, different game). */
+  scene4?: boolean;
 };
+
+/** True when local tracking measured this player. */
+export const isMeasured = (p: PlayerStats): p is PlayerStats & MeasuredStats => p.measured !== false;
 
 // ---------- 020 profiles (AI lane; read by the Facility lane) ----------
 

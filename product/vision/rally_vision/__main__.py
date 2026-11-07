@@ -17,6 +17,9 @@ import json
 import sys
 
 
+DEFAULT_WINDOW_SEC = 180  # 60 s showed Gemini only 1 to 10 shots per player: too little to grade
+
+
 def parse_corners(text: str) -> list[tuple[float, float]]:
     nums = [float(n) for n in text.split(",")]
     if len(nums) != 8:
@@ -66,9 +69,17 @@ def build_parser() -> argparse.ArgumentParser:
     aa = sub.add_parser("assess-all", help="Gemini grades every clip in demo/clips.md not yet cached, with progress")
     aa.add_argument("--refresh", action="store_true", help="Ask Gemini again even for cached clips")
     aa.add_argument("--only", nargs="*", help="Only these clip IDs")
+    aa.add_argument("--window", type=float, default=DEFAULT_WINDOW_SEC,
+                    help="Seconds of video Gemini watches from the start time (default %(default)s)")
+
+    o = sub.add_parser("overlay-all", help="Track player boxes in each local clip for the on-screen overlay")
+    o.add_argument("--only", nargs="*", help="Only these clip IDs")
+    o.add_argument("--refresh", action="store_true", help="Redo clips that already have an overlay")
+    o.add_argument("--refollow", action="store_true", help="Only redo following the graded player on saved boxes (fast)")
 
     b = sub.add_parser("build", help="Combine into the ClipStats the app reads")
     b.add_argument("clip_id")
+    sub.add_parser("build-all", help="Build every clip in demo/clips.md that Gemini has graded")
     return p
 
 
@@ -79,11 +90,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "assess":
         from .gemini import RealGemini
 
-        end = args.end if args.end is not None else (args.start + 60 if args.start is not None else None)
+        end = args.end if args.end is not None else (args.start + DEFAULT_WINDOW_SEC if args.start is not None else None)
         result = clips.get_or_assess(RealGemini(), args.clip_id, args.source, args.player, refresh=args.refresh,
                                      fps=args.fps, start_sec=args.start, end_sec=end)
         print(json.dumps(result, indent=2))
         return 0
+    if args.cmd == "overlay-all":
+        return overlay_all(args)
     if args.cmd == "assess-all":
         return assess_all(args)
     if args.cmd == "measure":
@@ -95,9 +108,19 @@ def main(argv: list[str] | None = None) -> int:
         path = clips.save_measured(args.clip_id, args.source, frames / fps, players)
         print(f"{len(players)} players -> {path}")
         return 0
-    if args.cmd == "build":
-        stats = clips.build_clip(args.clip_id)
-        print(f"{args.clip_id}: {len(stats['players'])} players, ok")
+    if args.cmd in ("build", "build-all"):
+        rows = {r["clipId"]: r for r in read_clips_table()}
+        ids = list(rows) if args.cmd == "build-all" else [args.clip_id]
+        for cid in ids:
+            r = rows.get(cid, {})
+            meta = {"channel": r.get("channel"), "labeledLevel": r.get("level"), "startSec": r.get("start"),
+                    "scene4": True if "scene 4" in r.get("usedIn", "") else None}
+            try:
+                stats = clips.build_clip(cid, meta=meta)
+                kind = "measured + Gemini" if stats["players"][0].get("measured") is not False else "Gemini only"
+                print(f"{cid}: {len(stats['players'])} player(s), {kind}, ok")
+            except FileNotFoundError as e:
+                print(f"{cid}: skipped ({e})")
         return 0
     return 1
 
@@ -110,14 +133,55 @@ def read_clips_table(path=None) -> list[dict]:
     path = path or Path(__file__).resolve().parents[3] / "demo" / "clips.md"
     rows = []
     for line in Path(path).read_text().splitlines():
-        m = re.match(r"\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|", line)
+        m = re.match(r"\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|", line)
         if not m:
             continue
-        cid, url, channel, level, player, start = (s.strip() for s in m.groups())
+        cid, url, channel, level, player, start, used_in = (s.strip() for s in m.groups())
         num = re.match(r"\d+(\.\d+)?", level)
         rows.append({"clipId": cid, "source": url, "channel": channel, "level": float(num.group()) if num else None,
-                     "player": player, "start": parse_time(start) if start else 0.0})
+                     "player": player, "start": parse_time(start) if start else 0.0, "usedIn": used_in})
     return rows
+
+
+def overlay_all(args) -> int:
+    import time
+
+    from . import clips
+    from .overlay import find_video, selection, track_boxes
+
+    rows = [r for r in read_clips_table() if not args.only or r["clipId"] in args.only]
+    began, failed = time.monotonic(), 0
+    for i, r in enumerate(rows, 1):
+        tag, cid = f"[{i}/{len(rows)}] {r['clipId']}", r["clipId"]
+        out = clips.CLIPS_DIR / f"{cid}.overlay.json"
+        if out.exists() and args.refollow:
+            from .overlay import add_following
+
+            data = json.loads(out.read_text())
+            data["frames"] = [f[:2] for f in data["frames"]]
+            sel = selection(cid)
+            data = add_following(data, sel[1] if sel else 10.0, find_video(cid))
+            out.write_text(json.dumps(data, separators=(",", ":")))
+            seen = sum(1 for f in data["frames"] if f[2] is not None) / len(data["frames"])
+            print(f"{tag}: graded player followed in {seen:.0%} of frames", flush=True)
+            continue
+        if out.exists() and not args.refresh:
+            print(f"{tag}: cached, skipped", flush=True)
+            continue
+        video, sel = find_video(cid), selection(cid)
+        if not video or not sel:
+            print(f"{tag}: skipped ({'no local video in demo/clips' if not video else 'no entry in fixtures/clips/selection.json'})", flush=True)
+            continue
+        print(f"{tag}: tracking players in {video.name}", flush=True)
+        try:
+            data = track_boxes(video, sel[0], sel[1])
+            out.write_text(json.dumps(data, separators=(",", ":")))
+            print(f"{tag}: done, {len(data['frames'])} frames, graded player is track {data['selected']} ({out.stat().st_size // 1024} KB)", flush=True)
+        except Exception as e:  # keep going
+            print(f"{tag}: FAILED: {e}", flush=True)
+            failed += 1
+    print(f"Finished in {time.monotonic() - began:.0f}s" + (f", {failed} failed" if failed else ""), flush=True)
+    return 1 if failed else 0
 
 
 def assess_all(args) -> int:
@@ -143,7 +207,7 @@ def assess_all(args) -> int:
             if gemini is None:
                 gemini = RealGemini()
             a = clips.get_or_assess(gemini, r["clipId"], r["source"], r["player"], refresh=args.refresh,
-                                    start_sec=r["start"], end_sec=r["start"] + 60)
+                                    start_sec=r["start"], end_sec=r["start"] + args.window)
             lvl = a["levelEstimate"]
             label = f", labeled {r['level']:g}" if r["level"] is not None else ""
             print(f"{tag}: done in {time.monotonic() - t:.0f}s: level {lvl['low']:g} to {lvl['high']:g}{label}", flush=True)

@@ -31,7 +31,7 @@ def test_reads_the_clips_table(tmp_path):
     )
     [row] = read_clips_table(md)
     assert row == {"clipId": "abc", "source": "https://www.youtube.com/watch?v=abc", "channel": "Chan", "level": 4.5,
-                   "player": "near side: red shirt", "start": 75.0}
+                   "player": "near side: red shirt", "start": 75.0, "usedIn": "answer key"}
 
 
 def test_VIS_6_assess_all_uses_cached_clips_without_creating_a_paid_client(tmp_path, monkeypatch, capsys):

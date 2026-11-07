@@ -97,3 +97,14 @@ def test_api_key_is_read_from_env_local_or_env(tmp_path, monkeypatch):
     assert gemini.load_api_key() == "from-env"
     (tmp_path / "product" / ".env.local").write_text("GEMINI_API_KEY=from-local\n")
     assert gemini.load_api_key() == "from-local"
+
+
+def test_build_works_from_gemini_alone_and_adds_clip_metadata(tmp_path):
+    fake = FakeGemini([json.dumps(GOOD)])
+    clips.get_or_assess(fake, "c3", "yt", "p", base=tmp_path, rubric="r", start_sec=30, end_sec=210)
+    stats = clips.build_clip("c3", base=tmp_path, meta={"channel": "Chan", "labeledLevel": 4.5, "startSec": 30, "scene4": None})
+    assert validate_clip_stats(stats) == []
+    assert stats["durationSec"] == 180
+    assert stats["players"] == [{"trackId": 0, "selected": True, "measured": False, "watched": GOOD}]
+    assert (stats["channel"], stats["labeledLevel"], stats["startSec"]) == ("Chan", 4.5, 30)
+    assert "scene4" not in stats

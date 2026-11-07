@@ -62,3 +62,43 @@ def test_ready_share_and_partner_spacing():
     stats = measure_track(me, [partner, opponent], FPS)
     assert stats["readyPositionShare"] == 0.9
     assert stats["avgPartnerSpacingM"] == 3.0
+
+
+def test_overlay_picks_the_box_under_the_point_nearest_the_requested_time():
+    from rally_vision.overlay import pick_track
+
+    frames = [
+        [9.0, [[1, 0.1, 0.1, 0.2, 0.4], [2, 0.6, 0.5, 0.7, 0.9]]],
+        [10.0, [[1, 0.6, 0.5, 0.7, 0.9], [2, 0.1, 0.1, 0.2, 0.4]]],  # the two swapped places
+        [11.0, []],
+    ]
+    assert pick_track(frames, 0.65, 0.7, at_sec=10) == 1
+    assert pick_track(frames, 0.15, 0.2, at_sec=10) == 2
+    assert pick_track([], 0.5, 0.5, at_sec=10) is None
+
+
+def test_following_survives_an_id_switch_and_ignores_a_reused_id_elsewhere():
+    from rally_vision.overlay import follow
+
+    walk = lambda x: [x, 0.5, x + 0.1, 0.9]  # noqa: E731 - a player walking right
+    frames = [
+        [0.0, [[1, *walk(0.10)], [2, *walk(0.70)]]],
+        [0.1, [[1, *walk(0.12)], [2, *walk(0.70)]]],
+        [0.2, [[5, *walk(0.14)], [2, *walk(0.70)]]],  # tracker renamed our player 1 -> 5
+        [0.3, [[5, *walk(0.16)], [1, *walk(0.70)]]],  # and reused 1 for someone far away
+    ]
+    assert follow(frames, anchor_id=1, at_sec=0.0) == [1, 1, 5, 5]
+
+
+def test_following_by_look_keeps_the_right_player_when_two_cross():
+    from rally_vision.overlay import follow_by_look
+
+    box = lambda x: [x, 0.5, x + 0.1, 0.9]  # noqa: E731
+    red, blue = [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]
+    # our player (red, id 1) walks right; another (blue, id 2) walks left; they cross at frame 2
+    xs_red, xs_blue = [0.30, 0.34, 0.38, 0.42], [0.46, 0.42, 0.38, 0.34]
+    frames = [[i * 0.1, [[1, *box(r)], [2, *box(b)]]] for i, (r, b) in enumerate(zip(xs_red, xs_blue))]
+    # at the crossing the tracker swaps their IDs
+    frames[3][1] = [[2, *box(xs_red[3])], [1, *box(xs_blue[3])]]
+    looks = [{1: red, 2: blue}, {1: red, 2: blue}, {1: red, 2: blue}, {2: red, 1: blue}]
+    assert follow_by_look(frames, looks, anchor_id=1, at_sec=0.0) == [1, 1, 1, 2]

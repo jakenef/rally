@@ -1,0 +1,12 @@
+{
+  "_about": "Where the graded player (demo/clips.md 'Players we use') stands in the local clip, in video pixels, at atSec seconds into the clip. Used to mark their box in the tracking overlay.",
+  "f5WajWaVLfM": { "x": 1790, "y": 650, "atSec": 10 },
+  "IUd_2A3VewE": { "x": 850, "y": 520, "atSec": 10 },
+  "bW-4z3Br7uE": { "x": 1170, "y": 260, "atSec": 10 },
+  "RijUJWIBe_o": { "x": 1280, "y": 650, "atSec": 10 },
+  "DkSnVZgmFF0": { "x": 1680, "y": 600, "atSec": 10 },
+  "R3KB2sRZccU": { "x": 1220, "y": 650, "atSec": 10 },
+  "euP6ns-3UXY": { "x": 750, "y": 580, "atSec": 10 },
+  "b2Pzi5_dBGg": { "x": 1210, "y": 340, "atSec": 10 },
+  "u6dqN2ReoOo": { "x": 1070, "y": 650, "atSec": 10 }
+}
