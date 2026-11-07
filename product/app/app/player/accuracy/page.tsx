@@ -1,6 +1,6 @@
 // AI lane (Jake). Scene 5, "We checked ourselves": every labeled clip, estimated without its own label.
 import { midpointOf } from "@rally/profiles";
-import { Caption, Headline } from "@rally/ui";
+import { Headline } from "@rally/ui";
 import { accuracyReport, loadClips } from "../data";
 import "../player.css";
 
@@ -17,14 +17,13 @@ export default function Accuracy() {
   const n = report.rows.length;
   return (
     <main className="rl-page">
-      <Caption>Scene 5</Caption>
-      <Headline size="h1" parts={["We checked", { text: "ourselves", serif: true }]} />
+      <Headline size="h1">Accuracy</Headline>
       {n === 0 ? (
-        <p className="rl-note">No labeled clips yet. Run the vision pipeline on the clips in demo/clips.md.</p>
+        <p className="rl-note">No labeled clips yet.</p>
       ) : (
         <>
           <p className="rl-body-lg">
-            {n} YouTube rec clips with the level in the title. Each one is estimated with a correction fitted on the other {n - 1}, never on itself.
+            {n} clips. Each estimate uses a correction fitted on the other clips.
           </p>
           <div className="ac-stats">
             <div className="ac-stat">
@@ -81,7 +80,7 @@ export default function Accuracy() {
             </div>
           </div>
           <p className="rl-note">
-            Labels come from the uploaders and aren&apos;t verified ratings. That&apos;s why Rally treats the video as a starting range, and real game results take over after one session.
+            Uploader labels are unverified. Estimates are starting ranges, not official ratings.
           </p>
         </>
       )}

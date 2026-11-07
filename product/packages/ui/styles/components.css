@@ -1,7 +1,8 @@
-/* crimsonhacks components: copied from brand-assets/crimsonhacks/components/bundle.css (minus the font @import, which app/layout.tsx loads as a <link>). Re-copy when the design system changes. */
-
-/* crimsonhacks components. Every colour comes from tokens.css. */
-body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-sans); }
+/* Overtime components. Keep colors in brand-assets/overtime/tokens.json.
+   ch-* names remain stable for screens in both lanes. Fonts are bundled locally. */
+@font-face { font-family: "Anton"; src: url("./fonts/anton.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Mona Sans"; src: url("./fonts/mona.woff2") format("woff2"); font-weight: 400 800; font-style: normal; font-display: swap; }
+body { margin: 0; background: var(--surface); color: var(--ink); font: 400 16px/1.5 var(--font-sans); -webkit-font-smoothing: antialiased; }
 
 /* Night scope: any element with .ch-night becomes a dark section, in either theme. */
 .ch-night {
@@ -14,25 +15,25 @@ body { margin: 0; background: var(--surface); color: var(--ink); font-family: va
 
 /* Wordmark */
 .ch-wordmark { display: inline-flex; flex-direction: column; line-height: .86; color: var(--ink); text-transform: uppercase; }
-.ch-wm-serif { font-family: var(--font-serif); font-weight: 400; letter-spacing: -.01em; }
+.ch-wm-display, .ch-wm-serif { font-family: var(--font-display); font-weight: 400; letter-spacing: -.04em; }
 .ch-wm-sans { font-family: var(--font-sans); font-weight: 800; font-stretch: 93%; letter-spacing: -.02em; }
-.ch-wordmark-sm { font-size: 20px; } .ch-wordmark-md { font-size: 32px; } .ch-wordmark-lg { font-size: 64px; }
+.ch-wordmark-sm { font-size: 28px; } .ch-wordmark-md { font-size: 42px; } .ch-wordmark-lg { font-size: 72px; }
 
 /* Icon */
 .ch-icon { display: inline-block; flex: none; vertical-align: middle; }
 
 /* Button */
 .ch-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--size-control); padding: 0 var(--space-mini);
-  border: 0; border-radius: var(--radius-btn); font: 700 16px/20px var(--font-sans); font-stretch: 93%; text-transform: uppercase;
-  text-decoration: none; cursor: pointer; transition: background-color .2s ease, transform .15s ease; white-space: nowrap; }
+  border: 1px solid transparent; border-radius: var(--radius-btn); font: 600 14px/20px var(--font-sans);
+  text-decoration: none; cursor: pointer; transition: background-color .2s ease, color .2s ease; white-space: nowrap; }
 .ch-btn .ch-icon { width: 18px; height: 18px; }
 .ch-btn-primary { background: var(--crimson); color: var(--on-crimson); }
 .ch-btn-primary:hover { background: var(--crimson-deep); }
 .ch-btn-light { background: var(--surface-raised); color: var(--ink); }
 .ch-btn-light:hover { background: var(--surface-sunk); }
-.ch-btn-outline { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.ch-btn-outline { background: transparent; color: var(--ink); border-color: var(--line-strong); }
 .ch-btn-outline:hover { background: var(--surface-raised); }
-.ch-btn:active { transform: translateY(1px); }
+.ch-btn:active { filter: brightness(.9); }
 .ch-btn:focus-visible, .ch-menu:focus-visible, .ch-footer a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
 /* MenuButton */
@@ -47,22 +48,22 @@ body { margin: 0; background: var(--surface); color: var(--ink); font-family: va
 .ch-menu[aria-expanded="true"] .ch-menu-glyph i:last-child { width: 18px; transform: translateY(-3.5px) rotate(-45deg); }
 
 /* Headline */
-.ch-hl { margin: 0; font-family: var(--font-sans); font-weight: 700; font-stretch: 93%; text-transform: uppercase; color: var(--ink);
-  text-wrap: balance; letter-spacing: -.02em; }
-.ch-hl-impact { font-size: clamp(48px, 9vw, 132px); line-height: .88; }
-.ch-hl-h2 { font-size: clamp(40px, 6vw, 72px); line-height: .92; }
-.ch-hl-h1 { font-size: clamp(36px, 5.5vw, 64px); line-height: .92; }
+.ch-hl { margin: 0; font-family: var(--font-display); font-weight: 400; text-transform: uppercase; color: var(--ink);
+  text-wrap: balance; letter-spacing: -.035em; }
+.ch-hl-impact { font-size: clamp(54px, 10.5vw, 160px); line-height: .94; letter-spacing: -.04em; }
+.ch-hl-h2 { font-size: clamp(40px, 5vw, 64px); line-height: 1; }
+.ch-hl-h1 { font-size: clamp(44px, 6.5vw, 80px); line-height: .98; }
 .ch-hl-h3 { font-size: 32px; line-height: 1.05; }
-.ch-hl-serif { font-family: var(--font-serif); font-weight: 400; font-stretch: normal; color: var(--crimson-text); letter-spacing: -.03em; }
+.ch-hl-accent, .ch-hl-serif { color: var(--crimson-text); font-family: inherit; font-weight: inherit; }
 .ch-hl-center { text-align: center; }
 
 /* Marquee */
-.ch-marquee { overflow: hidden; display: flex; flex-direction: column; }
+.ch-marquee { overflow: hidden; display: flex; flex-direction: column; gap: 10px; }
 .ch-mq-row { display: flex; width: max-content; white-space: nowrap; animation: ch-mq var(--ch-mq-speed, 40s) linear infinite; }
 .ch-mq-row.ch-mq-rev { animation-direction: reverse; }
-.ch-mq-row span { padding-right: .4em; font-size: clamp(48px, 8vw, 120px); line-height: .95; text-transform: uppercase; }
-.ch-mq-sans span { font-family: var(--font-sans); font-weight: 700; font-stretch: 93%; color: var(--ink); letter-spacing: -.02em; }
-.ch-mq-serif span { font-family: var(--font-serif); color: var(--crimson-text); letter-spacing: -.03em; }
+.ch-mq-row span { padding-right: .45em; font-size: clamp(48px, 8vw, 120px); line-height: 1.08; text-transform: uppercase; }
+.ch-mq-display span, .ch-mq-sans span { font-family: var(--font-display); font-weight: 400; color: var(--ink); letter-spacing: -.035em; }
+.ch-mq-accent span, .ch-mq-serif span { font-family: var(--font-accent); font-weight: 500; color: var(--crimson-text); letter-spacing: -.055em; }
 @keyframes ch-mq { to { transform: translateX(-50%); } }
 
 /* Caption */

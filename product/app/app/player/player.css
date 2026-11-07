@@ -1,12 +1,12 @@
-/* AI lane screens. Colours and type come from crimsonhacks tokens. */
+/* AI lane screens. Overtime tokens and fonts come from @rally/ui. */
 .pl-layout { display: grid; gap: var(--space-med); grid-template-columns: minmax(0, 3fr) minmax(280px, 2fr); align-items: start; }
 @media (max-width: 860px) { .pl-layout { grid-template-columns: 1fr; } }
 .pl-video { position: relative; aspect-ratio: 16 / 9; background: var(--surface-sunk); }
 .pl-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .pl-video-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: var(--space-mini); text-align: center; color: var(--ink-muted); }
-.pl-card { display: grid; gap: var(--space-mini); padding: var(--space-small); background: var(--surface-raised); border-radius: var(--radius-small); }
-.pl-dupr { font: 700 48px/0.95 var(--font-sans); font-stretch: 93%; text-transform: uppercase; color: var(--ink); letter-spacing: -.02em; }
-.pl-dupr span { font-family: var(--font-serif); font-weight: 400; color: var(--crimson-text); }
+.pl-card { display: grid; gap: var(--space-mini); padding: 28px; background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-small); min-width: 0; }
+.pl-dupr { font: 400 72px/1 var(--font-display); text-transform: uppercase; color: var(--crimson-text); letter-spacing: -.035em; }
+.pl-dupr span { font: 500 12px/1.5 var(--font-sans); color: var(--ink-faint); letter-spacing: .025em; }
 .pl-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; font: 600 14.4px/18px var(--font-sans); color: var(--ink-muted); text-transform: uppercase; }
 .pl-reasons { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; color: var(--ink); }
 .pl-tip { margin: 0; padding-top: var(--space-mini); border-top: 1px solid var(--line); color: var(--ink-muted); }
@@ -22,7 +22,7 @@
 /* Scene 5 accuracy chart */
 .ac-stats { display: grid; gap: var(--space-gap); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 .ac-stat { display: grid; gap: 4px; padding: var(--space-mini); background: var(--surface-raised); border-radius: var(--radius-small); }
-.ac-num { font: 700 48px/1 var(--font-sans); font-stretch: 93%; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ac-num { font: 400 64px/1 var(--font-display); letter-spacing: -.035em; color: var(--ink); font-variant-numeric: tabular-nums; }
 .ac-chart { display: grid; gap: 10px; }
 .ac-axis { position: relative; height: 16px; margin: 0 64px 0 200px; font: 600 12px/14px var(--font-sans); color: var(--ink-faint); }
 .ac-axis span { position: absolute; transform: translateX(-50%); }
@@ -40,6 +40,7 @@
 .ac-key-rally { background: var(--crimson); }
 .ac-key-label { width: 3px !important; height: 14px !important; background: var(--ink); }
 @media (max-width: 640px) {
+  .pl-card { padding: 22px; }.pl-dupr { font-size: 64px; }.pl-clips .ch-btn { padding-inline: 12px; font-size: 12px; }
   .ac-row { grid-template-columns: 1fr 48px; }
   .ac-name { grid-column: 1 / -1; }
   .ac-axis { margin: 0 60px 0 0; }

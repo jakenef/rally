@@ -1,5 +1,5 @@
 import { profilesById, roster, tonight } from "@rally/fixtures";
-import { Caption, Headline } from "@rally/ui";
+import { Headline } from "@rally/ui";
 
 // Facility lane (Danny). Placeholder from the base layer: lists tonight's players from the fixtures.
 // Step 1.4 replaces it with courts, the Rally it button, fairness scores and backfill.
@@ -21,9 +21,7 @@ export default function Dashboard() {
   };
   return (
     <main className="rl-page">
-      <Caption>Provo courts, Tuesday 7 pm</Caption>
-      <Headline size="h1" parts={["Tonight's", { text: "session", serif: true }]} />
-      <p className="rl-note">Matching isn&apos;t built yet (BUILD.md step 1.1). This page lists the demo roster from fixtures.</p>
+      <Headline size="h1" parts={["Session", { text: "roster", accent: true }]} />
       <span className="rl-label">
         Signed up · {tonight.signups.length} players · {tonight.courts} courts · ${(tonight.priceCents / 100).toFixed(0)}
       </span>
