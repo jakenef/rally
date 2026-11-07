@@ -1,11 +1,15 @@
 [project]
 name = "rally-vision"
-version = "0.0.1"
+version = "0.1.0"
 description = "Rally's vision pipeline (spec 010, AI lane): clip in, ClipStats JSON out."
 requires-python = ">=3.11"
 dependencies = []
 
 [project.optional-dependencies]
+# Gemini, for watching clips.
+gemini = ["google-genai>=1.0"]
+# Local detection, tracking and pose. Ultralytics is AGPL-3.0.
+detect = ["ultralytics>=8.3", "opencv-python", "numpy"]
 dev = ["pytest>=8"]
 
 [tool.pytest.ini_options]
