@@ -1,0 +1,13 @@
+{
+  "name": "@rally/ui",
+  "private": true,
+  "type": "module",
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
+  "exports": {
+    ".": "./src/index.tsx",
+    "./tokens.css": "./styles/tokens.css",
+    "./components.css": "./styles/components.css"
+  },
+  "peerDependencies": { "react": ">=19" }
+}

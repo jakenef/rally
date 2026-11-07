@@ -1,0 +1,72 @@
+/* crimsonhacks: generated from brand-assets/crimsonhacks/tokens.json by scripts/build-tokens.mjs. Don't edit by hand. */
+:root {
+  --surface: #f6f2f0;
+  --surface-raised: #ece4e2;
+  --surface-sunk: #ddd0cd;
+  --ink: #2a1214;
+  --ink-muted: #4f3d3f;
+  --ink-faint: #7a6466;
+  --line: #e0d4d2;
+  --line-strong: #6e5a5c;
+  --perforation: #e9dedc;
+  --crimson: #e5112d;
+  --crimson-deep: #a50c22;
+  --crimson-text: #c40d26;
+  --on-crimson: #ffffff;
+  --paper: #ffffff;
+  --focus: var(--crimson-text);
+  --night: #2a1214;
+  --night-raised: #3a1c1f;
+  --night-ink: #f6f2f0;
+  --night-ink-muted: #d6c8c6;
+  --night-ink-faint: #a89496;
+  --night-line: #8a6064;
+  --night-perforation: #3d1d20;
+  --night-crimson-text: #ff4d5e;
+  --font-serif: "Italiana", "Didot", "Bodoni 72", Georgia, serif;
+  --font-sans: "Mona Sans", "Arial Narrow", Arial, sans-serif;
+  --space-mini: 16px;
+  --space-container: 20px;
+  --space-gap: 20px;
+  --space-small: 32px;
+  --space-med: 48px;
+  --space-large: 64px;
+  --space-xlarge: 80px;
+  --space-nav: 86px;
+  --radius-btn: 8.64px;
+  --radius-small: 16px;
+  --radius-med: 48px;
+  --radius-large: 100px;
+  --size-control: 48px;
+  --size-tagbar-w: 40px;
+  --size-tagbar-h: 8px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #1d0c0e;
+    --surface-raised: #2e1518;
+    --surface-sunk: #140809;
+    --ink: #f6f2f0;
+    --ink-muted: #d6c8c6;
+    --ink-faint: #a89496;
+    --line: #3f2326;
+    --line-strong: #8a6064;
+    --perforation: #2c1417;
+    --crimson-text: #ff4d5e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --surface: #1d0c0e;
+  --surface-raised: #2e1518;
+  --surface-sunk: #140809;
+  --ink: #f6f2f0;
+  --ink-muted: #d6c8c6;
+  --ink-faint: #a89496;
+  --line: #3f2326;
+  --line-strong: #8a6064;
+  --perforation: #2c1417;
+  --crimson-text: #ff4d5e;
+  color-scheme: dark;
+}

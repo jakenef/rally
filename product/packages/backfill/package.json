@@ -1,0 +1,8 @@
+{
+  "name": "@rally/backfill",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": { "@rally/types": "*" }
+}

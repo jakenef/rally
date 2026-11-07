@@ -1,0 +1,71 @@
+{
+  "clipId": "sample",
+  "source": "https://www.youtube.com/watch?v=REPLACE_WITH_A_CLIP_FROM_demo_clips_md",
+  "durationSec": 60,
+  "players": [
+    {
+      "trackId": 1,
+      "selected": true,
+      "framesSeen": 1740,
+      "kitchenLineShare": 0.72,
+      "distanceM": 118.4,
+      "avgPartnerSpacingM": 2.9,
+      "readyPositionShare": 0.81,
+      "avgSpeedMps": 1.9,
+      "peakSpeedMps": 4.6,
+      "watched": {
+        "shots": {
+          "dink": 14,
+          "drive": 3,
+          "drop": 4,
+          "lob": 0,
+          "volley": 6,
+          "serve": 2,
+          "return": 2
+        },
+        "thirdShotDropShare": 0.75,
+        "unforcedErrors": 2,
+        "resetsUnderPressure": 3,
+        "levelEstimate": {
+          "low": 3.5,
+          "high": 4.0
+        },
+        "reasons": [
+          "Gets to the kitchen line after every return",
+          "Drops three of four third shots",
+          "Resets hard drives softly into the kitchen"
+        ]
+      }
+    },
+    {
+      "trackId": 2,
+      "framesSeen": 1702,
+      "kitchenLineShare": 0.68,
+      "distanceM": 104.0,
+      "avgPartnerSpacingM": 2.9,
+      "readyPositionShare": 0.74,
+      "avgSpeedMps": 1.7,
+      "peakSpeedMps": 4.1
+    },
+    {
+      "trackId": 3,
+      "framesSeen": 1655,
+      "kitchenLineShare": 0.41,
+      "distanceM": 131.2,
+      "avgPartnerSpacingM": 3.4,
+      "readyPositionShare": 0.58,
+      "avgSpeedMps": 2.2,
+      "peakSpeedMps": 5.0
+    },
+    {
+      "trackId": 4,
+      "framesSeen": 1690,
+      "kitchenLineShare": 0.47,
+      "distanceM": 122.7,
+      "avgPartnerSpacingM": 3.4,
+      "readyPositionShare": 0.62,
+      "avgSpeedMps": 2.0,
+      "peakSpeedMps": 4.8
+    }
+  ]
+}

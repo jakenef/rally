@@ -1,0 +1,20 @@
+/* App layout only. Colours, type and components come from @rally/ui (crimsonhacks). */
+* { box-sizing: border-box; }
+.rl-nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: var(--space-mini);
+  padding: 12px var(--space-container); background: var(--surface); border-bottom: 1px solid var(--line); }
+.rl-nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.rl-nav a.rl-home { color: inherit; text-decoration: none; }
+.rl-page { padding: var(--space-large) var(--space-container); display: grid; gap: var(--space-med); max-width: 1200px; margin: 0 auto; }
+.rl-section { padding: var(--space-xlarge) var(--space-container); }
+.rl-body-lg { font-size: 20px; line-height: 25px; color: var(--ink-muted); max-width: 46ch; margin: 0; }
+.rl-body { font-size: 16px; line-height: 22px; color: var(--ink-muted); margin: 0; }
+.rl-label { font: 600 14.4px/18px var(--font-sans); color: var(--ink-faint); text-transform: uppercase; letter-spacing: .02em; }
+.rl-row { display: flex; gap: var(--space-mini); flex-wrap: wrap; align-items: center; }
+.rl-grid { display: grid; gap: var(--space-gap); grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.rl-tile { background: var(--surface-raised); border-radius: var(--radius-small); padding: var(--space-mini); display: grid; gap: 6px; }
+.rl-tile h3 { margin: 0; font: 700 19.2px/1.25 var(--font-sans); font-stretch: 93%; text-transform: uppercase; color: var(--ink); }
+.rl-num { font-variant-numeric: tabular-nums; }
+.rl-note { border: 1px solid var(--line-strong); padding: var(--space-mini); color: var(--ink-muted); }
+.rl-phone { width: 300px; max-width: 100%; aspect-ratio: 9 / 18; border: 1px solid var(--line-strong); border-radius: 36px; padding: 18px;
+  background: var(--surface-raised); display: flex; flex-direction: column; gap: 12px; }
+.rl-phone-screen { flex: 1; background: var(--surface); border-radius: 22px; padding: var(--space-mini); display: grid; align-content: start; gap: 8px; }
