@@ -38,6 +38,8 @@ contrast. Text on red uses `on-crimson`. `ch-night` remains black, not burgundy.
 The opposing marquee rows intentionally use different typefaces: white Anton
 moving left and red Mona Sans moving right. Keep the original short slogans,
 "Same rating, different game." and "Mirror the teams."
+The red row uses `crimson`, matching the main headline and primary action; reserve
+the lighter `crimson-text` for small text and focus indicators.
 
 ## Copy and composition
 
