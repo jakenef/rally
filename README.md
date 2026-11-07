@@ -2,19 +2,24 @@
 
 Balanced pickleball sessions for facilities.
 
-DUPR tells you what you are. Rally decides who you should play tonight, and fills the court when someone bails.
+> DUPR tells you what you are. Rally decides who you should play tonight, and fills the court when someone bails.
 
-## What it does
+Built for the Utah hackathon (Best Commerce Project track), November 2026. This repo is the whole team's second brain: the idea, the research, our meeting notes, the specs and the code all live here, so any teammate or coding agent can pick up where someone left off.
 
-- **Player onboarding:** a 60-second clip gives a play-style profile (kitchen-line time, drive vs. dink, movement, ready position) and a rough starting skill range. Uses a DUPR rating as the skill input when a player has one.
-- **Balanced sessions:** puts the night's players onto courts and teams by skill and play-style fit, with a fairness score per court.
-- **Backfill:** when someone cancels, the next best-fit player on the waitlist gets the spot and pays.
-- **Facility rules in plain English:** e.g. "Tuesday 7pm is 3.5+ only, $12 peak."
+## Folders
 
-## Planned stack
+| Folder | What goes in it |
+| --- | --- |
+| `idea/` | What we're building and why: the pitch, positioning against DUPR, the idea history |
+| `research/` | What we found out: open-source repos and models, competitors, facility software, open questions |
+| `meeting-recordings/` | Recordings, transcripts and notes from our meetings and calls |
+| `specs/` | Module specs for the product. Spec first, then code. Start at `specs/README.md` |
+| `product/` | The code, the build plan (`BUILD.md`) and the judgment calls we made (`DECISIONS.md`) |
+| `demo/` | Demo flows, the stage script, and demo clips (videos stay out of git) |
+| `brand-assets/` | Logo, colors, screenshots for the pitch |
 
-- Vision: fork of [Pickleball-Vision](https://github.com/ArvanJ/Pickleball-Vision) (YOLO + ByteTrack, court homography, pose)
-- Shot labeling: Gemini video API at higher fps
-- Player cards and rule parsing: Claude
-- Ratings: [OpenSkill](https://github.com/vivekjoshy/openskill.py)
-- App: Next.js, Stripe test mode
+## Start here
+
+- New to the project: `idea/pitch.md`, then `specs/000-overview.md`.
+- Writing code (person or agent): read `AGENTS.md` first.
+- Preparing the pitch: `demo/README.md`.

@@ -1,7 +1,30 @@
-node_modules/
-.env*
+# OS and editor clutter
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and builds
+node_modules/
+.next/
+dist/
 __pycache__/
 .venv/
+*.pyc
+
+# Video and model weights stay out of git
 *.mp4
 *.mov
+*.m4v
+*.avi
+*.onnx
+*.pt
+demo/clips/*
+!demo/clips/.gitkeep
+product/vision/output/
