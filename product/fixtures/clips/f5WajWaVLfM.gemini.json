@@ -4,27 +4,28 @@
   "player": "near side, right: woman in white tank top and black leggings, ponytail",
   "used_model": "gemini-3.8-flash",
   "used_processing": true,
+  "windowSec": 180,
   "assessment": {
     "shots": {
       "dink": 1,
       "drive": 0,
       "drop": 0,
       "lob": 0,
-      "volley": 0,
-      "serve": 0,
-      "return": 1
+      "volley": 2,
+      "serve": 2,
+      "return": 3
     },
     "thirdShotDropShare": null,
-    "unforcedErrors": 1,
+    "unforcedErrors": 0,
     "resetsUnderPressure": 0,
     "levelEstimate": {
-      "low": 3.0,
-      "high": 3.5
+      "low": 3.5,
+      "high": 4.0
     },
     "reasons": [
-      "Hits a solid, deep return of serve and transitions immediately up to the kitchen line.",
-      "Shows good ready positioning at the non-volley zone line while tracking play.",
-      "Commits an unforced error by netting a standard dink from the transition/kitchen area."
+      "Consistently hit deep returns and immediately transitioned all the way up to the non-volley zone line.",
+      "Demonstrated good composure and paddle-ready positioning at the kitchen line, executing a clean dink and controlling mid-rally volleys.",
+      "Maintained high shot consistency across all her touches without committing any unforced errors."
     ]
   }
 }

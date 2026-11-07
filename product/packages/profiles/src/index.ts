@@ -1,6 +1,6 @@
 // 020 profiles — AI lane (Jake). Clip stats (010) plus an optional DUPR or self-rating in,
 // a Profile out: style, estimated DUPR range, athleticism, skill for matching, and a card.
-import type { GeminiAssessment, PlayerStats, Profile, Style, Tempo } from "@rally/types";
+import { isMeasured, type GeminiAssessment, type PlayerStats, type Profile, type Style, type Tempo } from "@rally/types";
 
 export type Card = NonNullable<Profile["card"]>;
 export type EstimatedDupr = NonNullable<Profile["estimatedDupr"]>;
@@ -9,25 +9,44 @@ const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n
 const scale = (n: number, lo: number, hi: number) => clamp((n - lo) / (hi - lo), 0, 1);
 const round = (n: number, places = 2) => Math.round(n * 10 ** places) / 10 ** places;
 
+/** Shots Gemini saw the player hit after the serve and return: the evidence behind a grade. */
+export function rallyShots(w: GeminiAssessment): number {
+  const s = w.shots;
+  return s.dink + s.drive + s.drop + s.lob + s.volley;
+}
+
+/** Fewer rally shots than this and the grade rests on too little: confidence is low. */
+export const MIN_EVIDENCE_SHOTS = 8;
+
 // ---------- style ----------
 
-/** 020 behavior 1. Every value 0..1 (PRO-3). */
+/**
+ * 020 behavior 1. Every value 0..1 (PRO-3). Without local tracking, kitchen comes from
+ * Gemini's shot mix (dinks and volleys are hit at the line) and mobility and readiness are 0.5.
+ */
 export function styleFrom(stats: PlayerStats): Style {
   const shots = stats.watched?.shots;
   const hard = shots ? shots.drive : 0;
   const soft = shots ? shots.dink + shots.drop : 0;
-  return {
-    kitchen: round(clamp(stats.kitchenLineShare, 0, 1)),
-    power: round(hard + soft > 0 ? hard / (hard + soft) : 0.5),
-    mobility: round(scale(stats.avgSpeedMps, 0.8, 2.4)),
-    readiness: round(clamp(stats.readyPositionShare, 0, 1)),
-  };
+  const power = round(hard + soft > 0 ? hard / (hard + soft) : 0.5);
+  if (isMeasured(stats)) {
+    return {
+      kitchen: round(clamp(stats.kitchenLineShare, 0, 1)),
+      power,
+      mobility: round(scale(stats.avgSpeedMps, 0.8, 2.4)),
+      readiness: round(clamp(stats.readyPositionShare, 0, 1)),
+    };
+  }
+  const rally = stats.watched ? rallyShots(stats.watched) : 0;
+  const atLine = shots ? shots.dink + shots.volley : 0;
+  return { kitchen: round(rally > 0 ? atLine / rally : 0.5), power, mobility: 0.5, readiness: 0.5 };
 }
 
 // ---------- athleticism ----------
 
-/** 020 behavior 2: 0..100 from speed, distance per minute and ready position (PRO-8). */
-export function athleticismFrom(stats: PlayerStats, durationSec: number): number {
+/** 020 behavior 2: 0..100 from speed, distance per minute and ready position (PRO-8). Needs local tracking. */
+export function athleticismFrom(stats: PlayerStats, durationSec: number): number | undefined {
+  if (!isMeasured(stats)) return undefined;
   const perMin = durationSec > 0 ? stats.distanceM / (durationSec / 60) : 0;
   const score =
     0.35 * scale(stats.avgSpeedMps, 0.8, 2.4) +
@@ -39,23 +58,35 @@ export function athleticismFrom(stats: PlayerStats, durationSec: number): number
 
 // ---------- estimated DUPR and calibration ----------
 
-/** Measured features the calibration fits on. */
-export function features(stats: PlayerStats, durationSec: number): number[] {
+/** Measured features for the "features" calibration; null without local tracking. */
+export function features(stats: PlayerStats, durationSec: number): number[] | null {
+  if (!isMeasured(stats)) return null;
   const w = stats.watched;
   const minutes = Math.max(durationSec / 60, 0.5);
   return [
     stats.kitchenLineShare,
     stats.readyPositionShare,
-    athleticismFrom(stats, durationSec) / 100,
+    (athleticismFrom(stats, durationSec) ?? 50) / 100,
     w?.thirdShotDropShare ?? 0.5,
     w ? w.unforcedErrors / minutes : 0,
   ];
 }
 
-/** A linear correction to Gemini's midpoint, fitted on labeled clips. */
-export type Calibration = { weights: number[]; bias: number; samples: number; meanError: number };
+/**
+ * A correction to Gemini's midpoint, fitted on labeled clips.
+ * - "shift": add the average gap between label and Gemini (used when clips have no measured stats).
+ * - "features": the gap predicted from measured features.
+ * meanError is honest: each labeled clip is scored by a calibration fitted without it.
+ */
+export type Calibration = {
+  mode: "shift" | "features";
+  bias: number;
+  weights: number[];
+  samples: number;
+  meanError: number;
+};
 
-export type CalibrationSample = { stats: PlayerStats; durationSec: number; labeled: number };
+export type CalibrationSample = { stats: PlayerStats; durationSec: number; labeled: number; clipId?: string };
 
 export const MIN_CALIBRATION_SAMPLES = 8;
 
@@ -85,24 +116,31 @@ function ridge(x: number[][], y: number[], lambda: number): number[] {
   return a.map((row, i) => (row[i] === 0 ? 0 : row[n] / row[i]));
 }
 
-function adjustment(stats: PlayerStats, durationSec: number, cal: Calibration | null): number {
-  if (!cal) return 0;
-  return features(stats, durationSec).reduce((s, v, i) => s + v * cal.weights[i], cal.bias);
+/** The part of the adjustment that comes from this player's measured features (0 in shift mode). */
+function featureAdjustment(stats: PlayerStats, durationSec: number, cal: Calibration | null): number {
+  if (!cal || cal.mode !== "features") return 0;
+  const f = features(stats, durationSec);
+  return f ? f.reduce((s, v, i) => s + v * cal.weights[i], 0) : 0;
 }
 
 /**
  * 020 behavior 3: Gemini's rubric range, shifted by the calibration, with a confidence.
- * Low when the two signals disagree by more than 0.75 (PRO-7); at most medium without a calibration.
+ * Confidence is low when the measured features pull more than 0.75 away from Gemini (PRO-7),
+ * when Gemini saw fewer than MIN_EVIDENCE_SHOTS rally shots, or when Gemini's range is over a
+ * point wide; at most medium without a calibration; high only when the calibration's honest
+ * error is 0.3 or less.
  */
 export function estimateDupr(stats: PlayerStats, durationSec: number, cal: Calibration | null = null): EstimatedDupr | undefined {
   const w = stats.watched;
   if (!w) return undefined;
-  const adj = adjustment(stats, durationSec, cal);
+  const pull = featureAdjustment(stats, durationSec, cal);
+  const adj = (cal?.bias ?? 0) + pull;
   const width = w.levelEstimate.high - w.levelEstimate.low;
   let confidence: EstimatedDupr["confidence"];
-  if (Math.abs(adj) > 0.75 || width > 1) confidence = "low";
-  else if (cal && Math.abs(adj) <= 0.25 && width <= 0.5) confidence = "high";
-  else confidence = width <= 0.5 ? "medium" : "low";
+  if (Math.abs(pull) > 0.75 || width > 1 || rallyShots(w) < MIN_EVIDENCE_SHOTS) confidence = "low";
+  else if (!cal) confidence = width <= 0.5 ? "medium" : "low";
+  else if (cal.meanError <= 0.3 && width <= 0.5) confidence = "high";
+  else confidence = cal.meanError <= 0.6 ? "medium" : "low";
   return {
     low: round(clamp(w.levelEstimate.low + adj, 2, 6)),
     high: round(clamp(w.levelEstimate.high + adj, 2, 6)),
@@ -110,33 +148,61 @@ export function estimateDupr(stats: PlayerStats, durationSec: number, cal: Calib
   };
 }
 
+function fitRaw(usable: CalibrationSample[]): Omit<Calibration, "meanError"> {
+  const gaps = usable.map((s) => s.labeled - midpointOf(s.stats.watched!.levelEstimate));
+  const allMeasured = usable.every((s) => isMeasured(s.stats));
+  if (!allMeasured) {
+    return { mode: "shift", bias: round(gaps.reduce((a, b) => a + b, 0) / gaps.length), weights: [], samples: usable.length };
+  }
+  const x = usable.map((s) => [...features(s.stats, s.durationSec)!, 1]);
+  const w = ridge(x, gaps, 0.5);
+  return { mode: "features", weights: w.slice(0, -1), bias: w[w.length - 1], samples: usable.length };
+}
+
 /**
- * Fit how far Gemini's midpoint is off, from measured features (020 behavior 3).
- * Returns null with fewer than MIN_CALIBRATION_SAMPLES clips: the adjustment is then skipped.
+ * Fit the correction from labeled clips (020 behavior 3). Null with fewer than
+ * MIN_CALIBRATION_SAMPLES labeled clips: the adjustment is then skipped.
  */
 export function fitCalibration(samples: CalibrationSample[]): Calibration | null {
   const usable = samples.filter((s) => s.stats.watched);
   if (usable.length < MIN_CALIBRATION_SAMPLES) return null;
-  const x = usable.map((s) => [...features(s.stats, s.durationSec), 1]);
-  const y = usable.map((s) => s.labeled - midpointOf(s.stats.watched!.levelEstimate));
-  const w = ridge(x, y, 0.5);
-  const cal: Calibration = { weights: w.slice(0, -1), bias: w[w.length - 1], samples: usable.length, meanError: 0 };
-  cal.meanError = round(
-    usable.reduce((s, smp) => s + Math.abs(midpointOf(estimateDupr(smp.stats, smp.durationSec, cal)!) - smp.labeled), 0) / usable.length,
-  );
+  const cal = { ...fitRaw(usable), meanError: 0 };
+  // Honest error: score each clip with a calibration fitted on the others.
+  const errors = usable.map((s, i) => {
+    const others = { ...fitRaw(usable.filter((_, j) => j !== i)), meanError: 0 };
+    return Math.abs(midpointOf(estimateDupr(s.stats, s.durationSec, others)!) - s.labeled);
+  });
+  cal.meanError = round(errors.reduce((a, b) => a + b, 0) / errors.length);
   return cal;
 }
 
-/** PRO-6: how often the range contains the labeled level, and the midpoint's mean error. */
-export function accuracy(samples: CalibrationSample[], cal: Calibration | null) {
-  const rows = samples
-    .filter((s) => s.stats.watched)
-    .map((s) => {
-      const e = estimateDupr(s.stats, s.durationSec, cal)!;
-      return { labeled: s.labeled, low: e.low, high: e.high, hit: s.labeled >= e.low && s.labeled <= e.high, error: Math.abs(midpointOf(e) - s.labeled) };
-    });
+/**
+ * PRO-6, scored honestly: each labeled clip estimated with a calibration fitted on the other
+ * clips (leave one out). Rows say whether the range contains the label, and the midpoint's error.
+ */
+export function leaveOneOut(samples: CalibrationSample[]) {
+  const usable = samples.filter((s) => s.stats.watched);
+  const rows = usable.map((s, i) => {
+    const cal = fitCalibration(usable.filter((_, j) => j !== i));
+    const raw = estimateDupr(s.stats, s.durationSec, null)!;
+    const e = estimateDupr(s.stats, s.durationSec, cal)!;
+    return {
+      clipId: s.clipId,
+      labeled: s.labeled,
+      gemini: { low: raw.low, high: raw.high },
+      estimate: e,
+      hit: s.labeled >= e.low && s.labeled <= e.high,
+      error: round(Math.abs(midpointOf(e) - s.labeled)),
+    };
+  });
   const n = rows.length || 1;
-  return { rows, hitRate: round(rows.filter((r) => r.hit).length / n), meanError: round(rows.reduce((s, r) => s + r.error, 0) / n) };
+  return {
+    rows,
+    hitRate: round(rows.filter((r) => r.hit).length / n),
+    within: (d: number) => rows.filter((r) => r.error <= d).length,
+    meanError: round(rows.reduce((s, r) => s + r.error, 0) / n),
+    rawMeanError: round(rows.reduce((s, r) => s + Math.abs(midpointOf(r.gemini) - r.labeled), 0) / n),
+  };
 }
 
 // ---------- the profile ----------

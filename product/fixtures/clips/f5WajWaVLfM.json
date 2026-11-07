@@ -1,0 +1,38 @@
+{
+  "clipId": "f5WajWaVLfM",
+  "source": "https://www.youtube.com/watch?v=f5WajWaVLfM",
+  "durationSec": 180.0,
+  "players": [
+    {
+      "trackId": 0,
+      "selected": true,
+      "measured": false,
+      "watched": {
+        "shots": {
+          "dink": 1,
+          "drive": 0,
+          "drop": 0,
+          "lob": 0,
+          "volley": 2,
+          "serve": 2,
+          "return": 3
+        },
+        "thirdShotDropShare": null,
+        "unforcedErrors": 0,
+        "resetsUnderPressure": 0,
+        "levelEstimate": {
+          "low": 3.5,
+          "high": 4.0
+        },
+        "reasons": [
+          "Consistently hit deep returns and immediately transitioned all the way up to the non-volley zone line.",
+          "Demonstrated good composure and paddle-ready positioning at the kitchen line, executing a clean dink and controlling mid-rally volleys.",
+          "Maintained high shot consistency across all her touches without committing any unforced errors."
+        ]
+      }
+    }
+  ],
+  "channel": "RallyPoint by Suffolk Pickleball Co.",
+  "labeledLevel": 3.0,
+  "startSec": 0.0
+}

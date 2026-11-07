@@ -2,7 +2,7 @@
 import { tonight } from "@rally/fixtures";
 import { Button, Caption, Headline } from "@rally/ui";
 import { joinSession } from "./actions";
-import { embedUrl, loadClips, profileForClip } from "./data";
+import { embedUrl, loadClips, profileForClip, selectedPlayer } from "./data";
 import { PlayerCard } from "./PlayerCard";
 import "./player.css";
 
@@ -12,8 +12,9 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
   const { clip: wanted, joined } = await searchParams;
   const { clips, usingSample } = loadClips();
   const clip = clips.find((c) => c.clipId === wanted) ?? clips[0];
-  const profile = await profileForClip(clip);
-  const embed = embedUrl(clip.source);
+  const profile = await profileForClip(clip, clips);
+  const embed = embedUrl(clip);
+  const graded = selectedPlayer(clip);
 
   return (
     <main className="rl-page">
@@ -24,21 +25,28 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
       ) : null}
       {clips.length > 1 ? (
         <nav className="pl-clips" aria-label="Clips">
-          {clips.map((c) => (
+          {clips.map((c, i) => (
             <Button key={c.clipId} href={`/player?clip=${encodeURIComponent(c.clipId)}`} variant={c.clipId === clip.clipId ? "primary" : "light"}>
-              {c.clipId}
+              {`Clip ${i + 1}${c.labeledLevel !== undefined ? ` · ${c.labeledLevel.toFixed(1)}` : ""}`}
             </Button>
           ))}
         </nav>
       ) : null}
       {joined ? <p className="pl-flash">{joined}</p> : null}
       <div className="pl-layout">
-        <div className="pl-video">
-          {embed ? (
-            <iframe src={embed} title={`Clip ${clip.clipId}`} allow="encrypted-media; picture-in-picture" allowFullScreen />
-          ) : (
-            <div className="pl-video-empty">The clip plays here once it has a YouTube link.</div>
-          )}
+        <div style={{ display: "grid", gap: "8px" }}>
+          <div className="pl-video">
+            {embed ? (
+              <iframe src={embed} title={`Clip ${clip.clipId}`} allow="encrypted-media; picture-in-picture" allowFullScreen />
+            ) : (
+              <div className="pl-video-empty">The clip plays here once it has a YouTube link.</div>
+            )}
+          </div>
+          <span className="rl-label">
+            {clip.channel ? `Video: ${clip.channel} on YouTube` : "Video"}
+            {clip.labeledLevel !== undefined ? ` · uploader's label ${clip.labeledLevel.toFixed(1)}` : ""}
+            {graded.measured === false ? " · graded by Gemini only" : ""}
+          </span>
         </div>
         <div style={{ display: "grid", gap: "var(--space-mini)" }}>
           <PlayerCard profile={profile} title="The player Gemini watched" />
@@ -48,9 +56,14 @@ export default async function Player({ searchParams }: { searchParams: Promise<{
               Join Tuesday session, ${(tonight.priceCents / 100).toFixed(0)}
             </Button>
           </form>
-          <Button href="/player/compare" variant="outline">
-            Compare two players
-          </Button>
+          <div className="rl-row">
+            <Button href="/player/compare" variant="outline">
+              Compare two players
+            </Button>
+            <Button href="/player/accuracy" variant="outline">
+              Check the accuracy
+            </Button>
+          </div>
         </div>
       </div>
     </main>
