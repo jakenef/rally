@@ -7,3 +7,5 @@ The view is facility → court → player, with Back and Escape navigation. Play
 Three.js is bundled with the application; no CDN is used. The controller cancels rendering, disconnects observers, clears focus-mode state, and disposes GPU resources on unmount.
 
 This increment does not wire sessions, cancellations, backfill, or the phone.
+
+The facility overview uses a continuous charcoal plaza with four crimson courts, bleachers, slatted benches, rock-and-grass planters, and a pergola. Directional shadows, contact shadows, and restrained crimson practical lights follow Danny’s supplied facility reference; geometry remains interactive through the existing court/player cameras.
