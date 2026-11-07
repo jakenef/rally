@@ -22,6 +22,7 @@ export default function SessionDashboard() {
   const currentCourts = useRef(startingCourts);
   const toolsButton = useRef<HTMLButtonElement>(null);
   const [ready, setReady] = useState(false);
+  const [shuffling, setShuffling] = useState(false);
   const [balanced, setBalanced] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [error, setError] = useState("");
@@ -57,10 +58,16 @@ export default function SessionDashboard() {
     };
   }, []);
 
-  function updateCourts(courts: Court[], isBalanced: boolean) {
+  async function updateCourts(courts: Court[], isBalanced: boolean) {
+    if (shuffling) return;
     currentCourts.current = courts;
-    controller.current?.setCourts(courts);
-    setBalanced(isBalanced);
+    setShuffling(isBalanced);
+    try {
+      await controller.current?.setCourts(courts, isBalanced);
+      setBalanced(isBalanced);
+    } finally {
+      setShuffling(false);
+    }
   }
 
   function closeTools() {
@@ -76,7 +83,7 @@ export default function SessionDashboard() {
           parts={["Tonight’s", { text: "session", accent: true }]}
         />
         <Button
-          disabled={!ready || balanced}
+          disabled={!ready || balanced || shuffling}
           onClick={() =>
             updateCourts(
               assign(players, tonight.courts, { seed: 42 }).courts,
@@ -84,7 +91,7 @@ export default function SessionDashboard() {
             )
           }
         >
-          Rally it
+          {shuffling ? "Matching…" : "Rally it"}
         </Button>
       </div>
       <div
@@ -98,7 +105,9 @@ export default function SessionDashboard() {
         </p>
       )}
       <p className="dashboard-note">
-        Demo profiles. Fairness is an internal matching score.
+        Paddle · power | Chef’s hat · kitchen | Sneakers · mobility | Headband ·
+        readiness. Stars show skill tier; the badge shows the rating. Demo
+        profiles.
       </p>
       {!toolsOpen && (
         <div className="dashboard-demo-edge">
@@ -142,6 +151,7 @@ export default function SessionDashboard() {
             </span>
           </div>
           <Button
+            disabled={shuffling}
             onClick={() =>
               updateCourts(randomAssign(players, tonight.courts, 42), false)
             }
