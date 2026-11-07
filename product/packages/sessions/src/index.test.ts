@@ -51,16 +51,6 @@ describe("sessions", () => {
     });
   });
 
-  it("SESS-1 simulates payment once for joined players, never waitlisted players", () => {
-    const store = createSessions({ sessions: [session()] });
-    for (let i = 0; i < 5; i++) store.signUp("tuesday", player(`p${i}`));
-    expect(store.getSession("tuesday").paid).toEqual([]);
-    store.markPaid("tuesday", "p0");
-    store.markPaid("tuesday", "p0");
-    expect(store.getSession("tuesday").paid).toEqual(["p0"]);
-    expect(() => store.markPaid("tuesday", "p4")).toThrow("Only a signed-up player");
-  });
-
   it("SESS-3 parses Tuesday 7pm, 3.5+, $12 through the fake model as an unsaved preview", async () => {
     const claude = fakeClaude([{
       startsAt: "2026-11-10T19:00:00-07:00", minSkill: 3.5, priceCents: 1200, maxSkill: null, courts: null,

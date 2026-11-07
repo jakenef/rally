@@ -81,14 +81,6 @@ export function createSessions(options: {
     return { status: "joined" };
   }
 
-  /** Hook for the simulated Pay button. No payment provider is called. */
-  function markPaid(sessionId: string, playerId: string): Session {
-    const session = requireSession(sessionId);
-    if (!session.signups.includes(playerId)) throw new Error("Only a signed-up player can pay");
-    if (!session.paid.includes(playerId)) session.paid.push(playerId);
-    return getSession(sessionId);
-  }
-
   /** Returns a preview only. The owner must call approveRule to save it. */
   async function parseRule(text: string): Promise<RuleDraft> {
     if (!text.trim()) throw new Error("Enter a session rule");
@@ -117,8 +109,8 @@ export function createSessions(options: {
   }
 
   for (const session of options.sessions ?? []) registerSession(session);
-  return { registerSession, getSession, signUp, markPaid, parseRule, approveRule };
+  return { registerSession, getSession, signUp, parseRule, approveRule };
 }
 
 // Default store for the app; use createSessions for independent demos and tests.
-export const { registerSession, getSession, signUp, markPaid, parseRule, approveRule } = createSessions();
+export const { registerSession, getSession, signUp, parseRule, approveRule } = createSessions();
