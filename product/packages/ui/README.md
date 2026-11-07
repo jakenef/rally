@@ -5,10 +5,12 @@ The shared Overtime design system. Read
 
 Import `@rally/ui/tokens.css` then `@rally/ui/components.css` once in the root
 layout. Fonts are bundled in the stylesheet; no external font service is needed.
-Use `Button`, `Headline`, `Wordmark`, `Perforation`, and `Marquee` from `@rally/ui`.
+Use `Button`, `Headline`, `Logo`, `Perforation`, and `Marquee` from `@rally/ui`.
+`Logo` renders the canonical supplied artwork at `/brand/rally-logo.png`;
+`Wordmark` is a compatibility alias to it.
 
 ```tsx
-<Wordmark text="Rally" />
+<Logo />
 <Headline parts={["Balanced games, not", { text: "court time.", accent: true }]} />
 <Marquee rows={[
   { text: "Same rating, different game." },

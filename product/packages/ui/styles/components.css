@@ -13,11 +13,11 @@ body { margin: 0; background: var(--surface); color: var(--ink); font: 400 16px/
   background: var(--surface); color: var(--ink);
 }
 
-/* Wordmark */
-.ch-wordmark { display: inline-flex; flex-direction: column; line-height: .86; color: var(--ink); text-transform: uppercase; }
-.ch-wm-display, .ch-wm-serif { font-family: var(--font-display); font-weight: 400; letter-spacing: -.04em; }
-.ch-wm-sans { font-family: var(--font-sans); font-weight: 800; font-stretch: 93%; letter-spacing: -.02em; }
-.ch-wordmark-sm { font-size: 28px; } .ch-wordmark-md { font-size: 42px; } .ch-wordmark-lg { font-size: 72px; }
+/* Supplied logo. Crop empty screenshot margins in the presentation only;
+   retain the original pixels and aspect ratio of the underlying artwork. */
+.ch-logo { --ch-logo-width: 128px; position: relative; display: inline-block; width: var(--ch-logo-width); aspect-ratio: 1.85; overflow: hidden; vertical-align: middle; flex-shrink: 0; }
+.ch-logo img { position: absolute; display: block; width: 130%; max-width: none; height: auto; left: -9%; top: -25%; mix-blend-mode: lighten; }
+.ch-logo-sm { --ch-logo-width: 104px; }.ch-logo-lg { --ch-logo-width: 240px; }
 
 /* Icon */
 .ch-icon { display: inline-block; flex: none; vertical-align: middle; }

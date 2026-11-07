@@ -52,6 +52,8 @@ Work through this list one step at a time, top to bottom (or take the step you w
 
 One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 
+- 2026-11-06 requested logo update: canonical supplied artwork in shared Logo/Wordmark, site navigation, phone, and browser/touch icons; original image preserved, responsive presentation checked. Presentation only.
+
 - 2026-11-06 requested Overtime color refinement: opposing marquee row matches the hero/button crimson; brighter small-text/focus token retained. Presentation only.
 
 - 2026-11-06 requested Overtime rebrand: active tokens, shared components and local fonts, minimal homepage with original pickleball texture and opposing two-font marquee, concise app screens, updated brand/agent guidance; alternative previews retired. Presentation change only; no feature criteria changed.

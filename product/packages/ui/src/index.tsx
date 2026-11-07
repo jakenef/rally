@@ -64,13 +64,21 @@ export function Icon({ name, size = 24, title, className }: { name: IconName; si
   );
 }
 
-// ---------- Wordmark ----------
+// ---------- Logo ----------
 
-/** Anton wordmark. Legacy word props remain supported for existing callers. */
+/** The supplied artwork is the single canonical logo, including browser icons. */
+export const RALLY_LOGO_SRC = "/brand/rally-logo.png";
+
+export function Logo({ size = "md", className }: { size?: "sm" | "md" | "lg"; className?: string }) {
+  return (
+    <span className={cx("ch-logo", `ch-logo-${size}`, className)} role="img" aria-label="Rally">
+      <img src={RALLY_LOGO_SRC} alt="" aria-hidden="true" width={544} height={308} draggable={false} />
+    </span>
+  );
+}
+
+/** Compatibility alias. All callers now render the canonical supplied artwork. */
 export function Wordmark({
-  text,
-  serif = "Rally",
-  sans = "",
   size = "md",
   className,
 }: {
@@ -80,18 +88,7 @@ export function Wordmark({
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
-  return (
-    <span className={cx("ch-wordmark", `ch-wordmark-${size}`, className)} role="img" aria-label={[text ?? serif, sans].filter(Boolean).join(" ")}>
-      <span className="ch-wm-display" aria-hidden="true">
-        {text ?? serif}
-      </span>
-      {sans ? (
-        <span className="ch-wm-sans" aria-hidden="true">
-          {sans}
-        </span>
-      ) : null}
-    </span>
-  );
+  return <Logo size={size} className={className} />;
 }
 
 // ---------- Button ----------
