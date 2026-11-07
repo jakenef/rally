@@ -382,33 +382,13 @@ export function mountFacility(
       }
     }
   });
-  function addPlayerCard(group: THREE.Group, p: Profile) {
-    const [kind, label] = playstyle(p);
-    const canvas = document.createElement("canvas");
-    canvas.width = 640;
-    canvas.height = 800;
-    const ctx = canvas.getContext("2d")!;
-    const paper = token("--paper"),
-      muted = token("--ink-muted"),
-      accent = token("--crimson");
-    const font = token("--font-sans");
-    ctx.fillStyle = token("--surface-raised");
-    ctx.fillRect(0, 0, 640, 800);
-    ctx.strokeStyle = token("--line-strong");
-    ctx.lineWidth = 3;
-    ctx.strokeRect(2, 2, 636, 796);
-    ctx.fillStyle = accent;
-    ctx.fillRect(0, 0, 640, 9);
-    ctx.fillStyle = paper;
-    ctx.font = `600 38px ${font}`;
-    let nameSize = 38;
-    while (ctx.measureText(p.name).width > 552 && nameSize > 22)
-      ctx.font = `600 ${--nameSize}px ${font}`;
-    ctx.fillText(p.name, 44, 72);
-
-    // Flat line icons are printed onto the face of the physical 3D card.
+  function drawPlaystyleIcon(
+    ctx: CanvasRenderingContext2D, kind: ReturnType<typeof playstyle>[0],
+    x: number, y: number, paper: string, scale = 1,
+  ) {
     ctx.save();
-    ctx.translate(92, 161);
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
     ctx.strokeStyle = paper;
     ctx.fillStyle = paper;
     ctx.lineWidth = 6;
@@ -476,6 +456,54 @@ export function mountFacility(
       ctx.stroke();
     }
     ctx.restore();
+  }
+  function addStyleMarker(group: THREE.Group, p: Profile) {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 160;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = token("--surface");
+    ctx.beginPath();
+    ctx.arc(80, 80, 76, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = token("--line-strong");
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    drawPlaystyleIcon(ctx, playstyle(p)[0], 80, 80, token("--paper"), 1.05);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const marker = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: texture, transparent: true, depthTest: false, depthWrite: false,
+      toneMapped: false,
+    }));
+    marker.name = "playstyle-marker";
+    marker.renderOrder = 20;
+    group.add(marker);
+  }
+  function addPlayerCard(group: THREE.Group, p: Profile) {
+    const [kind, label] = playstyle(p);
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 800;
+    const ctx = canvas.getContext("2d")!;
+    const paper = token("--paper"),
+      muted = token("--ink-muted"),
+      accent = token("--crimson");
+    const font = token("--font-sans");
+    ctx.fillStyle = token("--surface-raised");
+    ctx.fillRect(0, 0, 640, 800);
+    ctx.strokeStyle = token("--line-strong");
+    ctx.lineWidth = 3;
+    ctx.strokeRect(2, 2, 636, 796);
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, 0, 640, 9);
+    ctx.fillStyle = paper;
+    ctx.font = `600 38px ${font}`;
+    let nameSize = 38;
+    while (ctx.measureText(p.name).width > 552 && nameSize > 22)
+      ctx.font = `600 ${--nameSize}px ${font}`;
+    ctx.fillText(p.name, 44, 72);
+
+    drawPlaystyleIcon(ctx, kind, 92, 161, paper);
     ctx.fillStyle = muted;
     ctx.font = `500 22px ${font}`;
     ctx.fillText("PLAYSTYLE", 166, 146);
@@ -634,6 +662,7 @@ export function mountFacility(
           emissiveIntensity: 0,
         });
         addPlayerCard(group, p);
+        addStyleMarker(group, p);
         const shell = new THREE.Mesh(geometry.outer, m);
         shell.castShadow = true;
         shell.receiveShadow = true;
@@ -1402,6 +1431,29 @@ export function mountFacility(
             complete();
           }
         }
+        // Keep each overview icon beside its own ball, including during Rally it.
+        figures.forEach(f => {
+          const marker = f.group.getObjectByName("playstyle-marker") as THREE.Sprite;
+          marker.visible = level === "facility";
+          if (!marker.visible) return;
+          const world = f.group.getWorldPosition(new THREE.Vector3());
+          const anchor = project(world);
+          const depth = -world.clone().applyMatrix4(camera.matrixWorldInverse).z;
+          const tangent = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+          const radius = 0.85 * stage.clientHeight / (2 * tangent * depth);
+          const size = THREE.MathUtils.clamp(stage.clientWidth / 40, 20, 30);
+          const x = anchor.x + radius + size / 2 + 6;
+          const panelDepth = new THREE.Vector3(0, 0, -2)
+            .applyMatrix4(camera.matrixWorld).project(camera).z;
+          const position = new THREE.Vector3(
+            (x / stage.clientWidth) * 2 - 1,
+            1 - (anchor.y / stage.clientHeight) * 2,
+            panelDepth,
+          ).unproject(camera);
+          marker.position.copy(f.group.worldToLocal(position));
+          const worldSize = size / stage.clientHeight * 4 * tangent;
+          marker.scale.set(worldSize, worldSize, 1);
+        });
         renderer!.render(scene, camera);
         updateLabels();
         animation = requestAnimationFrame(frame);

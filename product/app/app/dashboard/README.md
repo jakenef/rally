@@ -19,3 +19,5 @@ Player cards use screen-space bounds reconstructed at their player’s 3D depth.
 The court camera reserves room for the cards. Camera-facing panels sit on a foreground plane rather than at player depth, preventing court and plaza geometry from clipping through them. Geometry regression checks cover desktop, tablet, portrait mobile, and short landscape viewports.
 
 Cards follow projected ball positions in separated team/row regions, clearing both teammates. They fade and slide into place, and the selected card stays visible while its position and size interpolate into the spotlight. Balls bob only above a fixed clearance; contact shadows remain flat on the court rather than inheriting ball rotation.
+
+Facility overview shows a compact playstyle marker beside every ball, reusing the exact icon drawing used by the player cards. Markers follow their players throughout Rally reassignment, remain a stable readable screen size, and disappear in court/player views. Their texture/material resources follow the existing player disposal lifecycle.

@@ -109,3 +109,5 @@ One line per finished step: `- YYYY-MM-DD step: what was done (criteria).`
 - 2026-11-06 1.4 requested card clearance: reserved side columns, court camera fit, and foreground 3D panels prevent card/court intersections. Five viewport geometry tests, TypeScript, and production build pass. Browser visual verification pending: browser access host unavailable.
 
 - 2026-11-06 1.4 card follow-up: ball-adjacent placement, animated card entry and persistent selected-card zoom, fixed ball clearance, and court-anchored contact shadows. Inspected court and spotlight through native Chrome controls; production build, TypeScript, and five viewport checks pass.
+
+- 2026-11-06 1.4 facility playstyle markers: reuse card icons beside every overview ball, following players through Rally reassignment. Inspected pre/post-Rally screenshots in Chrome; TypeScript and production build pass.
