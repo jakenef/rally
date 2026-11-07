@@ -5,7 +5,7 @@ import { createBackfill } from "@rally/backfill";
 import { assign } from "@rally/matching";
 import { createSessions } from "@rally/sessions";
 import { profilesById, roster, tonight } from "@rally/fixtures";
-import { Button, Caption, Headline } from "@rally/ui";
+import { Button, Headline, Logo } from "@rally/ui";
 import "./phone.css";
 
 const profiles = profilesById();
@@ -55,9 +55,7 @@ export default function BackfillDemo() {
   return (
     <main className="rl-page">
       <div className="bf-heading">
-        <Caption>Provo, 2026 · Tuesday 7 pm</Caption>
-        <Headline size="h1" parts={["Keep the", { text: "court full", serif: true }]} />
-        <p className="rl-body-lg">One cancellation. The best fit gets the offer.</p>
+        <Headline size="h1">Offers</Headline>
       </div>
       <div className="bf-layout">
         <section className="bf-controls" aria-label="Cancellation controls">
@@ -85,7 +83,7 @@ export default function BackfillDemo() {
         </section>
         <section className="rl-phone ch-night bf-phone" aria-label="Fake phone">
           <div className="rl-phone-screen">
-            <span className="rl-label">Rally · Waitlist</span>
+            <Logo size="sm" />
             {pending ? <>
               <h2 className="bf-phone-title">Your next game.</h2>
               <p className="rl-label">For {name(pending.playerId)}</p>

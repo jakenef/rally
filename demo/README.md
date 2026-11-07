@@ -6,7 +6,9 @@ About three minutes on stage. Footage is public YouTube rec play (`clips.md`). N
 
 **Scene 1: Chaos vs. Rally** (~1 min, no video). The facility dashboard shows tonight's open play with random courts: a strong player stuck with two beginners, a court fairness score of 41. Press **Rally it**: everyone reshuffles onto balanced courts and scores jump to 90+. Then show the value: balanced sessions can sell at a premium. Use the fixed demo price; no pricing-rule entry flow.
 
-**Scene 2: Video to court** (~1 min, one YouTube clip). Paste a YouTube link and click one player. Tracking boxes and a court heatmap play over the video (cached), then the player card appears: "3.5 to 4.0, medium confidence · dinker · lives at the kitchen line." Tap **Join Tuesday session** and they land on the right court.
+**Scene 2: Get your rating** (025). On `/player`: drop a clip, click yourself, watch the analysis, see YOUR card with shot callouts. For the demo, press `D` for the hidden demo controls and pick a prepared clip (no waiting on Gemini).
+
+**Scene 2 (old notes): Video to court** (~1 min, one clip). Pick a clip; tracking boxes play over the video, the graded player in crimson ("GRADED BY GEMINI"), then the player card appears. Best clips for the boxes: the Pickleball Pirates 5.0 clips (`b2Pzi5_dBGg`, `u6dqN2ReoOo`) and Wise Pickleball 4.5 (`RijUJWIBe_o`); avoid `f5WajWaVLfM` (box doubtful) and `euP6ns-3UXY` after 0:40 (an ad). Needs the laptop with the clips in `demo/clips/`. The card says: "3.5 to 4.0, medium confidence · dinker · lives at the kitchen line." Tap **Join Tuesday session** and they land on the right court.
 
 **Scene 3: The cancellation** (~45 s, the ending). Someone cancels 20 minutes before the session. Rally picks the best-fit person on the waitlist, and the fake phone on screen shows: "A spot opened on Court 2 at 6pm, $12." Tap Accept, the court is full, and the dashboard shows "$12 recovered." No payment flow is shown.
 

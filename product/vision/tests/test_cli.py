@@ -32,3 +32,17 @@ def test_reads_the_clips_table(tmp_path):
     [row] = read_clips_table(md)
     assert row == {"clipId": "abc", "source": "https://www.youtube.com/watch?v=abc", "channel": "Chan", "level": 4.5,
                    "player": "near side: red shirt", "start": 75.0, "usedIn": "answer key"}
+
+
+def test_VIS_6_assess_all_uses_cached_clips_without_creating_a_paid_client(tmp_path, monkeypatch, capsys):
+    from rally_vision import clips
+    from rally_vision import __main__ as cli
+    from rally_vision import gemini
+
+    (tmp_path / "abc.gemini.json").write_text('{"assessment": {}}')
+    monkeypatch.setattr(clips, "CLIPS_DIR", tmp_path)
+    monkeypatch.setattr(cli, "read_clips_table", lambda: [{"clipId": "abc", "player": "near left"}])
+    monkeypatch.setattr(gemini, "RealGemini", lambda: pytest.fail("paid client should not be created for a cached clip"))
+
+    assert cli.main(["assess-all", "--only", "abc"]) == 0
+    assert "[1/1] abc: cached, skipped" in capsys.readouterr().out
