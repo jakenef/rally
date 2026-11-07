@@ -1,0 +1,30 @@
+{
+  "clipId": "bW-4z3Br7uE",
+  "source": "https://www.youtube.com/watch?v=bW-4z3Br7uE",
+  "player": "near side: tan t-shirt, gray shorts",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "assessment": {
+    "shots": {
+      "dink": 2,
+      "drive": 1,
+      "drop": 0,
+      "lob": 0,
+      "volley": 0,
+      "serve": 1,
+      "return": 1
+    },
+    "thirdShotDropShare": 0.0,
+    "unforcedErrors": 1,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.0,
+      "high": 3.5
+    },
+    "reasons": [
+      "Moves cleanly to the kitchen line after hitting a deep return of serve.",
+      "Shows solid posture and touch on lunging kitchen dinks.",
+      "Attempted a third-shot drive from deep that resulted in an unforced error into the net."
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "clipId": "b2Pzi5_dBGg",
+  "source": "https://www.youtube.com/watch?v=b2Pzi5_dBGg",
+  "player": "near side: blue t-shirt, black shorts",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "assessment": {
+    "shots": {
+      "dink": 0,
+      "drive": 0,
+      "drop": 0,
+      "lob": 0,
+      "volley": 0,
+      "serve": 1,
+      "return": 3
+    },
+    "thirdShotDropShare": null,
+    "unforcedErrors": 0,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.5,
+      "high": 4.0
+    },
+    "reasons": [
+      "Consistently hit deep returns of serve with depth and control, committing no unforced errors.",
+      "Showed proper footwork by immediately moving up toward the non-volley zone line following his returns.",
+      "Delivered a dependable, well-placed serve deep into the opponent's court."
+    ]
+  }
+}

@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import json
 import os
+import sys
+import threading
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol
@@ -15,6 +18,7 @@ from typing import Protocol
 from .schema import GEMINI_SCHEMA, validate_assessment
 
 DEFAULT_MODEL = "gemini-3.8-flash"  # stable, takes video; checked 2026-11-07
+FALLBACK_MODEL = "gemini-3.6-flash"  # also stable; used when the default is overloaded
 DEFAULT_FPS = 5  # the default 1 fps misses fast play
 RUBRIC_PATH = Path(__file__).resolve().parent.parent / "rubric.md"
 
@@ -121,6 +125,7 @@ class RealGemini:
         self.client = genai.Client(api_key=key)
         self.model = model or os.environ.get("GEMINI_MODEL", DEFAULT_MODEL)
         self.used_processing: bool | None = None
+        self.used_model: str | None = None
 
     def _video(self, req: VideoRequest, with_processing: bool) -> dict:
         video: dict = {"type": "video", "uri": req.source}
@@ -133,19 +138,90 @@ class RealGemini:
             video["processing"] = processing
         return video
 
+    def _prompt(self, req: VideoRequest, with_processing: bool) -> str:
+        # Without `processing` Gemini sees the whole video, so name the window in words.
+        if with_processing or req.start_sec is None:
+            return req.prompt
+        end = f" to {_mmss(req.end_sec)}" if req.end_sec is not None else ""
+        return f"Watch only from {_mmss(req.start_sec)}{end} of the video.\n\n{req.prompt}"
+
+    def _call(self, model: str, req: VideoRequest, with_processing: bool) -> str:
+        interaction = self.client.interactions.create(
+            model=model,
+            input=[self._video(req, with_processing), {"type": "text", "text": self._prompt(req, with_processing)}],
+            response_format={"type": "text", "mime_type": "application/json", "schema": req.schema},
+            timeout=CALL_TIMEOUT_SEC,
+        )
+        return interaction.output_text
+
     def generate(self, req: VideoRequest) -> str:
-        # Custom fps is documented for uploaded files; for YouTube links it may be refused.
-        # Try with it, and fall back to Gemini's default sampling if the request is rejected.
+        """One reply. Retries overloads (429, 5xx) and timeouts with backoff, switching to the
+        fallback model after two; drops the custom fps only if Google rejects the request (400).
+        Prints a line for every step so long waits are visible."""
+        from google.genai._gaos.lib.compat_errors import APIConnectionError, APIStatusError
+
+        with_processing = True
+        model = self.model
         last: Exception | None = None
-        for with_processing in (True, False):
+        for attempt in range(MAX_ATTEMPTS):
+            started = time.monotonic()
+            log(f"asking {model}{'' if with_processing else ' (default frame rate)'}, attempt {attempt + 1} of {MAX_ATTEMPTS}")
             try:
-                interaction = self.client.interactions.create(
-                    model=self.model,
-                    input=[self._video(req, with_processing), {"type": "text", "text": req.prompt}],
-                    response_format={"type": "text", "mime_type": "application/json", "schema": req.schema},
-                )
-                self.used_processing = with_processing
-                return interaction.output_text
-            except Exception as e:  # noqa: BLE001 - any API error: try once without processing
+                with _ticker(started):
+                    text = self._call(model, req, with_processing)
+                log(f"answered in {time.monotonic() - started:.0f}s")
+                self.used_processing, self.used_model = with_processing, model
+                return text
+            except APIStatusError as e:
                 last = e
-        raise RuntimeError(f"Gemini request failed: {last}") from last
+                status = e.status_code or 0
+                if status == 400 and with_processing:
+                    log("Google rejected the custom frame rate for this video; retrying with its default sampling")
+                    with_processing = False
+                    continue
+                if status not in (429, 500, 502, 503, 504):
+                    raise RuntimeError(f"Gemini request failed ({status}): {e}") from e
+                reason = "overloaded" if status in (429, 503) else f"server error {status}"
+            except APIConnectionError as e:  # includes timeouts
+                last = e
+                reason = f"no answer within {CALL_TIMEOUT_SEC}s" if "imeout" in type(e).__name__ else "connection failed"
+            if attempt >= 1 and model != FALLBACK_MODEL:
+                model = FALLBACK_MODEL
+            wait = min(30, 4 * 2**attempt)
+            if attempt + 1 < MAX_ATTEMPTS:
+                log(f"{reason}; waiting {wait}s, then trying {model}")
+                time.sleep(wait)
+        raise RuntimeError(f"Gemini gave no answer after {MAX_ATTEMPTS} attempts: {last}") from last
+
+
+CALL_TIMEOUT_SEC = 180
+MAX_ATTEMPTS = 5
+
+
+def log(msg: str) -> None:
+    """Progress lines on stderr, so stdout stays clean JSON."""
+    print(f"  {time.strftime('%H:%M:%S')} {msg}", file=sys.stderr, flush=True)
+
+
+class _ticker:
+    """Prints 'still waiting (Ns)' every 15 seconds while a call is in flight."""
+
+    def __init__(self, started: float, every: float = 15):
+        self.started, self.every = started, every
+        self._stop = threading.Event()
+
+    def __enter__(self):
+        def run():
+            while not self._stop.wait(self.every):
+                log(f"still waiting ({time.monotonic() - self.started:.0f}s)")
+        self._thread = threading.Thread(target=run, daemon=True)
+        self._thread.start()
+        return self
+
+    def __exit__(self, *exc):
+        self._stop.set()
+        return False
+
+
+def _mmss(sec: float) -> str:
+    return f"{int(sec // 60)}:{int(sec % 60):02d}"

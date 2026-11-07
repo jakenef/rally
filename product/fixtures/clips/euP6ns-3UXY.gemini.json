@@ -1,0 +1,30 @@
+{
+  "clipId": "euP6ns-3UXY",
+  "source": "https://www.youtube.com/watch?v=euP6ns-3UXY",
+  "player": "near side: red t-shirt, navy shorts",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "assessment": {
+    "shots": {
+      "dink": 3,
+      "drive": 0,
+      "drop": 1,
+      "lob": 0,
+      "volley": 1,
+      "serve": 1,
+      "return": 1
+    },
+    "thirdShotDropShare": 1.0,
+    "unforcedErrors": 0,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 4.0,
+      "high": 4.5
+    },
+    "reasons": [
+      "Demonstrated consistent, controlled dinking with compact mechanics during kitchen exchanges.",
+      "Successfully executed an unhurried third-shot drop from deep and cleanly transitioned up to the kitchen line.",
+      "Showed strong court awareness, moving in tandem with partner and maintaining ready position at the line."
+    ]
+  }
+}

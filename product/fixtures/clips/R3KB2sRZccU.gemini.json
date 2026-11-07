@@ -1,0 +1,30 @@
+{
+  "clipId": "R3KB2sRZccU",
+  "source": "https://www.youtube.com/watch?v=R3KB2sRZccU",
+  "player": "camera side, closest to the camera: gray t-shirt, dark green shorts, neon green shoes",
+  "used_model": "gemini-3.8-flash",
+  "used_processing": true,
+  "assessment": {
+    "shots": {
+      "dink": 5,
+      "drive": 1,
+      "drop": 0,
+      "lob": 0,
+      "volley": 2,
+      "serve": 1,
+      "return": 1
+    },
+    "thirdShotDropShare": null,
+    "unforcedErrors": 1,
+    "resetsUnderPressure": 0,
+    "levelEstimate": {
+      "low": 3.5,
+      "high": 4.0
+    },
+    "reasons": [
+      "Moves up to the non-volley zone line promptly after hitting a deep return of serve.",
+      "Shows strong offensive instinct, capitalizing on high balls with an overhead smash and a decisive punch volley.",
+      "Demonstrates good control in dink rallies, though conceded an unforced error dumping a backhand dink into the net."
+    ]
+  }
+}
